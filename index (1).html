@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Youssef Wasfy — Quality, Automation &amp; Altitude</title>
+<meta name="description" content="Youssef Wasfy — Partnership Marketing Compliance Specialist at Exness. Quality assurance, automation, AI tooling, and a life on the trail.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..800,0..100;1,9..144,400..700,0..100&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#0E1A2B;
+    --night-2:#15263D;
+    --paper:#F4F1E8;
+    --paper-2:#EAE5D6;
+    --amber:#D29A3D;
+    --amber-deep:#B27A24;
+    --ember:#A65A33;
+    --stone:#6E7480;
+    --stone-light:#9AA0AC;
+    --ink:#0E1A2B;
+    --rule-dark:rgba(244,241,232,.14);
+    --rule-light:rgba(14,26,43,.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--amber);color:var(--night)}
+  a{color:inherit;text-decoration:none}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+
+  /* ───── shared structural type ───── */
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--amber-deep);
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{
+    content:attr(data-idx);
+    color:var(--stone);
+    font-weight:500;
+  }
+  .eyebrow::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--rule-light);
+  }
+  section{padding:96px 0;position:relative}
+  h2.section-title{
+    font-family:'Fraunces',serif;
+    font-variation-settings:"SOFT" 40,"opsz" 100;
+    font-weight:500;
+    font-size:clamp(30px,5vw,46px);
+    line-height:1.04;
+    letter-spacing:-.02em;
+    margin-bottom:36px;
+  }
+  h2.section-title em{font-style:italic;color:var(--ember)}
+
+  /* ───── NAV ───── */
+  nav{
+    position:fixed;
+    top:0;left:0;right:0;
+    z-index:100;
+    background:rgba(14,26,43,0);
+    backdrop-filter:blur(0px);
+    transition:background .3s,backdrop-filter .3s,border-color .3s;
+    border-bottom:1px solid transparent;
+  }
+  nav.scrolled{
+    background:rgba(14,26,43,.92);
+    backdrop-filter:blur(12px);
+    border-bottom-color:var(--rule-dark);
+  }
+  .nav-inner{
+    max-width:1080px;margin:0 auto;padding:16px 32px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .nav-logo{
+    font-family:'Fraunces',serif;
+    font-variation-settings:"SOFT" 40,"opsz" 40;
+    font-weight:600;font-size:20px;font-style:italic;
+    color:var(--paper);
+    transition:color .3s;
+    opacity:0;pointer-events:none;
+  }
+  nav.scrolled .nav-logo{opacity:1;pointer-events:auto}
+  .nav-links{display:flex;gap:30px}
+  .nav-links a{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--stone-light);transition:color .2s;
+    opacity:0;pointer-events:none;
+  }
+  nav.scrolled .nav-links a{opacity:1;pointer-events:auto}
+  .nav-links a:hover{color:var(--amber)}
+  @media(max-width:720px){.nav-links{display:none}}
+
+  /* ───── HERO ───── */
+  .hero{
+    background:var(--night);
+    color:var(--paper);
+    min-height:100vh;
+    display:flex;align-items:center;
+    position:relative;overflow:hidden;
+    padding:120px 0 80px;
+  }
+  .contour{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.5}
+  .contour path{fill:none;stroke:var(--amber);stroke-width:1;opacity:.13}
+  .hero-glow{
+    position:absolute;
+    width:680px;height:680px;
+    right:-180px;top:-160px;
+    background:radial-gradient(circle,rgba(210,154,61,.16),transparent 62%);
+    pointer-events:none;
+  }
+  .hero .wrap{position:relative;z-index:2}
+  .hero-tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--amber);margin-bottom:28px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .hero-tag .pin{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(210,154,61,.2)}
+  .hero h1{
+    font-family:'Fraunces',serif;
+    font-variation-settings:"SOFT" 30,"opsz" 144;
+    font-weight:500;
+    font-size:clamp(48px,9vw,104px);
+    line-height:.92;
+    letter-spacing:-.03em;
+    margin-bottom:30px;
+  }
+  .hero h1 em{font-style:italic;color:var(--amber);font-weight:400}
+  .hero-lede{
+    font-size:clamp(17px,2.2vw,21px);
+    line-height:1.5;
+    max-width:560px;
+    color:rgba(244,241,232,.82);
+    margin-bottom:38px;
+    font-weight:400;
+  }
+  .hero-roles{
+    display:flex;flex-wrap:wrap;gap:8px 0;
+    max-width:680px;margin-bottom:44px;
+  }
+  .hero-roles span{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--stone-light);
+    padding:5px 14px 5px 0;margin-right:14px;
+    border-right:1px solid var(--rule-dark);
+  }
+  .hero-roles span:last-child{border-right:none}
+  .hero-cta{display:flex;gap:16px;flex-wrap:wrap}
+  .btn{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    padding:14px 26px;border-radius:2px;
+    transition:all .2s;display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{background:var(--amber);color:var(--night);font-weight:500}
+  .btn-primary:hover{background:var(--paper);transform:translateY(-2px)}
+  .btn-ghost{border:1px solid var(--rule-dark);color:var(--paper)}
+  .btn-ghost:hover{border-color:var(--amber);color:var(--amber)}
+
+  .hero-coords{
+    position:absolute;bottom:34px;left:0;right:0;z-index:2;
+  }
+  .hero-coords .wrap{
+    display:flex;justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--stone);
+  }
+
+  /* ───── ABOUT ───── */
+  .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:64px;align-items:start}
+  .about-body p{font-size:17px;line-height:1.72;margin-bottom:18px;color:#26354a}
+  .about-body p strong{font-weight:600;color:var(--ink)}
+  .about-body em{font-style:italic;color:var(--ember)}
+  .about-card{
+    background:var(--night);color:var(--paper);
+    padding:32px;border-radius:3px;position:relative;overflow:hidden;
+  }
+  .about-card .label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--amber);margin-bottom:6px;
+  }
+  .about-card .val{font-size:15px;margin-bottom:20px;line-height:1.45;color:rgba(244,241,232,.9)}
+  .about-card .val:last-child{margin-bottom:0}
+  @media(max-width:760px){.about-grid{grid-template-columns:1fr;gap:36px}}
+
+  /* ───── CURRENT FOCUS (dark) ───── */
+  .focus{background:var(--night);color:var(--paper)}
+  .focus .eyebrow{color:var(--amber)}
+  .focus .eyebrow::before{color:var(--stone-light)}
+  .focus .eyebrow::after{background:var(--rule-dark)}
+  .focus h2.section-title{color:var(--paper)}
+  .focus h2.section-title em{color:var(--amber)}
+  .focus-intro{font-size:18px;line-height:1.65;max-width:640px;color:rgba(244,241,232,.82);margin-bottom:48px}
+  .focus-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule-dark);border:1px solid var(--rule-dark)}
+  .focus-item{background:var(--night);padding:30px 28px}
+  .focus-item .ico{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--amber);letter-spacing:.14em;margin-bottom:14px;
+  }
+  .focus-item h3{
+    font-family:'Fraunces',serif;font-variation-settings:"SOFT" 40,"opsz" 60;
+    font-weight:500;font-size:21px;margin-bottom:10px;line-height:1.2;
+  }
+  .focus-item p{font-size:14.5px;line-height:1.6;color:rgba(244,241,232,.72)}
+  @media(max-width:680px){.focus-grid{grid-template-columns:1fr}}
+
+  /* ───── EXPERIENCE ───── */
+  .timeline{position:relative}
+  .tl-item{
+    display:grid;grid-template-columns:172px 1fr;gap:32px;
+    padding:28px 0;border-top:1px solid var(--rule-light);
+  }
+  .tl-item:first-child{border-top:none}
+  .tl-date{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;letter-spacing:.08em;color:var(--stone);
+    padding-top:4px;
+  }
+  .tl-date .now{color:var(--amber-deep);font-weight:500}
+  .tl-body h3{
+    font-family:'Fraunces',serif;font-variation-settings:"SOFT" 40,"opsz" 72;
+    font-weight:500;font-size:22px;line-height:1.18;margin-bottom:3px;
+  }
+  .tl-body .org{
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    letter-spacing:.05em;color:var(--ember);margin-bottom:12px;
+  }
+  .tl-body p{font-size:15px;line-height:1.6;color:#33425a}
+  .tl-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .tl-tags span{
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    letter-spacing:.08em;text-transform:uppercase;
+    color:var(--stone);padding:3px 10px;border:1px solid var(--rule-light);border-radius:2px;
+  }
+  @media(max-width:640px){.tl-item{grid-template-columns:1fr;gap:8px}.tl-date{padding-top:0}}
+
+  /* ───── SKILLS ───── */
+  .skills-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:36px}
+  .skill-col h4{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--amber-deep);
+    margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--rule-light);
+  }
+  .skill-col ul{list-style:none}
+  .skill-col li{font-size:15px;padding:6px 0;color:#33425a;line-height:1.4}
+  @media(max-width:720px){.skills-wrap{grid-template-columns:1fr;gap:28px}}
+
+  /* ───── HONORS ───── */
+  .honors{background:var(--paper-2)}
+  .honors-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--rule-light);border-left:1px solid var(--rule-light)}
+  .honor{
+    padding:26px 28px;border-right:1px solid var(--rule-light);border-bottom:1px solid var(--rule-light);
+    display:flex;gap:18px;align-items:baseline;
+  }
+  .honor .stat{
+    font-family:'Fraunces',serif;font-variation-settings:"SOFT" 30,"opsz" 144;
+    font-weight:500;font-size:30px;line-height:1;color:var(--ember);white-space:nowrap;
+  }
+  .honor .desc{font-size:14.5px;line-height:1.45;color:#33425a}
+  .honor .desc strong{display:block;font-weight:600;color:var(--ink);font-size:15px;margin-bottom:2px}
+  @media(max-width:640px){.honors-grid{grid-template-columns:1fr}}
+
+  /* ───── ADVENTURES ───── */
+  .adv{background:var(--night);color:var(--paper);overflow:hidden}
+  .adv .eyebrow{color:var(--amber)}
+  .adv .eyebrow::before{color:var(--stone-light)}
+  .adv .eyebrow::after{background:var(--rule-dark)}
+  .adv h2.section-title{color:var(--paper)}
+  .adv h2.section-title em{color:var(--amber)}
+  .adv-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:8px}
+  .peak{position:relative;border:1px solid var(--rule-dark);border-radius:3px;overflow:hidden;background:var(--night-2)}
+  .peak-img{height:220px;background-size:cover;background-position:center;position:relative}
+  .peak-img::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(14,26,43,.85),transparent 60%)}
+  .peak-body{padding:22px 24px}
+  .peak .elev{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--amber);margin-bottom:8px}
+  .peak h3{font-family:'Fraunces',serif;font-variation-settings:"SOFT" 40,"opsz" 72;font-weight:500;font-size:24px;margin-bottom:8px}
+  .peak p{font-size:14px;line-height:1.55;color:rgba(244,241,232,.72)}
+  @media(max-width:760px){.adv-grid{grid-template-columns:1fr}}
+
+  /* ───── GALLERY ───── */
+  .gal-filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
+  .gal-filters button{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    padding:7px 16px;border:1px solid var(--rule-light);background:transparent;color:var(--stone);
+    border-radius:2px;cursor:pointer;transition:all .18s;
+  }
+  .gal-filters button:hover{border-color:var(--amber-deep);color:var(--amber-deep)}
+  .gal-filters button.active{background:var(--night);color:var(--paper);border-color:var(--night)}
+  .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .gal-item{position:relative;aspect-ratio:1;overflow:hidden;border-radius:3px;cursor:pointer;background:var(--paper-2)}
+  .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s;display:block}
+  .gal-item:hover img{transform:scale(1.06)}
+  .gal-item .cap{
+    position:absolute;inset:0;display:flex;align-items:flex-end;padding:14px;
+    background:linear-gradient(to top,rgba(14,26,43,.78),transparent 55%);
+    color:var(--paper);font-size:12px;line-height:1.3;opacity:0;transition:opacity .25s;
+  }
+  .gal-item:hover .cap{opacity:1}
+  .gal-item.hidden{display:none}
+  @media(max-width:860px){.gallery{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:560px){.gallery{grid-template-columns:repeat(2,1fr)}}
+
+  /* ───── CSR ───── */
+  .csr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+  .csr-card{border-left:2px solid var(--ember);padding:4px 0 4px 22px}
+  .csr-card .when{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--stone);margin-bottom:8px}
+  .csr-card h3{font-family:'Fraunces',serif;font-variation-settings:"SOFT" 40,"opsz" 60;font-weight:500;font-size:20px;margin-bottom:8px;line-height:1.2}
+  .csr-card p{font-size:14.5px;line-height:1.55;color:#33425a}
+  @media(max-width:760px){.csr-grid{grid-template-columns:1fr;gap:24px}}
+
+  /* ───── CONTACT ───── */
+  .contact{background:var(--night);color:var(--paper);text-align:center;overflow:hidden;position:relative}
+  .contact .contour{opacity:.4}
+  .contact .wrap{position:relative;z-index:2}
+  .contact h2{
+    font-family:'Fraunces',serif;font-variation-settings:"SOFT" 30,"opsz" 144;
+    font-weight:500;font-size:clamp(34px,6vw,60px);line-height:1;letter-spacing:-.02em;margin-bottom:20px;
+  }
+  .contact h2 em{font-style:italic;color:var(--amber)}
+  .contact .sub{font-size:17px;color:rgba(244,241,232,.78);max-width:480px;margin:0 auto 40px}
+  .contact-links{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+  .contact-links a{
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;
+    padding:14px 24px;border:1px solid var(--rule-dark);border-radius:2px;
+    transition:all .2s;display:inline-flex;align-items:center;gap:10px;color:var(--paper);
+  }
+  .contact-links a:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px)}
+  .contact-meta{margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone)}
+
+  /* reveal animation */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-logo">Youssef <span style="color:var(--amber)">Wasfy</span></a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#focus">Now</a>
+      <a href="#experience">Experience</a>
+      <a href="#adventures">Adventures</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ───────── HERO ───────── -->
+<header class="hero" id="top">
+  <svg class="contour" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path d="M-50,620 C200,560 380,640 560,580 C760,512 920,600 1260,520"/>
+    <path d="M-50,560 C220,500 400,580 580,520 C780,452 940,540 1260,460"/>
+    <path d="M-50,500 C240,440 420,520 600,460 C800,392 960,480 1260,400"/>
+    <path d="M-50,440 C260,380 440,460 620,400 C820,332 980,420 1260,340"/>
+    <path d="M-50,380 C280,320 460,400 640,340 C840,272 1000,360 1260,280"/>
+    <path d="M-50,320 C300,260 480,340 660,280 C860,212 1020,300 1260,220"/>
+    <path d="M-50,260 C320,200 500,280 680,220 C880,152 1040,240 1260,160"/>
+  </svg>
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-tag"><span class="pin"></span>Kuala Lumpur · originally Egypt</div>
+    <h1>Youssef<br><em>Wasfy</em></h1>
+    <p class="hero-lede">I build quiet systems that make careful work faster — and I climb mountains in between. Compliance and automation by profession, altitude and people by inclination.</p>
+    <div class="hero-roles">
+      <span>Compliance</span>
+      <span>Automation</span>
+      <span>AI &amp; Prompt Dev</span>
+      <span>Quality Assurance</span>
+      <span>Project Manager</span>
+      <span>Trainer &amp; Coach</span>
+      <span>Mountaineer</span>
+      <span>Chef</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#focus" class="btn btn-primary">What I do now →</a>
+      <a href="#contact" class="btn btn-ghost">Get in touch</a>
+    </div>
+  </div>
+  <div class="hero-coords">
+    <div class="wrap">
+      <span>8+ years · QA · Compliance · Automation</span>
+      <span>Summited 5,895m</span>
+    </div>
+  </div>
+</header>
+
+<!-- ───────── ABOUT ───────── -->
+<section id="about">
+  <div class="wrap reveal">
+    <div class="eyebrow" data-idx="01">Who I am</div>
+    <h2 class="section-title">A little <em>about me</em></h2>
+    <div class="about-grid">
+      <div class="about-body">
+        <p>I'm a <strong>detail-oriented compliance and quality professional</strong> with more than eight years across quality assurance, regulatory and brand compliance, AI prompt development, digital marketing, and large-scale operations.</p>
+        <p>What ties it together is a habit of <em>finding the repetitive work and replacing it with the right tool</em> — so people spend their time on judgment instead of mechanics. Lately that's meant building automation: browser extensions, data pipelines, and AI-assisted review tools that my team uses every day.</p>
+        <p>I've led and trained teams of 400+, run multi-market operations across five languages, and earned my employer's Culture Ambassador award two years running. Away from the screen I'm a hiker, a chef, a retreat organiser, and someone who believes life is richer when you're fully present — whether scaling a peak or plating a meal for friends.</p>
+        <p>I'm also committed to giving back — from feeding the homeless to founding a blood-donation drive that has supported over <strong>4,500 cases</strong>.</p>
+      </div>
+      <div class="about-card">
+        <div class="label">Based in</div>
+        <div class="val">Kuala Lumpur, Malaysia 🇲🇾<br>Originally from Egypt 🇪🇬</div>
+        <div class="label">Languages</div>
+        <div class="val">English · Arabic · Hindi (basic)</div>
+        <div class="label">Education</div>
+        <div class="val">B.Com — Management of Institutions &amp; Financial Markets<br>Asyut University, Egypt · 2011–2015</div>
+        <div class="label">Currently</div>
+        <div class="val">Partnership Marketing Compliance Specialist, Exness</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── CURRENT FOCUS ───────── -->
+<section id="focus" class="focus">
+  <div class="wrap reveal">
+    <div class="eyebrow" data-idx="02">What I do now</div>
+    <h2 class="section-title">Compliance, made <em>faster</em></h2>
+    <p class="focus-intro">As a Partnership Marketing Compliance Specialist, I review affiliate and partner marketing for regulatory and brand compliance. Alongside the core role, I design and ship automation that streamlines how the whole team works — self-initiated, and adopted in daily use.</p>
+    <div class="focus-grid">
+      <div class="focus-item">
+        <div class="ico">// 01</div>
+        <h3>A team-wide review tool</h3>
+        <p>Designed and built a browser extension that consolidates a fragmented compliance review workflow into one interface — adopted across the team and in daily production use. It automates more than half of the manual actions per case.</p>
+      </div>
+      <div class="focus-item">
+        <div class="ico">// 02</div>
+        <h3>Automation engines</h3>
+        <p>Python pipelines that process and quality-check large compliance datasets each month — reverse-engineering the rules, validating at full recall, and turning hours of manual prep into a repeatable run.</p>
+      </div>
+      <div class="focus-item">
+        <div class="ico">// 03</div>
+        <h3>Cross-team workflows</h3>
+        <p>A bidirectional Slack ↔ Sheets automation that gave a partner-facing team end-to-end request tracking for the first time — built for a team outside my own, still owned and maintained by me.</p>
+      </div>
+      <div class="focus-item">
+        <div class="ico">// 04</div>
+        <h3>AI-assisted QA</h3>
+        <p>Using approved LLM tooling to audit standardised content against a canonical rulebook — surfacing gaps and anomalies that manual review would miss, and scoping the pipeline that comes next.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── EXPERIENCE ───────── -->
+<section id="experience">
+  <div class="wrap reveal">
+    <div class="eyebrow" data-idx="03">My journey</div>
+    <h2 class="section-title">Work <em>experience</em></h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date"><span class="now">04/2026 — Present</span></div>
+        <div class="tl-body">
+          <h3>Partnership Marketing Compliance Specialist</h3>
+          <div class="org">Exness · Malaysia</div>
+          <p>Monitor affiliate and partner marketing for regulatory and brand compliance across multiple markets. Self-initiated and shipped a suite of automation — a team-wide review extension, Python QA engines, and cross-team workflow tools — recognised for AI/automation work spanning compliance and marketing operations.</p>
+          <div class="tl-tags"><span>Compliance</span><span>Automation</span><span>Python</span><span>AI tooling</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">03/2022 — 03/2026</div>
+        <div class="tl-body">
+          <h3>QA Specialist · Compliance &amp; Prompt Development</h3>
+          <div class="org">Exness · Malaysia</div>
+          <p>Owned client-facing quality and service standards, contributed to identity-verification and compliance processes supporting risk management, and developed chatbot prompts to improve automation and support efficiency. Earned the company's Culture Ambassador award two years in a row.</p>
+          <div class="tl-tags"><span>QA</span><span>Verification</span><span>Prompt Engineering</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">01/2021 — 12/2021</div>
+        <div class="tl-body">
+          <h3>Coordinator / Project Manager — ByteDance</h3>
+          <div class="org">Independent · Malaysia</div>
+          <p>Built and ran my own sub-agency of 400+ people serving five markets — payroll, policy onboarding, team-lead training, and quality monitoring. Coordinated the Thoth/TikTok project with 410 transcribers across five languages.</p>
+          <div class="tl-tags"><span>People Leadership</span><span>Operations</span><span>5 markets</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">08/2018 — 02/2022</div>
+        <div class="tl-body">
+          <h3>Quality Analyst, Trainer &amp; SME (Team Lead)</h3>
+          <div class="org">Accenture (Facebook &amp; TikTok) · Malaysia</div>
+          <p>Led quality analysis, training, and subject-matter expertise for Facebook and TikTok content operations. Certified Trainer by ByteDance and Accenture; responsible for onboarding, coaching, and consistent quality standards across teams.</p>
+          <div class="tl-tags"><span>QA</span><span>Training</span><span>Content Moderation</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">06/2019 — 06/2021</div>
+        <div class="tl-body">
+          <h3>English–Arabic Interpreter (Head of Department)</h3>
+          <div class="org">Irma Ventures Sdn Bhd · Malaysia</div>
+          <p>Led translation and localisation of the Pastor Chris project for the Middle East region, delivering over 250 hours of high-quality translated content.</p>
+          <div class="tl-tags"><span>Localisation</span><span>Leadership</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">01/2013 — 11/2016</div>
+        <div class="tl-body">
+          <h3>Digital Marketing Manager</h3>
+          <div class="org">Online / Freelance</div>
+          <p>Generated and optimised content across websites and social platforms; developed and executed multi-channel digital marketing strategies and brand presence.</p>
+          <div class="tl-tags"><span>Digital Marketing</span><span>Content</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── SKILLS ───────── -->
+<section id="skills" style="background:var(--paper-2)">
+  <div class="wrap reveal">
+    <div class="eyebrow" data-idx="04">What I bring</div>
+    <h2 class="section-title">Skills &amp; <em>expertise</em></h2>
+    <div class="skills-wrap">
+      <div class="skill-col">
+        <h4>Compliance &amp; Quality</h4>
+        <ul>
+          <li>Regulatory &amp; brand compliance</li>
+          <li>Quality assurance</li>
+          <li>Verification &amp; risk mindset</li>
+          <li>Process improvement</li>
+          <li>Content moderation</li>
+          <li>Data labelling &amp; analysis</li>
+        </ul>
+      </div>
+      <div class="skill-col">
+        <h4>Automation &amp; AI</h4>
+        <ul>
+          <li>Workflow automation</li>
+          <li>Python tooling</li>
+          <li>Chrome extension development</li>
+          <li>AI prompt engineering</li>
+          <li>AI-assisted QA</li>
+          <li>Slack / Sheets integration</li>
+        </ul>
+      </div>
+      <div class="skill-col">
+        <h4>Leadership &amp; People</h4>
+        <ul>
+          <li>Project management</li>
+          <li>People leadership (400+)</li>
+          <li>Training &amp; coaching</li>
+          <li>Stakeholder management</li>
+          <li>Event organisation (400+)</li>
+          <li>English–Arabic interpretation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── HONORS ───────── -->
+<section class="honors">
+  <div class="wrap reveal">
+    <div class="eyebrow" data-idx="05">Selected milestones</div>
+    <h2 class="section-title">Things I'm <em>proud of</em></h2>
+    <div class="honors-grid">
+      <div class="honor"><div class="stat">2×</div><div class="desc"><strong>Culture Ambassador Award</strong>Recognised by Exness two years in a row.</div></div>
+      <div class="honor"><div class="stat">410</div><div class="desc"><strong>Transcribers led</strong>Thoth / TikTok project across five languages.</div></div>
+      <div class="honor"><div class="stat">4,500+</div><div class="desc"><strong>Blood-donation cases</strong>Founded and ran a five-year CSR drive.</div></div>
+      <div class="honor"><div class="stat">1,200+</div><div class="desc"><strong>Hiking trips organised</strong>Leading groups of every experience level.</div></div>
+      <div class="honor"><div class="stat">5,895m</div><div class="desc"><strong>Mt. Kilimanjaro summit</strong>Africa's highest peak, Tanzania.</div></div>
+      <div class="honor"><div class="stat">400+</div><div class="desc"><strong>Event attendees</strong>Organised and led large-scale events.</div></div>
+      <div class="honor"><div class="stat">✦</div><div class="desc"><strong>Certified Trainer</strong>ByteDance &amp; Accenture · Data Analysis certificate.</div></div>
+      <div class="honor"><div class="stat">5</div><div class="desc"><strong>Markets &amp; languages</strong>Cross-market operations leadership.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── ADVENTURES ───────── -->
+<section id="adventures" class="adv">
+  <svg class="contour" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true" style="opacity:.35">
+    <path d="M-50,500 C240,440 420,520 600,460 C800,392 960,480 1260,400"/>
+    <path d="M-50,440 C260,380 440,460 620,400 C820,332 980,420 1260,340"/>
+    <path d="M-50,380 C280,320 460,400 640,340 C840,272 1000,360 1260,280"/>
+    <path d="M-50,320 C300,260 480,340 660,280 C860,212 1020,300 1260,220"/>
+  </svg>
+  <div class="wrap reveal">
+    <div class="eyebrow" data-idx="06">Beyond the office</div>
+    <h2 class="section-title">Adventures in the <em>wild</em></h2>
+    <div class="adv-grid">
+      <div class="peak">
+        <div class="peak-img" style="background-image:url('https://youssef-the-coptic.github.io/images/Kilimanjaro_summit.jpeg')"></div>
+        <div class="peak-body">
+          <div class="elev">5,895 M · TANZANIA</div>
+          <h3>Mt. Kilimanjaro</h3>
+          <p>The highest peak on the African continent — a gruelling multi-day climb that tested every ounce of endurance and will.</p>
+        </div>
+      </div>
+      <div class="peak">
+        <div class="peak-img" style="background-image:url('https://youssef-the-coptic.github.io/images/Kinabalu_sumit.jpeg')"></div>
+        <div class="peak-body">
+          <div class="elev">4,095 M · SABAH, MY</div>
+          <h3>Mt. Kinabalu</h3>
+          <p>The crown of Borneo and Malaysia's highest — one of Southeast Asia's most iconic and rewarding summits.</p>
+        </div>
+      </div>
+      <div class="peak">
+        <div class="peak-img" style="background-image:url('https://youssef-the-coptic.github.io/images/hiking_day.jpeg')"></div>
+        <div class="peak-body">
+          <div class="elev">1,200+ TRIPS</div>
+          <h3>A life on the trail</h3>
+          <p>Over 1,200 hikes organised, leading groups of all levels through trails, mountains, and wilderness — same care and preparation every time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── GALLERY ───────── -->
+<section id="gallery">
+  <div class="wrap reveal">
+    <div class="eyebrow" data-idx="07">Life in photos</div>
+    <h2 class="section-title">Moments &amp; <em>memories</em></h2>
+    <div class="gal-filters">
+      <button class="active" data-filter="all">All</button>
+      <button data-filter="summit">Summits</button>
+      <button data-filter="hike">Hiking</button>
+      <button data-filter="retreat">Retreats</button>
+      <button data-filter="csr">Nature &amp; CSR</button>
+    </div>
+    <div class="gallery">
+      <div class="gal-item" data-cat="summit"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/Kilimanjaro_summit.jpeg" alt="Kilimanjaro summit"><div class="cap">Uhuru Peak · Kilimanjaro 5,895m</div></div>
+      <div class="gal-item" data-cat="summit"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/Kinabalu_sumit.jpeg" alt="Kinabalu summit"><div class="cap">Low's Peak · Mt. Kinabalu 4,095m</div></div>
+      <div class="gal-item" data-cat="retreat"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/nature_retreat.jpeg" alt="Nature retreat cooking"><div class="cap">Campfire cooking · Nature retreat</div></div>
+      <div class="gal-item" data-cat="retreat"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/camping_retreat_2.jpeg" alt="Camping retreat BBQ"><div class="cap">Retreat night BBQ</div></div>
+      <div class="gal-item" data-cat="hike"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/camping_retreat.jpeg" alt="River hike group"><div class="cap">River splash after the trail</div></div>
+      <div class="gal-item" data-cat="hike"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/hiking_day.jpeg" alt="Hiking day"><div class="cap">Jungle hike · Malaysia</div></div>
+      <div class="gal-item" data-cat="hike"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/hiking_with_dogs.jpeg" alt="Hiking with dogs"><div class="cap">Hiking with the furry crew</div></div>
+      <div class="gal-item" data-cat="retreat"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/team_building.jpg" alt="Team building rafting"><div class="cap">White-water rafting · Team building</div></div>
+      <div class="gal-item" data-cat="csr"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/tree_planting_3.JPG" alt="Tree planting"><div class="cap">Tree planting · CSR event</div></div>
+      <div class="gal-item" data-cat="csr"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/tree_planting.JPG" alt="Tree planting"><div class="cap">Planting for the future</div></div>
+      <div class="gal-item" data-cat="hike"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/waterfalls_hike_.jpeg" alt="Waterfall hike"><div class="cap">Waterfall hike · river crossing</div></div>
+      <div class="gal-item" data-cat="csr"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/event__tree_planting_.JPG" alt="Community tree planting"><div class="cap">Community tree planting</div></div>
+      <div class="gal-item" data-cat="retreat"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/retreat_in_the_nature.jpg" alt="Retreat in nature"><div class="cap">Cooking fresh · Nature retreat</div></div>
+      <div class="gal-item" data-cat="csr"><img loading="lazy" src="https://youssef-the-coptic.github.io/images/Physical_event.jpg" alt="Exness physical event"><div class="cap">Exness physical event</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── CSR ───────── -->
+<section id="csr" style="background:var(--paper-2)">
+  <div class="wrap reveal">
+    <div class="eyebrow" data-idx="08">Giving back</div>
+    <h2 class="section-title">Volunteer &amp; <em>CSR work</em></h2>
+    <div class="csr-grid">
+      <div class="csr-card">
+        <div class="when">Sep 2021 — Present · Malaysia</div>
+        <h3>Soup Kitchen — T.A.S.K</h3>
+        <p>Providing food for the homeless and those affected by poverty, and helping rebuild homes and restore essential services for families in need.</p>
+      </div>
+      <div class="csr-card">
+        <div class="when">Ongoing · Egypt</div>
+        <h3>ABA — Abram for Those in Need</h3>
+        <p>Providing food, tools, and clothing to homeless and poor families across Egypt. A passion project rooted in compassion and community.</p>
+      </div>
+      <div class="csr-card">
+        <div class="when">2011 — 2016 · Egypt</div>
+        <h3>Blood Donation Bank</h3>
+        <p>Founded and managed the "Anba Abram" CSR project — supporting 4,500+ cases of free blood donation over five years for accident victims who couldn't afford care.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── CONTACT ───────── -->
+<section id="contact" class="contact">
+  <svg class="contour" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path d="M-50,560 C220,500 400,580 580,520 C780,452 940,540 1260,460"/>
+    <path d="M-50,500 C240,440 420,520 600,460 C800,392 960,480 1260,400"/>
+    <path d="M-50,440 C260,380 440,460 620,400 C820,332 980,420 1260,340"/>
+    <path d="M-50,380 C280,320 460,400 640,340 C840,272 1000,360 1260,280"/>
+    <path d="M-50,320 C300,260 480,340 660,280 C860,212 1020,300 1260,220"/>
+  </svg>
+  <div class="wrap reveal">
+    <div class="eyebrow" data-idx="09" style="justify-content:center;color:var(--amber)">Let's connect</div>
+    <h2>Reach <em>out</em></h2>
+    <p class="sub">Open to conversations about compliance, automation, AI tooling — or the next mountain worth climbing.</p>
+    <div class="contact-links">
+      <a href="mailto:jo7kamal@gmail.com">✉ jo7kamal@gmail.com</a>
+      <a href="https://wa.me/60143178851" target="_blank" rel="noopener">📞 +60 14-317 8851</a>
+      <a href="https://www.instagram.com/the_coptic" target="_blank" rel="noopener">📷 @the_coptic</a>
+    </div>
+    <div class="contact-meta">Kuala Lumpur, Malaysia · Quality · Leadership · Heart</div>
+  </div>
+</section>
+
+<script>
+  // Nav scroll state
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 80);
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Gallery filter
+  const filterBtns = document.querySelectorAll('.gal-filters button');
+  const items = document.querySelectorAll('.gal-item');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      items.forEach(it => {
+        it.classList.toggle('hidden', !(f === 'all' || it.dataset.cat === f));
+      });
+    });
+  });
+</script>
+</body>
+</html>
