@@ -63,8 +63,11 @@ button.tile{align-items:center;text-align:center;gap:2px;padding:8px}
 .src.soundex{background:#f3efe4;color:#6a4a12}
 .sound-box{border:1px dashed #cfe0d7;border-radius:12px;padding:12px 14px;background:#f7fbf9}
 .sound-box .el{font-size:clamp(20px,5vw,28px)}
-.alpha-actions{display:flex;gap:8px;flex-wrap:wrap}
-.alpha-actions button{flex:1 1 30%;min-width:108px}
+.alpha-en{margin:0;color:var(--muted);font-size:18px;font-weight:650}
+.alpha-name{margin:0}
+.alpha-example .example-row{border-top:none;padding-top:4px}
+.alpha-example .eyebrow{margin-bottom:0}
+.tile .el{font-size:clamp(18px,5vw,24px)}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px;width:100%}
 .grid{display:grid;gap:12px}.grid.two,.grid.three{grid-template-columns:1fr}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -1114,50 +1117,40 @@ function renderLearnHub(){
     </div>
   </section>`;
 }
+function showLetter(i){
+  GRS.letterIndex=((i%24)+24)%24;
+  if(GRS.route.parts[1]==="alphabet"){
+    stopAudio(false);
+    render();
+  } else go("#/learn/alphabet");
+}
 function renderAlphabet(){
   const i=GRS.letterIndex||0;
   const L=D.letters[i];
   const sp=letterSpeech(L);
-  const soundLine = sp.kind==="vowel"
-    ? `<p class="el" lang="el">${esc(sp.ipa)}</p><p class="muted">Vowel sound — not the name ${esc(sp.name)}</p>`
-    : `<p class="el" lang="el">${esc(sp.syllable)}</p><p class="muted">Sound example for ${esc(sp.ipa)} — not the name ${esc(sp.name)}</p>`;
-  return `<section class="stack">
+  return `<section class="stack alphabet-page">
     <div class="spread row"><h1>Alphabet</h1>${srcTag("book")} ${pageTag(9)}</div>
-    <p class="muted">The book table also lists <b>ΟΥ, ου [u]</b> after ω. Tap a letter to hear its <b>sound</b>. Name, sound, and example words are separate.</p>
     <div class="letter-grid" id="letters">${D.letters.map((x,idx)=>{
       const ns=letterSpeech(x);
-      return `<button type="button" class="tile ${idx===i?"active":""}" data-act="letter" data-i="${idx}" lang="el" aria-label="${esc(ns.name)}"><span class="el" aria-hidden="true">${x.u} ${x.l}</span><span class="meta" aria-hidden="true">${esc(ns.name)}</span></button>`;
-    }).join("")}
-      <button type="button" class="tile" data-act="letter-ou" lang="el" aria-label="ου"><span class="el" aria-hidden="true">ΟΥ ου</span><span class="meta" aria-hidden="true">[u]</span></button>
-    </div>
-    <div class="card stack">
+      return `<button type="button" class="tile ${idx===i?"active":""}" data-act="letter" data-i="${idx}" lang="el" aria-label="${esc(ns.name)}"><span class="el" aria-hidden="true">${x.u} ${x.l}</span></button>`;
+    }).join("")}</div>
+    <div class="card stack alpha-card">
       <div class="greek xl" lang="el" aria-hidden="true">${L.u} ${L.l}</div>
-      <p><b lang="el">${esc(sp.name)}</b> · ${esc(sp.ipa)}</p>
-      ${L.bookNote? `<p class="notice sand">${esc(L.bookNote)}</p>`:""}
-      <div class="sound-box stack">
-        <p class="eyebrow">Sound</p>
-        ${soundLine}
-        <button class="primary" type="button" data-act="letter-sound">Hear sound</button>
-      </div>
-      <div class="example-row">
-        <p class="el" lang="el">${esc(L.ex)}</p>
-        <p class="muted">${esc(L.en)}</p>
-        <button type="button" class="primary" data-act="speak" data-text="${esc(sp.example)}">Hear example</button>
-      </div>
-      <div class="example-row">
-        <p class="el" lang="el">${esc(L.ex2)}</p>
-        <p class="muted">${esc(L.en2)}</p>
-        <button type="button" class="primary" data-act="speak" data-text="${esc(sp.example2)}">Hear example</button>
-      </div>
-      <div class="row alpha-actions">
-        <button type="button" data-act="speak" data-text="${esc(sp.name)}">Hear name</button>
-        <button class="primary" type="button" data-act="letter-sound">Hear sound</button>
-        <button type="button" data-act="repeat">Repeat</button>
+      <p class="alpha-en">${esc(sp.nameEnglish)}</p>
+      <p class="el alpha-name" lang="el">${esc(sp.name)}</p>
+      <button class="primary hear-xl" type="button" data-act="speak" data-text="${esc(sp.name)}">🔊 Hear name</button>
+      <div class="alpha-example">
+        <p class="eyebrow">Example</p>
+        <div class="example-row">
+          <p class="el" lang="el">${esc(L.ex)}</p>
+          <p class="muted">${esc(L.en)}</p>
+          <button type="button" class="primary" data-act="speak" data-text="${esc(sp.example)}">🔊 Hear example</button>
+        </div>
       </div>
       <div class="pager">
-        <button type="button" data-act="let-prev">Previous</button>
+        <button type="button" data-act="let-prev">← Previous</button>
         <span class="meta">${i+1} / 24</span>
-        <button class="primary" type="button" data-act="let-next">Next</button>
+        <button class="primary" type="button" data-act="let-next">Next →</button>
       </div>
     </div>
     <button data-go="#/practice" data-act="alpha-quiz">Practise letters</button>
@@ -1608,15 +1601,14 @@ function onAct(b){
   if(act==="speak") speak(text);
   if(act==="speak-slow") speak(text, {slow:true});
   if(act==="repeat"){ replayLastAudio(false); }
-  if(act==="letter"){ GRS.letterIndex=+b.getAttribute("data-i"); stopAudio(false); playLetterSound(D.letters[GRS.letterIndex]); render(); }
-  if(act==="letter-ou"){ stopAudio(false); playLetterSound("ου"); }
+  if(act==="letter"){ showLetter(+b.getAttribute("data-i")); }
+  if(act==="letter-ou"){ speak("ου"); }
   if(act==="letter-sound"){
     const ph=b.getAttribute("data-phoneme");
     if(ph && PHONEMES[ph]) playNativePhoneme(ph, "/"+ph+"/");
-    else playLetterSound(D.letters[GRS.letterIndex||0]);
   }
-  if(act==="let-prev"){ GRS.letterIndex=(GRS.letterIndex+23)%24; stopAudio(false); playLetterSound(D.letters[GRS.letterIndex]); render(); }
-  if(act==="let-next"){ GRS.letterIndex=(GRS.letterIndex+1)%24; stopAudio(false); playLetterSound(D.letters[GRS.letterIndex]); render(); }
+  if(act==="let-prev"){ showLetter((GRS.letterIndex||0)+23); }
+  if(act==="let-next"){ showLetter((GRS.letterIndex||0)+1); }
   if(act==="alpha-quiz") startSession("alpha", buildAlphabetQuiz(), "alphabet");
   if(act==="fam-quiz") startSession("fam", buildFamilyQuiz(b.getAttribute("data-id")), "vowels");
   if(act==="ei-level"){ const n=+b.getAttribute("data-n"); GRS.state.ei.level=Math.max(GRS.state.ei.level||1, n); save(); startSession("ei"+n, eiLevelItems(n), "ei"); }
@@ -1699,11 +1691,11 @@ function onAct(b){
 document.addEventListener("keydown", e=>{
   if(e.target && (e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA")) return;
   if(e.key==="ArrowRight"){
-    if(GRS.route.parts[1]==="alphabet"){ e.preventDefault(); GRS.letterIndex=(GRS.letterIndex+1)%24; stopAudio(false); playLetterSound(D.letters[GRS.letterIndex]); render(); }
+    if(GRS.route.parts[1]==="alphabet"){ e.preventDefault(); showLetter((GRS.letterIndex||0)+1); }
     else if(GRS.session){ e.preventDefault(); GRS.session.i=Math.min(GRS.session.items.length, GRS.session.i+1); render(); }
   }
   if(e.key==="ArrowLeft"){
-    if(GRS.route.parts[1]==="alphabet"){ e.preventDefault(); GRS.letterIndex=(GRS.letterIndex+23)%24; stopAudio(false); playLetterSound(D.letters[GRS.letterIndex]); render(); }
+    if(GRS.route.parts[1]==="alphabet"){ e.preventDefault(); showLetter((GRS.letterIndex||0)+23); }
     else if(GRS.session){ e.preventDefault(); GRS.session.i=Math.max(0, GRS.session.i-1); render(); }
   }
 });
@@ -1810,6 +1802,7 @@ try{
 GRS.go=go;
 GRS.inAppBack=inAppBack;
 GRS.render=render;
+GRS.showLetter=showLetter;
 GRS.exportState=exportState;
 GRS.importState=importState;
 GRS.buildAlphabetQuiz=buildAlphabetQuiz;
