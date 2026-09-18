@@ -39,7 +39,17 @@ a{color:var(--teal)}
 h1,h2,h3,p{margin-top:0}
 h1{font-size:clamp(24px,6vw,36px);letter-spacing:-.6px;line-height:1.15}
 h2{font-size:20px;letter-spacing:-.3px}h3{font-size:17px}
-.muted{color:var(--muted)}.micro{font-size:12px;color:var(--muted)}
+.muted{color:var(--muted)}.meta{font-size:12px;color:var(--muted);font-weight:550}
+button.card,button.nav-card,button.tile{
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;
+  text-align:left;gap:6px;white-space:normal;width:100%;line-height:1.3}
+button.card > b, .nav-card-title{display:block;width:100%;font-size:18px;font-weight:800;line-height:1.25;margin:0}
+button.card > p, .nav-card-sub{display:block;width:100%;margin:0;font-size:14px;font-weight:500;line-height:1.4;color:var(--muted)}
+button.tile{align-items:center;text-align:center;gap:2px;padding:8px}
+.example-row{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;gap:2px 12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.example-row .el{margin:0;grid-column:1;grid-row:1;min-width:0}
+.example-row .muted{margin:0;grid-column:1;grid-row:2;font-size:14px}
+.example-row button{grid-column:2;grid-row:1 / span 2;min-width:76px;align-self:center}
 .eyebrow{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;font-weight:800;color:var(--teal);margin-bottom:8px}
 .greek{font-size:clamp(32px,8vw,48px);line-height:1.2;font-weight:700;letter-spacing:-.5px}
 .greek.xl{font-size:clamp(48px,14vw,84px)}
@@ -93,7 +103,7 @@ h2{font-size:20px;letter-spacing:-.3px}h3{font-size:17px}
 .letter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .tile{min-height:58px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px}
 .tile.active{background:var(--dark);color:#fff}
-.tile small{display:block;font-size:10px;opacity:.75}
+.tile .meta{display:block;font-size:10px;opacity:.75;font-weight:600}
 .choice{width:100%;font-size:22px;padding:16px;min-height:52px}
 .choice.ok{background:#e5f6ea;border-color:#9dcea8}
 .choice.bad{background:var(--redbg);border-color:#e3b3b4}
@@ -182,12 +192,12 @@ a.tap-xl{width:100%;box-sizing:border-box}
   </div>
   <div class="mhead-voice">
     <span id="voiceBadge">Checking Greek voice…</span>
-    <span id="voiceHint" class="micro"></span>
+    <span id="voiceHint" class="meta"></span>
   </div>
 </header>
 <nav class="topnav" id="topNav" aria-label="Primary"></nav>
 <div class="shell">
-  <div class="top"><div class="micro" id="crumb">Home</div></div>
+  <div class="top"><div class="meta" id="crumb">Home</div></div>
   <div class="ios-banner" id="iosBanner">
   <b>If this screen does nothing when you tap, you are in the iPhone/iPad file viewer.</b>
   Files and Downloads preview HTML but do not run the app. Open it in Safari instead:
@@ -197,10 +207,10 @@ a.tap-xl{width:100%;box-sizing:border-box}
   <section class="stack">
     <p class="eyebrow">Continue learning</p>
     <div class="card stack">
-      <p class="micro">Current unit</p>
+      <p class="meta">Current unit</p>
       <h1 lang="el">Από το Α στο Ω</h1>
       <p class="muted">Current lesson · Introduction · p.8–13</p>
-      <p class="micro">Progress is saved on this device after the app starts in Safari.</p>
+      <p class="meta">Progress is saved on this device after the app starts in Safari.</p>
       <a class="primary tap-xl" href="#/learn/book/intro">Continue</a>
     </div>
     <div class="card stack">
@@ -228,7 +238,7 @@ a.tap-xl{width:100%;box-sizing:border-box}
   </div>
   <div id="playerExtra" class="hidden">
     <audio id="bookHtmlAudio" controls preload="none" playsinline webkit-playsinline></audio>
-    <p class="micro" id="audioStatus"></p>
+    <p class="meta" id="audioStatus"></p>
   </div>
 </div>
 <nav class="bottom" id="bottomNav" aria-label="Primary"></nav>
@@ -260,7 +270,7 @@ const GRS = window.GRS = {
   data: D,
   route: {tab:"home", parts:["home"]},
   state: null,
-  audio: {token:0, last:[], rate:0.92, paused:false},
+  audio: {token:0, last:[], spoken:[], rate:0.92, paused:false},
   session: null,
   letterIndex: 0,
   ready: false,
@@ -414,20 +424,48 @@ function splitUtterances(text){
   const parts=t.split(/[.!;…;]+\s+/).map(s=>s.trim()).filter(Boolean);
   return parts.length? parts : [t];
 }
+const LETTER_NAME_EL={Α:"άλφα",Β:"βήτα",Γ:"γάμα",Δ:"δέλτα",Ε:"έψιλον",Ζ:"ζήτα",Η:"ήτα",Θ:"θήτα",Ι:"γιώτα",Κ:"κάπα",Λ:"λάμδα",Μ:"μι",Ν:"νι",Ξ:"ξι",Ο:"όμικρον",Π:"πι",Ρ:"ρο",Σ:"σίγμα",Τ:"ταυ",Υ:"ύψιλον",Φ:"φι",Χ:"χι",Ψ:"ψι",Ω:"ωμέγα"};
+const LETTER_NAME_EN={Α:"Alpha",Β:"Beta",Γ:"Gamma",Δ:"Delta",Ε:"Epsilon",Ζ:"Zeta",Η:"Eta",Θ:"Theta",Ι:"Iota",Κ:"Kappa",Λ:"Lambda",Μ:"Mu",Ν:"Nu",Ξ:"Xi",Ο:"Omicron",Π:"Pi",Ρ:"Rho",Σ:"Sigma",Τ:"Tau",Υ:"Upsilon",Φ:"Phi",Χ:"Chi",Ψ:"Psi",Ω:"Omega"};
+function letterSpeech(L){
+  return {
+    uppercase:L.u,
+    lowercase:L.l,
+    char:L.u,
+    nameGreek:LETTER_NAME_EL[L.u]||L.name,
+    name:LETTER_NAME_EL[L.u]||L.name,
+    nameEnglish:LETTER_NAME_EN[L.u]||"",
+    sound:L.ipa||"",
+    example:L.ex,
+    example2:L.ex2
+  };
+}
+function speechText(raw){
+  return String(raw==null?"":raw)
+    .replace(/\b(micro|small|uppercase|lowercase)\b/gi, "")
+    .replace(/\s+/g," ")
+    .trim();
+}
+function speakLetterChar(L){
+  if(!L) return;
+  speak(letterSpeech(L).char);
+}
 function speakList(list, opts){
   opts=opts||{};
+  const clean=(list||[]).map(speechText).filter(Boolean);
+  if(!clean.length) return;
+  GRS.audio.spoken=(GRS.audio.spoken||[]).concat(clean);
+  GRS.audio.last=clean.slice();
+  const sk=$("sourceKind"); if(sk){ sk.textContent="🔊 Computer voice"; sk.className="src voice"; }
+  $("nowText").textContent=clean.join(" ");
   if(!synth || !chosen){ $("audioStatus").textContent="No Greek voice"; return; }
   stopAudio(false);
   const token=++GRS.audio.token;
-  GRS.audio.last=list.slice();
   const rate = opts.slow ? Math.max(0.55, (GRS.audio.rate||0.92)*0.72) : (opts.rate||GRS.audio.rate||0.92);
-  const sk=$("sourceKind"); if(sk){ sk.textContent="🔊 Computer voice"; sk.className="src voice"; }
-  $("nowText").textContent=list.join(" ");
   const run=i=>{
     if(token!==GRS.audio.token) return;
-    if(i>=list.length){ $("audioStatus").textContent="Your turn to say it aloud."; if(opts.done) opts.done(); return; }
-    const u=new SpeechSynthesisUtterance(list[i]);
-    u.voice=chosen; u.lang=chosen.lang; u.rate=rate; u.pitch=1; u.volume=1;
+    if(i>=clean.length){ $("audioStatus").textContent="Your turn to say it aloud."; if(opts.done) opts.done(); return; }
+    const u=new SpeechSynthesisUtterance(clean[i]);
+    u.voice=chosen; u.lang=(chosen && chosen.lang) || "el-GR"; u.rate=rate; u.pitch=1; u.volume=1;
     utterance=u;
     $("audioStatus").textContent="Playing";
     u.onend=()=>{ if(token!==GRS.audio.token) return; setTimeout(()=>run(i+1), opts.gap||160); };
@@ -437,10 +475,12 @@ function speakList(list, opts){
   run(0);
 }
 function speak(text, opts){
-  const parts=splitUtterances(text);
-  speakList(parts, opts||{});
+  const t=speechText(text);
+  if(!t) return;
+  speakList(splitUtterances(t), opts||{});
 }
 GRS.speak=speak; GRS.stopAudio=stopAudio; GRS.playBookTrack=playBookTrack;
+GRS.letterSpeech=letterSpeech; GRS.speechText=speechText; GRS.LETTER_NAME_EL=LETTER_NAME_EL;
 
 /* ---------- greek check ---------- */
 function stripAccents(s){
@@ -573,7 +613,7 @@ function renderSession(){
   const n=S.items.length;
   if(GRS.gesture && q.speakOnStart){ setTimeout(()=>{ speak(q.speakOnStart, {slow:!!q.slow}); }, 40); }
   return `<section class="stack">
-    <div class="spread row"><span class="eyebrow">${esc(q.skillLabel||S.skill)}</span><span class="micro">${S.i+1} / ${n}</span></div>
+    <div class="spread row"><span class="eyebrow">${esc(q.skillLabel||S.skill)}</span><span class="meta">${S.i+1} / ${n}</span></div>
     <div class="bar" aria-hidden="true"><span style="width:${Math.round(100*S.i/n)}%"></span></div>
     ${q.src? srcTag(q.src):""} ${q.page? pageTag(q.page):""}
     <h2>${esc(q.prompt||"")}</h2>
@@ -594,7 +634,7 @@ function renderQBody(q){
     return `<div class="stack" id="choices">${q.choices.map((c,i)=>`<button class="choice" type="button" data-act="choose" data-i="${i}" lang="el">${esc(c.label)}</button>`).join("")}</div>`;
   }
   if(q.type==="type" || q.type==="dictation"){
-    return `<label class="stack"><span class="micro">Type in Greek</span>
+    return `<label class="stack"><span class="meta">Type in Greek</span>
       <input id="ans" type="text" lang="el" autocomplete="off" autocapitalize="off" aria-label="Your answer">
       <button class="primary" type="button" data-act="submit-type">Check</button></label>`;
   }
@@ -620,7 +660,7 @@ function renderQBody(q){
   if(q.type==="match"){
     return `<div class="grid two" id="match">${q.left.map((L,i)=>`<button type="button" data-act="match-l" data-i="${i}" lang="el">${esc(L)}</button>`).join("")}
       ${q.right.map((R,i)=>`<button type="button" data-act="match-r" data-i="${i}">${esc(R)}</button>`).join("")}</div>
-      <p class="micro" id="matchSt"></p>`;
+      <p class="meta" id="matchSt"></p>`;
   }
   if(q.type==="order"){
     return `<p class="muted">Tap the pieces in order.</p>
@@ -912,18 +952,18 @@ function renderHome(){
   return `<section class="stack">
     <p class="eyebrow">Continue learning</p>
     <div class="card stack">
-      <p class="micro">Current unit</p>
+      <p class="meta">Current unit</p>
       <h1>${esc(u.n? ("Unit "+u.n+" · "+u.title): u.title)}</h1>
       <p class="muted">Current lesson · p.${u.pages[0]}–${u.pages[1]}</p>
-      <p class="micro">Progress</p>
+      <p class="meta">Progress</p>
       <div class="bar" aria-hidden="true"><span style="width:${progress}%"></span></div>
-      <p class="micro">E / I practice ${progress}%</p>
+      <p class="meta">E / I practice ${progress}%</p>
       <button class="primary tap-xl" data-go="#/learn/book/${u.id}">Continue</button>
     </div>
     <div class="card stack">
       <p class="eyebrow">Today's Review</p>
       <p>Weak area: <b>${esc(weak[0]||"E / I")}</b></p>
-      <p class="micro">${due} items waiting</p>
+      <p class="meta">${due} items waiting</p>
       <button class="tap-xl" data-go="#/review">Start Review</button>
     </div>
   </section>`;
@@ -932,43 +972,54 @@ function renderLearnHub(){
   return `<section class="stack">
     <h1>Learn</h1>
     <div class="grid two">
-      <button class="card" data-go="#/learn/alphabet"><b>Alphabet & Sounds</b><p class="muted">24 letters + ου, from p.9</p></button>
-      <button class="card" data-go="#/learn/book"><b>Book Lessons</b><p class="muted">Introduction → Unit 11</p></button>
-      <button class="card" data-go="#/learn/reading"><b>Reading</b><p class="muted">Ladder from letters to passages</p></button>
-      <button class="card" data-go="#/learn/vowels"><b>Vowels</b><p class="muted">α ε η ι υ ο ω and sound families</p></button>
+      <button type="button" class="nav-card card" data-go="#/learn/alphabet"><span class="nav-card-title">Alphabet &amp; Sounds</span><span class="nav-card-sub">24 letters + ου, from p.9</span></button>
+      <button type="button" class="nav-card card" data-go="#/learn/book"><span class="nav-card-title">Book Lessons</span><span class="nav-card-sub">Introduction → Unit 11</span></button>
+      <button type="button" class="nav-card card" data-go="#/learn/reading"><span class="nav-card-title">Reading</span><span class="nav-card-sub">Ladder from letters to passages</span></button>
+      <button type="button" class="nav-card card" data-go="#/learn/vowels"><span class="nav-card-title">Vowels</span><span class="nav-card-sub">α ε η ι υ ο ω and sound families</span></button>
     </div>
     <div class="grid two">
-      <button class="card" data-go="#/learn/e-or-i"><b>E or I?</b><p class="muted">Highest-priority path</p></button>
-      <button class="card" data-go="#/learn/combos"><b>Combinations</b><p class="muted">αι ει οι ου αυ ευ · μπ ντ γκ γγ τσ τζ</p></button>
+      <button type="button" class="nav-card card" data-go="#/learn/e-or-i"><span class="nav-card-title">E or I?</span><span class="nav-card-sub">Highest-priority path</span></button>
+      <button type="button" class="nav-card card" data-go="#/learn/combos"><span class="nav-card-title">Combinations</span><span class="nav-card-sub">αι ει οι ου αυ ευ · μπ ντ γκ γγ τσ τζ</span></button>
     </div>
   </section>`;
 }
 function renderAlphabet(){
   const i=GRS.letterIndex||0;
   const L=D.letters[i];
+  const sp=letterSpeech(L);
   return `<section class="stack">
     <div class="spread row"><h1>Alphabet</h1>${srcTag("book")} ${pageTag(9)}</div>
-    <p class="muted">The book table also lists <b>ΟΥ, ου [u]</b> after ω. Click a letter to hear it. Previous / Next and the arrow keys move and play once.</p>
-    <div class="letter-grid" id="letters">${D.letters.map((x,idx)=>`<button class="tile ${idx===i?"active":""}" data-act="letter" data-i="${idx}" lang="el" aria-label="${esc(x.name)}"><span class="el">${x.u} ${x.l}</span><small>${esc(x.name)}</small></button>`).join("")}
-      <button class="tile" data-act="letter-ou" lang="el" aria-label="ου"><span class="el">ΟΥ ου</span><small>[u]</small></button>
+    <p class="muted">The book table also lists <b>ΟΥ, ου [u]</b> after ω. Tap a letter to hear the character. Previous / Next move and play the character once.</p>
+    <div class="letter-grid" id="letters">${D.letters.map((x,idx)=>{
+      const ns=letterSpeech(x);
+      return `<button type="button" class="tile ${idx===i?"active":""}" data-act="letter" data-i="${idx}" lang="el" aria-label="${esc(ns.char)}"><span class="el" aria-hidden="true">${x.u} ${x.l}</span><span class="meta" aria-hidden="true">${esc(ns.name)}</span></button>`;
+    }).join("")}
+      <button type="button" class="tile" data-act="letter-ou" lang="el" aria-label="ου"><span class="el" aria-hidden="true">ΟΥ ου</span><span class="meta" aria-hidden="true">[u]</span></button>
     </div>
-    <div class="card">
+    <div class="card stack">
       <div class="greek xl" lang="el">${L.u} ${L.l}</div>
-      <p><b>${esc(L.name)}</b> · ${esc(L.ipa)}</p>
+      <p><b lang="el">${esc(sp.name)}</b> · ${esc(L.ipa)}</p>
       ${L.bookNote? `<p class="notice sand">${esc(L.bookNote)}</p>`:""}
-      <p class="el" lang="el">${esc(L.ex)} <span class="muted">· ${esc(L.en)}</span></p>
-      <p class="el" lang="el">${esc(L.ex2)} <span class="muted">· ${esc(L.en2)}</span></p>
+      <div class="example-row">
+        <p class="el" lang="el">${esc(L.ex)}</p>
+        <p class="muted">${esc(L.en)}</p>
+        <button type="button" class="primary" data-act="speak" data-text="${esc(sp.example)}">Hear</button>
+      </div>
+      <div class="example-row">
+        <p class="el" lang="el">${esc(L.ex2)}</p>
+        <p class="muted">${esc(L.en2)}</p>
+        <button type="button" class="primary" data-act="speak" data-text="${esc(sp.example2)}">Hear</button>
+      </div>
       <div class="row">
-        <button class="primary" data-act="speak" data-text="${L.l}">Hear letter</button>
-        <button data-act="speak" data-text="${L.name}">Hear name</button>
-        <button data-act="speak" data-text="${L.ex}">Hear example</button>
-        <button data-act="speak-slow" data-text="${L.l}">Slow</button>
-        <button data-act="repeat">Repeat</button>
+        <button class="primary" type="button" data-act="speak" data-text="${esc(sp.char)}">Hear letter</button>
+        <button type="button" data-act="speak" data-text="${esc(sp.name)}">Hear name</button>
+        <button type="button" data-act="speak-slow" data-text="${esc(sp.char)}">Slow</button>
+        <button type="button" data-act="repeat">Repeat</button>
       </div>
       <div class="pager">
-        <button data-act="let-prev">Previous</button>
-        <span class="micro">${i+1} / 24</span>
-        <button class="primary" data-act="let-next">Next</button>
+        <button type="button" data-act="let-prev">Previous</button>
+        <span class="meta">${i+1} / 24</span>
+        <button class="primary" type="button" data-act="let-next">Next</button>
       </div>
     </div>
     <button data-go="#/practice" data-act="alpha-quiz">Practise letters</button>
@@ -995,9 +1046,8 @@ function renderEorI(){
     <h1>E or I?</h1>
     ${srcTag("book")} ${pageTag(16)} ${pageTag(36)}
     <p>This is the highest-priority path. Isolated sound first. The book then practises ε/η filling in Unit 2 (p.36).</p>
-    <div class="grid two">${D.eiLevels.map(L=>`<button class="card ${L.level===lv?"primary":""}" data-act="ei-level" data-n="${L.level}" ${L.level>lv+1?"disabled":""}>
-      <b>Level ${L.level}</b><p class="muted">${esc(L.title)}</p></button>`).join("")}</div>
-    <p class="micro">Later levels unlock after you practise. You can still reopen a finished level.</p>
+    <div class="grid two">${D.eiLevels.map(L=>`<button type="button" class="nav-card card ${L.level===lv?"primary":""}" data-act="ei-level" data-n="${L.level}" ${L.level>lv+1?"disabled":""}><span class="nav-card-title">Level ${L.level}</span><span class="nav-card-sub">${esc(L.title)}</span></button>`).join("")}</div>
+    <p class="meta">Later levels unlock after you practise. You can still reopen a finished level.</p>
   </section>`;
 }
 function renderCombos(){
@@ -1006,7 +1056,7 @@ function renderCombos(){
     <div class="grid two">${D.combos.filter(c=>c.kind==="vowel").map(c=>`<button class="card" data-go="#/learn/combo/${c.id}"><div class="el" lang="el">${c.spell}</div><p class="muted">${c.ipa}</p></button>`).join("")}</div>
     <h2>Consonant</h2>
     <div class="grid two">${D.combos.filter(c=>c.kind==="consonant").map(c=>`<button class="card" data-go="#/learn/combo/${c.id}"><div class="el" lang="el">${c.spell}</div><p class="muted">${c.ipa}</p></button>`).join("")}</div>
-    <button class="card" data-go="#/learn/au-eu"><b>αυ / ευ special</b><p class="muted">av/af and ev/ef with the book’s rule</p></button>
+    <button type="button" class="nav-card card" data-go="#/learn/au-eu"><span class="nav-card-title">αυ / ευ special</span><span class="nav-card-sub">av/af and ev/ef with the book’s rule</span></button>
   </section>`;
 }
 function renderCombo(id){
@@ -1054,7 +1104,7 @@ function renderReading(){
   return `<section class="stack">
     <h1>Reading ladder</h1>
     <p class="muted">Stages 9–10 stay closed until earlier reading feels steady.</p>
-    ${stages.map((name,i)=>`<button class="card" ${locked(i+1)?"disabled":""} data-act="read-stage" data-n="${i+1}"><b>Stage ${i+1}</b> · ${esc(name)}</button>`).join("")}
+    ${stages.map((name,i)=>`<button type="button" class="nav-card card" ${locked(i+1)?"disabled":""} data-act="read-stage" data-n="${i+1}"><span class="nav-card-title">Stage ${i+1}</span><span class="nav-card-sub">${esc(name)}</span></button>`).join("")}
   </section>`;
 }
 function renderBookIndex(){
@@ -1062,7 +1112,7 @@ function renderBookIndex(){
   return `<section class="stack">
     <h1>Book lessons</h1>
     <p class="muted">${esc(D.book.title)} · printed pages in the supplied file: 8–149 · ${D.units.length} lessons</p>
-    ${D.units.map(u=>`<button class="card" data-go="#/learn/book/${u.id}"><div class="spread row"><b>${u.n? "Unit "+u.n+" · ":""}${esc(u.title)}</b><span class="micro">p.${u.pages[0]}–${u.pages[1]}</span></div><p class="muted">${esc(u.theme)}</p></button>`).join("")}
+    ${D.units.map(u=>`<button type="button" class="nav-card card" data-go="#/learn/book/${u.id}"><span class="nav-card-title">${u.n? "Unit "+u.n+" · ":""}${esc(u.title)}</span><span class="nav-card-sub">p.${u.pages[0]}–${u.pages[1]} · ${esc(u.theme)}</span></button>`).join("")}
     <div class="more-later" id="more-later">${esc(later.moreMessage||"More lessons will be added when the remaining book material is available.")}</div>
   </section>`;
 }
@@ -1095,12 +1145,12 @@ function bookAudioList(u){
       <a href="${esc((D.course&&D.course.audioIndex)||D.book.audioUrl)}" target="_blank" rel="noopener">Patakis audio</a>.</p></div>`;
   }
   return `<div class="book-audio stack">
-    <div class="spread row"><span class="src">Book audio</span><span class="micro">External Patakis MP3 · not bundled · not a computer voice</span></div>
+    <div class="spread row"><span class="src">Book audio</span><span class="meta">External Patakis MP3 · not bundled · not a computer voice</span></div>
     ${tracks.map(t=>`<div class="spread row">
       <div><b>${esc(t.cd)}</b> <span class="muted">p.${esc(t.page)}</span></div>
       <button type="button" data-act="book-play" data-url="${esc(t.url)}" data-label="${esc(t.cd+" p."+t.page)}">🎧 Book audio</button>
     </div>`).join("")}
-    <p class="micro">If a track fails to load, the publisher file is temporarily unavailable. You can still use <b>computer voice</b> on the same lines.</p>
+    <p class="meta">If a track fails to load, the publisher file is temporarily unavailable. You can still use <b>computer voice</b> on the same lines.</p>
   </div>`;
 }
 function vocabItems(u){
@@ -1122,8 +1172,11 @@ function renderUnitLearn(u){
   if(u.id==="intro"){
     body += `<div class="card"><h3>Alphabet · p.9</h3>${srcTag("book")}
       <p class="muted">Click a letter. The book lists ΟΥ, ου [u] after ω.</p>
-      <div class="letter-grid">${D.letters.map((x,idx)=>`<button class="tile" data-act="letter" data-i="${idx}" lang="el"><span class="el">${x.u} ${x.l}</span><small>${esc(x.name)}</small></button>`).join("")}
-        <button class="tile" data-act="letter-ou" lang="el"><span class="el">ΟΥ ου</span><small>[u]</small></button></div></div>
+      <div class="letter-grid">${D.letters.map((x,idx)=>{
+        const ns=letterSpeech(x);
+        return `<button type="button" class="tile" data-act="letter" data-i="${idx}" lang="el" aria-label="${esc(ns.char)}"><span class="el" aria-hidden="true">${x.u} ${x.l}</span><span class="meta" aria-hidden="true">${esc(ns.name)}</span></button>`;
+      }).join("")}
+        <button type="button" class="tile" data-act="letter-ou" lang="el" aria-label="ου"><span class="el" aria-hidden="true">ΟΥ ου</span><span class="meta" aria-hidden="true">[u]</span></button></div></div>
       ${fam.map(f=>`<div class="card"><h3>${esc(f.title)}</h3><p>${esc(f.teach)}</p><p class="el" lang="el">${f.spellings.join(" · ")}</p>
         <div class="row">${f.examples.slice(0,4).map(ex=>`<button type="button" data-act="speak" data-text="${esc(ex.g)}">${esc(ex.g)}</button>`).join("")}</div></div>`).join("")}`;
   }
@@ -1173,7 +1226,7 @@ function renderUnitWrite(u){
       ${w.hint? `<p class="muted">${esc(w.hint)}</p>`:""}
       <textarea class="write-box" data-write="${esc(key)}" placeholder="Write in Greek…">${esc(saved)}</textarea>
       <div class="row"><button type="button" data-act="save-write" data-key="${esc(key)}">Save draft</button>
-        <span class="micro">${saved? "Draft kept in greekReadingStudio.v1":"Not saved yet"}</span></div>
+        <span class="meta">${saved? "Draft kept in greekReadingStudio.v1":"Not saved yet"}</span></div>
     </div>`;
   }).join("");
 }
@@ -1195,7 +1248,7 @@ function renderUnit(id, tab){
     try{ items=shuffle(tab==="exercises"? unitExercises(u).concat(buildUnitPractice(u).slice(0,8)) : buildUnitPractice(u)); }catch(err){ console.error(err); items=[]; }
     if(!items.length) items=buildSpelling().slice(0,8);
     beginEmbedded(u, tab, items.slice(0,20), "spelling");
-    body=`<p class="micro">${tab==="exercises"? "Book-based interactive items from the printed pages.":"Mixed practice from this unit."}</p>${renderSession()}`;
+    body=`<p class="meta">${tab==="exercises"? "Book-based interactive items from the printed pages.":"Mixed practice from this unit."}</p>${renderSession()}`;
   } else if(tab==="read"){
     const pack=unitReadCards(u);
     body=`${pack.rs.map(r=>`<div class="card"><h3>${esc(r.title)}</h3>${srcTag(r.src||"book")} ${pageTag(r.page)}
@@ -1218,7 +1271,7 @@ function renderUnit(id, tab){
     try{ items=buildUnitPractice(u).filter(q=>q.speak||q.speakOnStart||q.type==="listen"); }catch(err){ console.error(err); items=[]; }
     if(!items.length) items=buildListening().slice(0,10);
     beginEmbedded(u, "listen", items.slice(0,12), "listening");
-    body=`<p class="micro">${esc((u.listen||[]).join(" · "))}</p>
+    body=`<p class="meta">${esc((u.listen||[]).join(" · "))}</p>
       ${bookAudioList(u)}
       <p class="notice">Below is computer-voice practice on the same pages. Official tracks above stream from Patakis and are not downloaded into this file.</p>
       ${renderSession()}`;
@@ -1253,12 +1306,12 @@ function renderPractice(){
   return `<section class="stack">
     <h1>Practice</h1>
     <div class="grid two">
-      <button class="card" data-go="#/practice/listening"><b>Listening</b><p class="muted">Ear training, E/I first</p></button>
-      <button class="card" data-go="#/practice/sounds"><b>Sound discrimination</b><p class="muted">Same sound, different spelling</p></button>
-      <button class="card" data-go="#/practice/spelling"><b>Spelling</b><p class="muted">Type and choose the real letters</p></button>
-      <button class="card" data-go="#/practice/reading"><b>Reading practice</b><p class="muted">Self-check read-aloud</p></button>
-      <button class="card" data-go="#/practice/dictation"><b>Dictation</b><p class="muted">7 levels, no microphone</p></button>
-      <button class="card" data-go="#/learn/e-or-i"><b>E or I?</b><p class="muted">Dedicated path</p></button>
+      <button type="button" class="nav-card card" data-go="#/practice/listening"><span class="nav-card-title">Listening</span><span class="nav-card-sub">Ear training, E/I first</span></button>
+      <button type="button" class="nav-card card" data-go="#/practice/sounds"><span class="nav-card-title">Sound discrimination</span><span class="nav-card-sub">Same sound, different spelling</span></button>
+      <button type="button" class="nav-card card" data-go="#/practice/spelling"><span class="nav-card-title">Spelling</span><span class="nav-card-sub">Type and choose the real letters</span></button>
+      <button type="button" class="nav-card card" data-go="#/practice/reading"><span class="nav-card-title">Reading practice</span><span class="nav-card-sub">Self-check read-aloud</span></button>
+      <button type="button" class="nav-card card" data-go="#/practice/dictation"><span class="nav-card-title">Dictation</span><span class="nav-card-sub">7 levels, no microphone</span></button>
+      <button type="button" class="nav-card card" data-go="#/learn/e-or-i"><span class="nav-card-title">E or I?</span><span class="nav-card-sub">Dedicated path</span></button>
     </div>
   </section>`;
 }
@@ -1286,17 +1339,17 @@ function renderReview(){
 function renderMore(){
   return `<section class="stack"><h1>More</h1>
     <div class="grid two">
-      <button class="card" data-go="#/more/progress"><b>Progress</b></button>
-      <button class="card" data-go="#/more/sources"><b>Sources</b></button>
-      <button class="card" data-go="#/more/settings"><b>Settings</b></button>
-      <button class="card" data-go="#/more/help"><b>Help</b></button>
+      <button type="button" class="nav-card card" data-go="#/more/progress"><span class="nav-card-title">Progress</span></button>
+      <button type="button" class="nav-card card" data-go="#/more/sources"><span class="nav-card-title">Sources</span></button>
+      <button type="button" class="nav-card card" data-go="#/more/settings"><span class="nav-card-title">Settings</span></button>
+      <button type="button" class="nav-card card" data-go="#/more/help"><span class="nav-card-title">Help</span></button>
     </div>
   </section>`;
 }
 function renderProgress(){
   return `<section class="stack"><h1>Progress</h1>
     <p class="muted">Practice indicators, not proficiency claims.</p>
-    ${D.skills.map(sk=>{ const p=pct(skill(sk.id)); return `<div class="card"><div class="spread row"><b>${esc(sk.label)}</b><span>${p}%</span></div><div class="bar"><span style="width:${p}%"></span></div><p class="micro">${skill(sk.id).ok} ok · ${skill(sk.id).bad} to retry</p></div>`; }).join("")}
+    ${D.skills.map(sk=>{ const p=pct(skill(sk.id)); return `<div class="card"><div class="spread row"><b>${esc(sk.label)}</b><span>${p}%</span></div><div class="bar"><span style="width:${p}%"></span></div><p class="meta">${skill(sk.id).ok} ok · ${skill(sk.id).bad} to retry</p></div>`; }).join("")}
     <h2>Saved words</h2>
     <p>${(GRS.state.saved||[]).length? GRS.state.saved.map(esc).join(" · ") : "None yet."}</p>
   </section>`;
@@ -1316,7 +1369,7 @@ function renderSources(){
     <p>Labels used in the app:</p>
     <p>${srcTag("book")} ${srcTag("adapted")} ${srcTag("new")} ${srcTag("web")}</p>
     <div class="notice sand"><b>Supplementary web research:</b> publisher catalogue (Patakis), Google Books contents list used only to confirm unit titles/pages already visible in the supplied PDF. SpeechSynthesis behaviour is browser-specific and is not from the textbook.</div>
-    <p class="micro">This trainer does not reproduce the PDF as images. Interactive exercises are inspired by the book’s tasks.</p>
+    <p class="meta">This trainer does not reproduce the PDF as images. Interactive exercises are inspired by the book’s tasks.</p>
   </section>`;
 }
 function renderSettings(){
@@ -1330,7 +1383,7 @@ function renderSettings(){
       <button class="primary" id="btnExport" type="button">Export progress</button>
       <label class="card">Import progress<input id="imp" type="file" accept="application/json,.json"></label>
     </div>
-    <p class="micro">Storage key <code>${STORE_KEY}</code>. Import merges; it does not silently delete.</p>
+    <p class="meta">Storage key <code>${STORE_KEY}</code>. Import merges; it does not silently delete.</p>
   </section>`;
 }
 function renderHelp(){
@@ -1417,10 +1470,10 @@ function onAct(b){
   if(act==="speak") speak(text);
   if(act==="speak-slow") speak(text, {slow:true});
   if(act==="repeat"){ if(GRS.audio.last.length) speakList(GRS.audio.last); }
-  if(act==="letter"){ GRS.letterIndex=+b.getAttribute("data-i"); stopAudio(false); speak(D.letters[GRS.letterIndex].l); render(); }
+  if(act==="letter"){ GRS.letterIndex=+b.getAttribute("data-i"); stopAudio(false); speakLetterChar(D.letters[GRS.letterIndex]); render(); }
   if(act==="letter-ou"){ stopAudio(false); speak("ου"); }
-  if(act==="let-prev"){ GRS.letterIndex=(GRS.letterIndex+23)%24; stopAudio(false); speak(D.letters[GRS.letterIndex].l); render(); }
-  if(act==="let-next"){ GRS.letterIndex=(GRS.letterIndex+1)%24; stopAudio(false); speak(D.letters[GRS.letterIndex].l); render(); }
+  if(act==="let-prev"){ GRS.letterIndex=(GRS.letterIndex+23)%24; stopAudio(false); speakLetterChar(D.letters[GRS.letterIndex]); render(); }
+  if(act==="let-next"){ GRS.letterIndex=(GRS.letterIndex+1)%24; stopAudio(false); speakLetterChar(D.letters[GRS.letterIndex]); render(); }
   if(act==="alpha-quiz") startSession("alpha", buildAlphabetQuiz(), "alphabet");
   if(act==="fam-quiz") startSession("fam", buildFamilyQuiz(b.getAttribute("data-id")), "vowels");
   if(act==="ei-level"){ const n=+b.getAttribute("data-n"); GRS.state.ei.level=Math.max(GRS.state.ei.level||1, n); save(); startSession("ei"+n, eiLevelItems(n), "ei"); }
@@ -1503,11 +1556,11 @@ function onAct(b){
 document.addEventListener("keydown", e=>{
   if(e.target && (e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA")) return;
   if(e.key==="ArrowRight"){
-    if(GRS.route.parts[1]==="alphabet"){ e.preventDefault(); GRS.letterIndex=(GRS.letterIndex+1)%24; stopAudio(false); speak(D.letters[GRS.letterIndex].l); render(); }
+    if(GRS.route.parts[1]==="alphabet"){ e.preventDefault(); GRS.letterIndex=(GRS.letterIndex+1)%24; stopAudio(false); speakLetterChar(D.letters[GRS.letterIndex]); render(); }
     else if(GRS.session){ e.preventDefault(); GRS.session.i=Math.min(GRS.session.items.length, GRS.session.i+1); render(); }
   }
   if(e.key==="ArrowLeft"){
-    if(GRS.route.parts[1]==="alphabet"){ e.preventDefault(); GRS.letterIndex=(GRS.letterIndex+23)%24; stopAudio(false); speak(D.letters[GRS.letterIndex].l); render(); }
+    if(GRS.route.parts[1]==="alphabet"){ e.preventDefault(); GRS.letterIndex=(GRS.letterIndex+23)%24; stopAudio(false); speakLetterChar(D.letters[GRS.letterIndex]); render(); }
     else if(GRS.session){ e.preventDefault(); GRS.session.i=Math.max(0, GRS.session.i-1); render(); }
   }
 });
