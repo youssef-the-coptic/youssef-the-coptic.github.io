@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a5f56">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="color-scheme" content="light">
+<meta name="description" content="Greek reading and pronunciation trainer for Ελληνικά Α΄">
+<title>Greek Reading Studio · Phone &amp; Tablet</title>
+<style>
+:root{
+  --bg:#f3f0e6;--paper:#fffdf8;--ink:#1b2f2c;--muted:#66736f;--line:#e1ddd0;
+  --teal:#1a5f56;--dark:#123f3a;--pale:#e7f3ee;--gold:#b56a1e;--sand:#fff1dc;
+  --red:#9d2f32;--redbg:#fff1f0;--ok:#1f7a4d;--radius:16px;
+  --rail:0px;--navh:58px;--playerh:160px;
+}
+*{box-sizing:border-box}
+html{height:100%;-webkit-text-size-adjust:100%}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+body{min-height:100%;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+button,input,select,textarea{font:inherit;color:inherit}
+button,a.tap-xl,a.btn{cursor:pointer;border:1px solid var(--line);background:var(--paper);border-radius:12px;
+  padding:12px 14px;font-weight:650;min-height:44px;touch-action:manipulation;-webkit-tap-highlight-color:rgba(26,95,86,.18);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;color:inherit}
+a.tap-xl.primary,a.btn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+button:disabled{opacity:.45;cursor:default}
+button.primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+button.dark{background:var(--dark);color:#fff;border-color:var(--dark)}
+button.ghost{background:transparent}
+button.warn{background:var(--sand);border-color:#ead2a6}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{
+  outline:3px solid #c68727;outline-offset:2px}
+a{color:var(--teal)}
+.skip{position:absolute;left:-999px;top:8px}
+.skip:focus{left:12px;background:#fff;padding:8px 12px;z-index:80;border-radius:8px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(24px,6vw,36px);letter-spacing:-.6px;line-height:1.15}
+h2{font-size:20px;letter-spacing:-.3px}h3{font-size:17px}
+.muted{color:var(--muted)}.micro{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;font-weight:800;color:var(--teal);margin-bottom:8px}
+.greek{font-size:clamp(32px,8vw,48px);line-height:1.2;font-weight:700;letter-spacing:-.5px}
+.greek.xl{font-size:clamp(48px,14vw,84px)}
+.el{font-size:clamp(22px,5.5vw,30px);font-weight:700}
+.src{display:inline-flex;gap:6px;align-items:center;font-size:11px;font-weight:700;
+  background:var(--pale);color:var(--teal);padding:4px 8px;border-radius:999px;white-space:nowrap}
+.src.ad{background:var(--sand);color:#8a5414}.src.nw{background:#eee;color:#555}.src.web{background:#e7eef8;color:#355}
+.src.book{background:var(--dark);color:#fff}
+.src.voice{background:var(--pale);color:var(--teal)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px;width:100%}
+.grid{display:grid;gap:12px}.grid.two,.grid.three{grid-template-columns:1fr}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spread{justify-content:space-between}
+.stack{display:flex;flex-direction:column;gap:12px}
+.rail{display:none!important}
+.brand,.nav{display:none}
+.shell{margin:0;padding:10px 14px calc(var(--playerh) + var(--navh) + env(safe-area-inset-bottom) + 36px)}
+.top{display:none}
+.mhead{position:sticky;top:0;z-index:40;display:flex;gap:8px;align-items:center;
+  padding:calc(6px + env(safe-area-inset-top)) 10px 6px;min-height:52px;
+  background:#fbfaf4f2;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.mhead #btnBack{min-width:44px;min-height:44px;padding:8px 10px;font-size:18px;flex:0 0 auto}
+.mhead-titles{flex:1;min-width:0}
+.mhead-titles b{display:block;font-size:14px;line-height:1.2}
+.mhead-titles #headLesson{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mhead-voice{text-align:right;max-width:42%;flex:0 1 auto}
+.mhead-voice #voiceBadge{display:block;font-size:11px;font-weight:700;color:var(--teal);line-height:1.25}
+.mhead-voice #voiceBadge.warning{color:var(--gold)}
+.mhead-voice #voiceHint{display:block;font-size:10px;color:var(--muted);line-height:1.2}
+.topnav{display:none;gap:6px;padding:8px 10px;background:#fbfaf4;border-bottom:1px solid var(--line);overflow-x:auto}
+.topnav button{flex:1 0 auto;min-height:44px;border:0;background:transparent;color:var(--muted);border-radius:12px;font-size:14px}
+.topnav button.active{background:var(--pale);color:var(--teal)}
+#view{max-width:100%;margin:0 auto;width:100%}
+.player{position:fixed;left:0;right:0;bottom:calc(var(--navh) + env(safe-area-inset-bottom));
+  background:#fffcf7f5;backdrop-filter:blur(12px);border-top:1px solid var(--line);
+  padding:8px 10px;z-index:25}
+.player-compact{display:flex;flex-direction:column;gap:6px}
+.player-actions{display:flex;gap:6px;align-items:center}
+.player-actions > button{flex:1;min-height:44px;min-width:44px;padding:8px 6px;font-size:13px}
+.now{display:flex;align-items:center;gap:8px;min-width:0}
+.now b{flex:1;min-width:0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:22px}
+#playerExtra{padding-top:6px}
+#bookHtmlAudio{width:100%;height:36px}
+.bottom{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;
+  height:calc(var(--navh) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:#fbfaf4;border-top:1px solid var(--line)}
+.bottom button{flex:1;border:0;background:transparent;border-radius:0;min-height:44px;
+  font-size:11px;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 4px}
+.bottom button.active{color:var(--teal);background:var(--pale)}
+.letter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.tile{min-height:58px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px}
+.tile.active{background:var(--dark);color:#fff}
+.tile small{display:block;font-size:10px;opacity:.75}
+.choice{width:100%;font-size:22px;padding:16px;min-height:52px}
+.choice.ok{background:#e5f6ea;border-color:#9dcea8}
+.choice.bad{background:var(--redbg);border-color:#e3b3b4}
+.bar{height:8px;background:#e8e4d8;border-radius:99px;overflow:hidden}
+.bar>span{display:block;height:100%;background:var(--teal)}
+.kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 6px;font-size:11px;background:#fff}
+.notice{background:var(--pale);border:1px solid #cfe0d7;border-radius:12px;padding:12px 14px;font-size:14px}
+.notice.sand{background:var(--sand);border-color:#ead2a6}
+.hidden{display:none!important}
+input[type=text],input[type=search],textarea,select{width:100%;border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;min-height:52px;font-size:18px}
+.tabs{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:0 0 auto;min-height:44px;padding:8px 14px;font-size:14px}
+.book-audio{border:1px dashed #cfe0d7;border-radius:12px;padding:14px;background:#f7fbf9}
+.book-audio .src{background:var(--dark);color:#fff}
+.book-audio button{min-height:44px}
+.write-box{min-height:140px;font-size:18px}
+.more-later{background:var(--sand);border:1px solid #ead2a6;border-radius:12px;padding:14px 16px}
+.pager{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:12px;scroll-margin-bottom:calc(var(--playerh) + var(--navh) + env(safe-area-inset-bottom) + 12px)}
+.pager button{flex:1;min-height:48px}
+.tap-xl{width:100%;min-height:52px;font-size:18px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;
+  padding:10px 16px;border-radius:12px;z-index:90;max-width:80vw;
+  bottom:calc(var(--playerh) + var(--navh) + env(safe-area-inset-bottom) + 12px)}
+.hear-xl{min-height:52px;min-width:120px;font-size:18px}
+body.player-open .shell{padding-bottom:calc(var(--playerh) + var(--navh) + env(safe-area-inset-bottom) + 88px)}
+.ios-banner{background:var(--sand);border-bottom:1px solid #ead2a6;padding:10px 12px;font-size:14px;line-height:1.4}
+.ios-banner b{display:block;margin-bottom:4px}
+a.tap-xl{width:100%;box-sizing:border-box}
+
+@media (min-width:768px) and (min-height:600px){
+  .bottom{display:none}
+  .topnav{display:flex}
+  .player{bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+  html{--playerh:76px}
+  .player-compact{flex-direction:row;align-items:center;gap:12px}
+  .now{flex:1 1 auto;min-width:160px}
+  .player-actions{flex:0 1 auto}
+  .player-actions > button{flex:0 0 auto;min-width:72px;font-size:14px}
+  .shell{padding:14px 22px calc(var(--playerh) + env(safe-area-inset-bottom) + 28px)}
+  .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .letter-grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+  #view{max-width:920px}
+  .tabs{flex-wrap:wrap;overflow:visible}
+  .toast{bottom:calc(var(--playerh) + env(safe-area-inset-bottom) + 12px)}
+  .mhead-titles b{font-size:16px}
+}
+@media (min-width:820px){
+  #view{max-width:960px}
+  .letter-grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+}
+@media (min-width:1024px){
+  #view{max-width:1040px}
+  .letter-grid{grid-template-columns:repeat(8,minmax(0,1fr))}
+  .shell{padding-left:28px;padding-right:28px}
+}
+@media (min-width:820px) and (orientation:landscape){
+  #view{max-width:1100px}
+  .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:430px){
+  .player-actions > button{padding:8px 6px;font-size:12px}
+  .mhead-voice{max-width:38%}
+}
+@media (max-height:500px) and (orientation:landscape){
+  .mhead{min-height:44px;padding-top:4px;padding-bottom:4px}
+  h1{font-size:22px}
+  .player{padding-top:6px;padding-bottom:6px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#view">Skip to content</a>
+<aside class="rail" hidden aria-hidden="true">
+  <nav class="nav" id="railNav"></nav>
+</aside>
+<header class="mhead">
+  <button type="button" id="btnBack" aria-label="Back">←</button>
+  <div class="mhead-titles">
+    <b>Greek Reading Studio</b>
+    <span id="headLesson">Home</span>
+  </div>
+  <div class="mhead-voice">
+    <span id="voiceBadge">Checking Greek voice…</span>
+    <span id="voiceHint" class="micro"></span>
+  </div>
+</header>
+<nav class="topnav" id="topNav" aria-label="Primary"></nav>
+<div class="shell">
+  <div class="top"><div class="micro" id="crumb">Home</div></div>
+  <div class="ios-banner" id="iosBanner">
+  <b>If this screen does nothing when you tap, you are in the iPhone/iPad file viewer.</b>
+  Files and Downloads preview HTML but do not run the app. Open it in Safari instead:
+  on a computer, double-tap <b>Open_on_iPhone.command</b>, then type the address it shows into Safari on the phone.
+</div>
+<main id="view" tabindex="-1">
+  <section class="stack">
+    <p class="eyebrow">Continue learning</p>
+    <div class="card stack">
+      <p class="micro">Current unit</p>
+      <h1 lang="el">Από το Α στο Ω</h1>
+      <p class="muted">Current lesson · Introduction · p.8–13</p>
+      <p class="micro">Progress is saved on this device after the app starts in Safari.</p>
+      <a class="primary tap-xl" href="#/learn/book/intro">Continue</a>
+    </div>
+    <div class="card stack">
+      <p class="eyebrow">Today's Review</p>
+      <p>Weak area: <b>E / I</b></p>
+      <a class="tap-xl" href="#/review">Start Review</a>
+    </div>
+  </section>
+</main>
+<div id="toast" class="toast hidden" role="status"></div>
+</div>
+<div class="player" id="player">
+  <div class="player-compact">
+    <div class="now">
+      <span class="src voice" id="sourceKind">🔊 Computer voice</span>
+      <b id="nowText" lang="el">Ελλάδα</b>
+    </div>
+    <div class="player-actions">
+      <button class="primary" id="btnPlay" type="button" aria-label="Play">▶ Play</button>
+      <button type="button" id="btnReplay" aria-label="Replay">↻ Replay</button>
+      <button type="button" id="btnSlow" aria-label="Slow">🐢 Slow</button>
+      <button type="button" id="btnStop" aria-label="Stop audio">Stop</button>
+      <button type="button" id="btnPlayerMore" aria-expanded="false">More</button>
+    </div>
+  </div>
+  <div id="playerExtra" class="hidden">
+    <audio id="bookHtmlAudio" controls preload="none" playsinline webkit-playsinline></audio>
+    <p class="micro" id="audioStatus"></p>
+  </div>
+</div>
+<nav class="bottom" id="bottomNav" aria-label="Primary"></nav>
+
+<script type="application/json" id="grs-data">{"book":{"title":"Ελληνικά Α΄","subtitle":"Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας (επίπεδα Α1 + Α2)","authors":"Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου","editor":"Σπύρος Α. Μοσχονάς","publisher":"Εκδόσεις Πατάκη","year":2010,"isbn":"978-960-16-2815-8","suppliedPages":149,"fullBookPages":312,"audioUrl":"https://www.patakis.gr/files2/06815_audio.html","note":"The supplied PDF is the first part of the book (through Ενότητα 11, printed page 149)."},"src":{"book":"Book","adapted":"Adapted practice","new":"New practice","web":"Supplementary web research"},"letters":[{"u":"Α","l":"α","name":"άλφα","ipa":"[a]","ex":"Αλβανία","en":"Albania","ex2":"Αβάνα","en2":"Havana","page":9},{"u":"Β","l":"β","name":"βήτα","ipa":"[v]","ex":"Βολιβία","en":"Bolivia","ex2":"Βερολίνο","en2":"Berlin","page":9},{"u":"Γ","l":"γ","name":"γάμα","ipa":"[γ]","ex":"Γαλλία","en":"France","ex2":"Γρανάδα","en2":"Granada","page":9,"bookNote":"The book writes the letter name γάμα and the sound as [γ]."},{"u":"Δ","l":"δ","name":"δέλτα","ipa":"[δ]","ex":"Δανία","en":"Denmark","ex2":"Δαμασκός","en2":"Damascus","page":9},{"u":"Ε","l":"ε","name":"έψιλον","ipa":"[e]","ex":"Ελλάδα","en":"Greece","ex2":"Ελσίνκι","en2":"Helsinki","page":9},{"u":"Ζ","l":"ζ","name":"ζήτα","ipa":"[z]","ex":"Ζαΐρ","en":"Zaire","ex2":"Ζυρίχη","en2":"Zurich","page":9},{"u":"Η","l":"η","name":"ήτα","ipa":"[i]","ex":"ΗΠΑ","en":"USA","ex2":"Αθήνα","en2":"Athens","page":9},{"u":"Θ","l":"θ","name":"θήτα","ipa":"[θ]","ex":"Θιβέτ","en":"Tibet","ex2":"Θεσσαλονίκη","en2":"Thessaloniki","page":9},{"u":"Ι","l":"ι","name":"γιώτα","ipa":"[i]","ex":"Ιράν","en":"Iran","ex2":"Παρίσι","en2":"Paris","page":9},{"u":"Κ","l":"κ","name":"κάπα","ipa":"[k]","ex":"Καναδάς","en":"Canada","ex2":"Καράκας","en2":"Caracas","page":9,"bookNote":"The book writes the letter name κάπα."},{"u":"Λ","l":"λ","name":"λάμδα","ipa":"[l]","ex":"Λίβανος","en":"Lebanon","ex2":"Λονδίνο","en2":"London","page":9,"bookNote":"The book writes the letter name λάμδα."},{"u":"Μ","l":"μ","name":"μι","ipa":"[m]","ex":"Μαρόκο","en":"Morocco","ex2":"Μαδρίτη","en2":"Madrid","page":9},{"u":"Ν","l":"ν","name":"νι","ipa":"[n]","ex":"Νότια Αφρική","en":"South Africa","ex2":"Νέα Ορλεάνη","en2":"New Orleans","page":9},{"u":"Ξ","l":"ξ","name":"ξι","ipa":"[ks]","ex":"Μεξικό","en":"Mexico","ex2":"Ξάνθη","en2":"Xanthi","page":9},{"u":"Ο","l":"ο","name":"όμικρον","ipa":"[o]","ex":"Ολλανδία","en":"Holland / the Netherlands","ex2":"Όσλο","en2":"Oslo","page":9},{"u":"Π","l":"π","name":"πι","ipa":"[p]","ex":"Πακιστάν","en":"Pakistan","ex2":"Πεκίνο","en2":"Beijing","page":9},{"u":"Ρ","l":"ρ","name":"ρο","ipa":"[r]","ex":"Ρωσία","en":"Russia","ex2":"Ρίγα","en2":"Riga","page":9},{"u":"Σ","l":"σ","name":"σίγμα","ipa":"[s]","ex":"Σερβία","en":"Serbia","ex2":"Σόφια","en2":"Sofia","page":9,"final":"ς"},{"u":"Τ","l":"τ","name":"ταυ","ipa":"[t]","ex":"Τουρκία","en":"Turkey","ex2":"Τίρανα","en2":"Tirana","page":9},{"u":"Υ","l":"υ","name":"ύψιλον","ipa":"[i]","ex":"Υεμένη","en":"Yemen","ex2":"Νέα Υόρκη","en2":"New York","page":9},{"u":"Φ","l":"φ","name":"φι","ipa":"[f]","ex":"Φιλιππίνες","en":"Philippines","ex2":"Φραγκφούρτη","en2":"Frankfurt","page":9},{"u":"Χ","l":"χ","name":"χι","ipa":"[h]","ex":"Χιλή","en":"Chile","ex2":"Χαρτούμ","en2":"Khartoum","page":9,"bookNote":"The book’s beginner table marks χ as [h]. A later unit (p.57) shows how κ, γ, χ, γκ change before [e]/[i]."},{"u":"Ψ","l":"ψ","name":"ψι","ipa":"[ps]","ex":"Ουψάλα","en":"Uppsala","ex2":"Ψαρά","en2":"Psara","page":9},{"u":"Ω","l":"ω","name":"ωμέγα","ipa":"[o]","ex":"Πολωνία","en":"Poland","ex2":"Ρώμη","en2":"Rome","page":9}],"vowels":[{"id":"a","u":"Α","l":"α","ipa":"[a]","family":"a","page":16,"examples":[{"g":"Αλεξάνδρα","e":"Alexandra"},{"g":"Αθήνα","e":"Athens"},{"g":"Αλέκος","e":"Alekos"}]},{"id":"e","u":"Ε","l":"ε","ipa":"[e]","family":"e","page":16,"examples":[{"g":"Ελένη","e":"Eleni"},{"g":"Ελβετία","e":"Switzerland"},{"g":"Ελλάδα","e":"Greece"}]},{"id":"h","u":"Η","l":"η","ipa":"[i]","family":"i","page":16,"examples":[{"g":"Ηλίας","e":"Ilias"},{"g":"Αθήνα","e":"Athens"},{"g":"καλημέρα","e":"good morning"}]},{"id":"i","u":"Ι","l":"ι","ipa":"[i]","family":"i","page":16,"examples":[{"g":"Ίκαρος","e":"Icarus"},{"g":"σπίτι","e":"house"},{"g":"βιβλίο","e":"book"}]},{"id":"y","u":"Υ","l":"υ","ipa":"[i]","family":"i","page":16,"examples":[{"g":"Υεμένη","e":"Yemen"},{"g":"Υβόννη","e":"Yvonne"},{"g":"πυραμίδα","e":"pyramid"}]},{"id":"o","u":"Ο","l":"ο","ipa":"[o]","family":"o","page":16,"examples":[{"g":"Όλγα","e":"Olga"},{"g":"σπορ","e":"sport"},{"g":"ομελέτα","e":"omelette"}]},{"id":"w","u":"Ω","l":"ω","ipa":"[o]","family":"o","page":16,"examples":[{"g":"Ρωξάνη","e":"Roxani"},{"g":"ώρα","e":"hour / time"},{"g":"ψωμί","e":"bread"}]}],"families":[{"id":"e","title":"The [e] sound","ipa":"[e]","spellings":["ε","αι"],"teach":"The book groups ε and αι together as the [e] sound. They sound the same. They are not the same spelling.","page":16,"examples":[{"g":"Ελένη","e":"Eleni","sp":"ε"},{"g":"Αιμιλία","e":"Aimilia","sp":"αι"},{"g":"Ελβετία","e":"Switzerland","sp":"ε"},{"g":"Αίγυπτος","e":"Egypt","sp":"αι"},{"g":"Αιθιοπία","e":"Ethiopia","sp":"αι"},{"g":"καλημέρα","e":"good morning","sp":"ε"},{"g":"είμαι","e":"I am","sp":"αι"}]},{"id":"i","title":"The [i] sound","ipa":"[i]","spellings":["η","ι","υ","ει","οι","υι"],"teach":"The book groups ι, η, υ, ει, οι and υι as the [i] sound. Hearing [i] does not tell you which spelling a word uses.","page":16,"examples":[{"g":"Ίκαρος","e":"Icarus","sp":"ι"},{"g":"Ηλίας","e":"Ilias","sp":"η"},{"g":"Υβόννη","e":"Yvonne","sp":"υ"},{"g":"Ειρήνη","e":"Eirini / peace (name)","sp":"ει"},{"g":"οικονομία","e":"economy","sp":"οι"},{"g":"υιός","e":"son","sp":"υι"},{"g":"σπίτι","e":"house","sp":"ι"},{"g":"φίλη","e":"female friend","sp":"η"}]},{"id":"o","title":"The [o] sound","ipa":"[o]","spellings":["ο","ω"],"teach":"The book groups ο and ω as the [o] sound. You still have to learn the spelling of each word.","page":16,"examples":[{"g":"Όλγα","e":"Olga","sp":"ο"},{"g":"Ρωξάνη","e":"Roxani","sp":"ω"},{"g":"ώρα","e":"hour / time","sp":"ω"},{"g":"σπορ","e":"sport","sp":"ο"},{"g":"ψωμί","e":"bread","sp":"ω"},{"g":"το","e":"the (neuter)","sp":"ο"}]},{"id":"u","title":"The [u] sound","ipa":"[u]","spellings":["ου"],"teach":"The book’s alphabet table already lists ΟΥ, ου as [u], with Ουκρανία / Βουκουρέστι. Later, Unit 2 practises ο vs ου.","page":9,"examples":[{"g":"Ουκρανία","e":"Ukraine","sp":"ου"},{"g":"Ουρανία","e":"Ourania","sp":"ου"},{"g":"Βουκουρέστι","e":"Bucharest","sp":"ου"},{"g":"του","e":"his / of the","sp":"ου"},{"g":"μουσείο","e":"museum","sp":"ου"}]}],"combos":[{"id":"ai","spell":"αι","ipa":"[e]","kind":"vowel","approx":"same sound as ε","page":16,"teach":"αι is grouped with ε as the [e] sound.","words":[{"g":"Αιμιλία","e":"Aimilia"},{"g":"Αίγυπτος","e":"Egypt"},{"g":"Αιθιοπία","e":"Ethiopia"},{"g":"είμαι","e":"I am"},{"g":"και","e":"and"},{"g":"παιδί","e":"child"}],"sentences":["Είμαι η Αιμιλία.","Είμαι από την Αιθιοπία."]},{"id":"ei","spell":"ει","ipa":"[i]","kind":"vowel","approx":"same sound as ι","page":16,"teach":"ει is grouped with ι, η, υ, οι, υι as the [i] sound.","words":[{"g":"Ειρήνη","e":"Eirini"},{"g":"είμαι","e":"I am"},{"g":"είσαι","e":"you are"},{"g":"είναι","e":"is / are"},{"g":"εκεί","e":"there"},{"g":"ξενοδοχείο","e":"hotel"}],"sentences":["Είμαι ο Νίκος.","Ειρήνη, γεια σου."]},{"id":"oi","spell":"οι","ipa":"[i]","kind":"vowel","approx":"same sound as ι","page":16,"teach":"οι is also an [i] spelling. Unit 1 later asks οι or η in αυτός / αυτή / αυτοί.","words":[{"g":"οικονομία","e":"economy"},{"g":"οι","e":"the (masculine plural)"},{"g":"ποιο","e":"which (neuter)"},{"g":"οικογένεια","e":"family"},{"g":"φίλοι","e":"friends"}],"sentences":["Η οικογένειά μου είναι εδώ.","Οι φίλοι είναι από την Ελλάδα."]},{"id":"ou","spell":"ου","ipa":"[u]","kind":"vowel","approx":"oo","page":9,"teach":"The opening table already treats ου as its own vowel sound [u]. Intro exercise 9 completes ου in country names.","words":[{"g":"Ουκρανία","e":"Ukraine"},{"g":"Τουρκία","e":"Turkey"},{"g":"Βουλγαρία","e":"Bulgaria"},{"g":"Κούβα","e":"Cuba"},{"g":"Περού","e":"Peru"},{"g":"μουσείο","e":"museum"},{"g":"φούρνος","e":"bakery / oven"},{"g":"του","e":"his / of the"}],"sentences":["Είμαι από την Ουκρανία.","Το μουσείο είναι εδώ."]},{"id":"au","spell":"αυ","ipa":"[av] / [af]","kind":"vowel","approx":"av or af","page":16,"teach":"αυ is [af] before κ, π, τ, φ, θ, χ, σ, ξ, ψ. It is [av] before α, ε, ι, ο, υ or β, γ, δ, ζ, λ, ρ, μ, ν.","words":[{"g":"αύριο","e":"tomorrow","sound":"av"},{"g":"αυτός","e":"he / this","sound":"af"},{"g":"Αυστραλία","e":"Australia","sound":"af"},{"g":"Αυστρία","e":"Austria","sound":"af"},{"g":"αυτοκίνητο","e":"car","sound":"af"},{"g":"Μαυριτανία","e":"Mauritania","sound":"av"},{"g":"Καύκασος","e":"Caucasus","sound":"af"}],"sentences":["Αύριο είμαι στην Αθήνα.","Αυτός είναι ο Νίκος."]},{"id":"eu","spell":"ευ","ipa":"[ev] / [ef]","kind":"vowel","approx":"ev or ef","page":16,"teach":"ευ follows the same book rule as αυ: [ef] before unvoiced consonants κ π τ φ θ χ σ ξ ψ; [ev] before vowels or β γ δ ζ λ ρ μ ν.","words":[{"g":"ευχαριστώ","e":"thank you","sound":"ef"},{"g":"Ευρώπη","e":"Europe","sound":"ev"},{"g":"ευρώ","e":"euro","sound":"ev"},{"g":"εύκολο","e":"easy","sound":"ef"},{"g":"ευτυχία","e":"happiness","sound":"ef"},{"g":"Δευτέρα","e":"Monday","sound":"ef"},{"g":"δουλεύω","e":"I work","sound":"ev"},{"g":"Λευκορωσία","e":"Belarus","sound":"ef"}],"sentences":["Ευχαριστώ πολύ.","Η Ευρώπη είναι εδώ."]},{"id":"mp","spell":"μπ","ipa":"[b] / [mb]","kind":"consonant","approx":"b (often mb inside a word)","page":17,"teach":"The book gives μπ as [b] in μπάσκετ and [mb] in ομπρέλα.","words":[{"g":"μπάσκετ","e":"basketball","sound":"b"},{"g":"ομπρέλα","e":"umbrella","sound":"mb"},{"g":"μπανάνα","e":"banana","sound":"b"},{"g":"μπίρα","e":"beer","sound":"b"},{"g":"μπάλα","e":"ball","sound":"b"},{"g":"χάμπουργκερ","e":"hamburger","sound":"b"}],"sentences":["Η μπανάνα είναι εδώ.","Παίζω μπάσκετ."]},{"id":"nt","spell":"ντ","ipa":"[d] / [nd]","kind":"consonant","approx":"d (often nd inside a word)","page":17,"teach":"The book gives ντ as [d] in ντίσκο and [nd] in Αντρέας.","words":[{"g":"ντίσκο","e":"disco","sound":"d"},{"g":"Αντρέας","e":"Andreas","sound":"nd"},{"g":"ντομάτα","e":"tomato","sound":"d"},{"g":"ντιβάνι","e":"divan / sofa","sound":"d"},{"g":"αντίο","e":"goodbye","sound":"nd"},{"g":"ντόμινο","e":"domino","sound":"d"}],"sentences":["Η ντομάτα είναι εδώ.","Αντίο, Αντρέα."]},{"id":"gk","spell":"γκ","ipa":"[g] / [ng]","kind":"consonant","approx":"g","page":17,"teach":"The book groups γκ with γγ. γκαράζ is given as [g].","words":[{"g":"γκαράζ","e":"garage","sound":"g"},{"g":"γκολ","e":"goal","sound":"g"},{"g":"γκολφ","e":"golf","sound":"g"},{"g":"γκάζι","e":"gas","sound":"g"}],"sentences":["Το γκολ είναι ωραίο.","Το γκαράζ είναι εδώ."]},{"id":"gg","spell":"γγ","ipa":"[g] / [ng]","kind":"consonant","approx":"ng / g","page":17,"teach":"The book groups γγ with γκ and gives καγκουρό and φεγγάρι as [ng].","words":[{"g":"καγκουρό","e":"kangaroo","sound":"ng"},{"g":"φεγγάρι","e":"moon","sound":"ng"},{"g":"Αγγλία","e":"England","sound":"ng"},{"g":"αγγούρι","e":"cucumber","sound":"ng"},{"g":"άγγελος","e":"angel","sound":"ng"},{"g":"Ουγγαρία","e":"Hungary","sound":"ng"}],"sentences":["Είμαι από την Αγγλία.","Το φεγγάρι είναι ωραίο."]},{"id":"ts","spell":"τσ","ipa":"[ts]","kind":"consonant","approx":"ts","page":17,"teach":"The book gives τσ as [ts], example πίτσα.","words":[{"g":"πίτσα","e":"pizza"},{"g":"τσάντα","e":"bag"},{"g":"τσάι","e":"tea"},{"g":"τσιγάρο","e":"cigarette"},{"g":"τσίρκο","e":"circus"},{"g":"παπούτσι","e":"shoe"},{"g":"βαλίτσα","e":"suitcase"}],"sentences":["Η πίτσα είναι ωραία.","Η τσάντα είναι εδώ."]},{"id":"tz","spell":"τζ","ipa":"[dz]","kind":"consonant","approx":"dz","page":17,"teach":"The book gives τζ as [dz], example τζιν.","words":[{"g":"τζιν","e":"jeans"},{"g":"τζάμι","e":"windowpane / glass"},{"g":"τζατζίκι","e":"tzatziki"},{"g":"φλιτζάνι","e":"cup"},{"g":"τζάγκουαρ","e":"jaguar"}],"sentences":["Το τζιν είναι καινούριο.","Το τζατζίκι είναι ωραίο."]}],"syllables":[{"g":"μα","set":"m","src":"new"},{"g":"με","set":"m","src":"new"},{"g":"μη","set":"m","src":"new"},{"g":"μι","set":"m","src":"new"},{"g":"μο","set":"m","src":"new"},{"g":"μου","set":"m","src":"new"},{"g":"πα","set":"p","src":"new"},{"g":"πε","set":"p","src":"new"},{"g":"πη","set":"p","src":"new"},{"g":"πι","set":"p","src":"new"},{"g":"πο","set":"p","src":"new"},{"g":"που","set":"p","src":"new"},{"g":"τα","set":"t","src":"new"},{"g":"τε","set":"t","src":"new"},{"g":"τη","set":"t","src":"new"},{"g":"τι","set":"t","src":"new"},{"g":"το","set":"t","src":"new"},{"g":"του","set":"t","src":"new"},{"g":"κα","set":"k","src":"new"},{"g":"κε","set":"k","src":"new"},{"g":"κη","set":"k","src":"new"},{"g":"κι","set":"k","src":"new"},{"g":"κο","set":"k","src":"new"},{"g":"κου","set":"k","src":"new"},{"g":"να","set":"n","src":"new"},{"g":"νε","set":"n","src":"new"},{"g":"νη","set":"n","src":"new"},{"g":"νι","set":"n","src":"new"},{"g":"νο","set":"n","src":"new"},{"g":"νου","set":"n","src":"new"},{"g":"λα","set":"l","src":"new"},{"g":"λε","set":"l","src":"new"},{"g":"λη","set":"l","src":"new"},{"g":"λι","set":"l","src":"new"},{"g":"λο","set":"l","src":"new"},{"g":"λου","set":"l","src":"new"},{"g":"σα","set":"s","src":"new"},{"g":"σε","set":"s","src":"new"},{"g":"ση","set":"s","src":"new"},{"g":"σι","set":"s","src":"new"},{"g":"σο","set":"s","src":"new"},{"g":"σου","set":"s","src":"new"},{"g":"βα","set":"v","src":"new"},{"g":"βε","set":"v","src":"new"},{"g":"βη","set":"v","src":"new"},{"g":"βι","set":"v","src":"new"},{"g":"βο","set":"v","src":"new"},{"g":"βου","set":"v","src":"new"}],"words":[{"g":"γεια","e":"hi","page":14,"unit":"u1","tags":["ai"]},{"g":"σας","e":"you (pl./formal)","page":14,"unit":"u1","tags":[]},{"g":"σου","e":"you (sg.) / your","page":14,"unit":"u1","tags":["ou"]},{"g":"είμαι","e":"I am","page":16,"unit":"u1","tags":["ei","ai"]},{"g":"είσαι","e":"you are","page":20,"unit":"u1","tags":["ei","ai"]},{"g":"είναι","e":"he/she/it is","page":20,"unit":"u1","tags":["ei","ai"]},{"g":"εμείς","e":"we","page":20,"unit":"u1","tags":["ei"]},{"g":"εσείς","e":"you (pl.)","page":20,"unit":"u1","tags":["ei"]},{"g":"από","e":"from","page":14,"unit":"u1","tags":["o"]},{"g":"καλημέρα","e":"good morning","page":19,"unit":"u1","tags":["i","e"]},{"g":"καλησπέρα","e":"good evening","page":25,"unit":"u2","tags":["i","e"]},{"g":"ευχαριστώ","e":"thank you","page":16,"unit":"u1","tags":["eu"]},{"g":"παρακαλώ","e":"please / you're welcome","page":19,"unit":"u1","tags":["o"]},{"g":"ναι","e":"yes","page":18,"unit":"u1","tags":["ai"]},{"g":"όχι","e":"no","page":15,"unit":"u1","tags":["o","i"]},{"g":"πώς","e":"how","page":14,"unit":"u1","tags":["o"]},{"g":"πού","e":"where","page":24,"unit":"u2","tags":["ou"]},{"g":"μένω","e":"I live","page":24,"unit":"u2","tags":["e","o"]},{"g":"τηλέφωνο","e":"telephone","page":12,"unit":"intro","tags":["i","o"]},{"g":"κινητό","e":"mobile phone","page":36,"unit":"u2","tags":["i","o"]},{"g":"σπίτι","e":"house / home","page":12,"unit":"intro","tags":["i"]},{"g":"βιβλίο","e":"book","page":12,"unit":"intro","tags":["i"]},{"g":"ώρα","e":"hour / time","page":12,"unit":"intro","tags":["o"]},{"g":"νερό","e":"water","page":12,"unit":"intro","tags":["e","o"]},{"g":"καφές","e":"coffee","page":11,"unit":"intro","tags":["e"]},{"g":"ψωμί","e":"bread","page":12,"unit":"intro","tags":["o","i"]},{"g":"σοκολάτα","e":"chocolate","page":12,"unit":"intro","tags":["o"]},{"g":"ταξί","e":"taxi","page":12,"unit":"intro","tags":["i"]},{"g":"φίλη","e":"female friend","page":21,"unit":"u1","tags":["i"]},{"g":"παιδί","e":"child","page":20,"unit":"u1","tags":["ai","i"]},{"g":"δουλειά","e":"work / job","page":38,"unit":"u3","tags":["ou","ei"]},{"g":"οικογένεια","e":"family","page":38,"unit":"u3","tags":["oi","ei"]},{"g":"γιατρός","e":"doctor","page":47,"unit":"u3","tags":["o"]},{"g":"φοιτήτρια","e":"female student","page":46,"unit":"u3","tags":["oi","i"]},{"g":"ελληνικά","e":"Greek (language)","page":48,"unit":"u4","tags":["i"]},{"g":"μιλάω","e":"I speak","page":48,"unit":"u4","tags":["i"]},{"g":"λεωφορείο","e":"bus","page":66,"unit":"u6","tags":["o","ei"]},{"g":"εισιτήριο","e":"ticket","page":66,"unit":"u6","tags":["ei"]},{"g":"χυμός","e":"juice","page":94,"unit":"u8","tags":["o"]},{"g":"παγωτό","e":"ice cream","page":94,"unit":"u8","tags":["o"]},{"g":"ακριβός","e":"expensive","page":108,"unit":"u9","tags":["i","o"]},{"g":"καινούριο","e":"new (neuter)","page":108,"unit":"u9","tags":["ai","ou"]},{"g":"ενοίκιο","e":"rent","page":132,"unit":"u11","tags":["oi"]},{"g":"διαμέρισμα","e":"apartment","page":132,"unit":"u11","tags":["i"]},{"g":"Αθήνα","e":"Athens","page":9,"unit":"intro","tags":["i"]},{"g":"Ελλάδα","e":"Greece","page":9,"unit":"intro","tags":["e"]},{"g":"αύριο","e":"tomorrow","page":16,"unit":"u1","tags":["au"]},{"g":"Ευρώπη","e":"Europe","page":16,"unit":"u1","tags":["eu"]},{"g":"Κυψέλη","e":"Kypseli","page":24,"unit":"u2","tags":["i"]},{"g":"Πειραιάς","e":"Piraeus","page":25,"unit":"u2","tags":["ei"]},{"g":"πατέρας","e":"father","page":40,"unit":"u3","tags":["e"]},{"g":"μητέρα","e":"mother","page":40,"unit":"u3","tags":["i"]},{"g":"αδερφός","e":"brother","page":40,"unit":"u3","tags":["e"]},{"g":"αδερφή","e":"sister","page":40,"unit":"u3","tags":["i"]},{"g":"παντρεμένος","e":"married (m.)","page":40,"unit":"u3","tags":["e"]},{"g":"ελεύθερος","e":"single (m.)","page":40,"unit":"u3","tags":["e"]},{"g":"οδοντίατρος","e":"dentist","page":46,"unit":"u3","tags":["o"]},{"g":"καταλαβαίνω","e":"I understand","page":49,"unit":"u4","tags":["ai"]},{"g":"ξέρω","e":"I know","page":48,"unit":"u4","tags":["e"]},{"g":"λίγο","e":"a little","page":49,"unit":"u4","tags":["i"]},{"g":"καθόλου","e":"not at all","page":49,"unit":"u4","tags":["ou"]},{"g":"τρόλεϊ","e":"trolleybus","page":67,"unit":"u6","tags":["ei"]},{"g":"στάση","e":"stop","page":67,"unit":"u6","tags":["i"]},{"g":"μετρό","e":"metro","page":67,"unit":"u6","tags":["e"]},{"g":"Κυριακή","e":"Sunday","page":80,"unit":"u7","tags":["i"]},{"g":"ξυπνάω","e":"I wake up","page":80,"unit":"u7","tags":[]},{"g":"τρώω","e":"I eat","page":80,"unit":"u7","tags":[]},{"g":"τηλεόραση","e":"television","page":80,"unit":"u7","tags":["i"]},{"g":"ύπνος","e":"sleep","page":80,"unit":"u7","tags":["i"]},{"g":"ρέστα","e":"change (money)","page":94,"unit":"u8","tags":["e"]},{"g":"απόδειξη","e":"receipt","page":94,"unit":"u8","tags":["ei"]},{"g":"ψώνια","e":"shopping","page":108,"unit":"u9","tags":["o"]},{"g":"χρώμα","e":"colour","page":108,"unit":"u9","tags":["o"]},{"g":"αγγελία","e":"advert","page":132,"unit":"u11","tags":["i"]},{"g":"όροφος","e":"floor / storey","page":132,"unit":"u11","tags":["o"]},{"g":"κουζίνα","e":"kitchen","page":132,"unit":"u11","tags":["i"]},{"g":"σαλόνι","e":"living room","page":132,"unit":"u11","tags":["o"]}],"numbers":[{"n":0,"g":"μηδέν","var":null,"page":21},{"n":1,"g":"ένα","var":null,"page":21},{"n":2,"g":"δύο","var":"δυο","page":21},{"n":3,"g":"τρία","var":null,"page":21},{"n":4,"g":"τέσσερα","var":null,"page":21},{"n":5,"g":"πέντε","var":null,"page":21},{"n":6,"g":"έξι","var":null,"page":21},{"n":7,"g":"εφτά","var":"επτά","page":21},{"n":8,"g":"οχτώ","var":"οκτώ","page":21},{"n":9,"g":"εννιά","var":"εννέα","page":21},{"n":10,"g":"δέκα","var":null,"page":21}],"placesGr":["Αθήνα","Βόλος","Γιάννενα","Δράμα","Έδεσσα","Ζάκυνθος","Ηράκλειο","Θεσσαλονίκη","Ιεράπετρα","Καβάλα","Λάρισα","Μυτιλήνη","Νάξος","Ξάνθη","Ολυμπία","Πάτρα","Ρόδος","Σπάρτη","Τρίπολη","Ύδρα","Φλώρινα","Χανιά","Ψαρά","Ωρωπός"],"ouCountries":[{"g":"Βουλγαρία","gap":"Β__λγαρία"},{"g":"Τουρκία","gap":"Τ__ρκία"},{"g":"Ουκρανία","gap":"__κρανία"},{"g":"Περού","gap":"Περ__"},{"g":"Παραγουάη","gap":"Παραγ__άη"},{"g":"Ουρουγουάη","gap":"__ρ__γ__άη"},{"g":"Ονδούρα","gap":"Ονδ__ρα"},{"g":"Γουατεμάλα","gap":"Γ__ατεμάλα"},{"g":"Σουδάν","gap":"Σ__δάν"},{"g":"Καμερούν","gap":"Καμερ__ν"},{"g":"Κούβα","gap":"Κ__βα"},{"g":"Λιθουανία","gap":"Λιθ__ανία"},{"g":"Λουξεμβούργο","gap":"Λ__ξεμβ__ργο"},{"g":"Ρουμανία","gap":"Ρ__μανία"}],"findI":[{"g":"τηλέφωνο","hits":["η"]},{"g":"καλημέρα","hits":["η"]},{"g":"αστυνομία","hits":["ι","ί"]},{"g":"πυραμίδα","hits":["υ","ί"]},{"g":"βιβλίο","hits":["ι","ί"]},{"g":"ταξί","hits":["ί"]},{"g":"σπίτι","hits":["ί","ι"]}],"findO":[{"g":"σπορ","hits":["ο"]},{"g":"φωτογραφία","hits":["ω","ο"]},{"g":"σοκολάτα","hits":["ο","ο"]},{"g":"τηλέφωνο","hits":["ω","ο"]},{"g":"ώρα","hits":["ώ"]},{"g":"ομελέτα","hits":["ο"]},{"g":"ψωμί","hits":["ω"]}],"eiWords":[{"g":"κινητό","fill":"κιν_τό","ans":"η","page":36},{"g":"καλημέρα","fill":"καλ_μέρα","ans":"η","page":36},{"g":"δημοκρατία","fill":"δ_μοκρατία","ans":"η","page":36},{"g":"Θεσσαλονίκη","fill":"Θ_σσαλονίκ_","ans":"ε,η","page":36},{"g":"τηλέφωνο","fill":"τ_λέφωνο","ans":"η","page":36},{"g":"μαθηματικά","fill":"μαθ_ματικά","ans":"η","page":36},{"g":"ξενοδοχείο","fill":"ξ_νοδοχείο","ans":"ε","page":36},{"g":"καλησπέρα","fill":"καλ_σπέρα","ans":"η","page":36},{"g":"τηλεόραση","fill":"τ_λ_όραση","ans":"η,ε","page":36}],"ouVsO":[{"g":"δρομέας","ans":"ο","page":36},{"g":"αρμονία","ans":"ο","page":36},{"g":"σχολείο","ans":"ο","page":36},{"g":"μουσείο","ans":"ου","page":36},{"g":"ιστορία","ans":"ο","page":36},{"g":"φούρνος","ans":"ου","page":36},{"g":"νοσοκομείο","ans":"ο","page":36},{"g":"μουσική","ans":"ου","page":36},{"g":"Ουκρανία","ans":"ου","page":36}],"aueuSort":[{"g":"Αυστραλία","box":"af","page":16},{"g":"ευχαριστώ","box":"ef","page":16},{"g":"ευτυχία","box":"ef","page":16},{"g":"αυτοκίνητο","box":"af","page":16},{"g":"αύριο","box":"av","page":16},{"g":"αυτός","box":"af","page":16},{"g":"Ευρώπη","box":"ev","page":16},{"g":"Αυστρία","box":"af","page":16},{"g":"Λευκορωσία","box":"ef","page":16},{"g":"Μαυριτανία","box":"av","page":16},{"g":"εύκολο","box":"ef","page":16},{"g":"ευρώ","box":"ev","page":16}],"dialogues":[{"id":"u1_cafe","unit":"u1","title":"Γεια σας","page":14,"track":"A2","lines":[{"who":"Μελέκ","g":"Γεια σας."},{"who":"Αρλέτα","g":"Γεια σου, Μελέκ. Από ’δώ η Βέρα."},{"who":"Μελέκ","g":"Γεια σου, Βέρα."},{"who":"Βέρα","g":"Γεια σου, Μελέκ."}]},{"id":"u1_andre","unit":"u1","title":"Κύριε Αντρέα","page":14,"track":"A3","lines":[{"who":"Παναγιώτης","g":"Γεια σας, κύριε Αντρέα."},{"who":"Κύριος Αντρέας","g":"Γεια σου, Παναγιώτη μου."}]},{"id":"u1_names","unit":"u1","title":"Εσύ είσαι η Μελέκ;","page":15,"track":"A4","lines":[{"who":"Αρλέτα","g":"Έλα! Εδώ είμαστε."},{"who":"Ερβίν","g":"Γεια. Είμαι ο Ερβίν. Εσύ είσαι η Μελέκ;"},{"who":"Βέρα","g":"Όχι, δεν είμαι η Μελέκ. Είμαι η Βέρα."},{"who":"Μελέκ","g":"Εγώ είμαι η Μελέκ."}]},{"id":"u1_how","unit":"u1","title":"Πώς σε λένε;","page":19,"track":"A10","lines":[{"who":"Φου","g":"Καλημέρα."},{"who":"Πάμπλο","g":"Γεια, είμαι ο Πάμπλο. Πώς σε λένε;"},{"who":"Φου","g":"Με λένε Φου."},{"who":"Πάμπλο","g":"Χαίρω πολύ."},{"who":"Φου","g":"Είσαι από την Ιταλία;"},{"who":"Πάμπλο","g":"Όχι. Είμαι από την Ισπανία. Εσύ από πού είσαι;"},{"who":"Φου","g":"Από την Κίνα."}]},{"id":"u2_street","unit":"u2","title":"Πού μένεις;","page":25,"track":"A13","lines":[{"who":"Φου","g":"Γεια σου, Παναγιώτη!"},{"who":"Παναγιώτης","g":"Α, καλησπέρα, Φου. Τι κάνεις;"},{"who":"Φου","g":"Καλά, εσύ; Πώς είσαι;"},{"who":"Παναγιώτης","g":"Μια χαρά! Μένεις εδώ κοντά;"},{"who":"Φου","g":"Ναι, μένω στην Κυψέλη."},{"who":"Παναγιώτης","g":"Πού ακριβώς;"},{"who":"Φου","g":"Κυκλάδων 29. Εσύ πού μένεις;"},{"who":"Παναγιώτης","g":"Στον Πειραιά, στο Πασαλιμάνι."}]},{"id":"u3_family","unit":"u3","title":"Αυτή είναι η οικογένειά μου","page":39,"track":"A21","audioId":"t021","lines":[{"who":"Παναγιώτης","g":"Καλησπέρα, Λι. Τι είναι αυτό;"},{"who":"Λι","g":"Φωτογραφία. Ναι, από την Κίνα. Η οικογένειά μου."},{"who":"Παναγιώτης","g":"Ααα! Ποιος είναι αυτός;"},{"who":"Λι","g":"Ο πατέρας μου. Τον λένε Χουάνγκ."},{"who":"Παναγιώτης","g":"Αυτή είναι η μητέρα σου;"},{"who":"Λι","g":"Ναι."},{"who":"Παναγιώτης","g":"Πώς τη λένε;"},{"who":"Λι","g":"Τη λένε Γκονγκ. Και εδώ είναι ο αδερφός μου, ο Τσου."},{"who":"Παναγιώτης","g":"Είσαι παντρεμένος;"},{"who":"Λι","g":"Ναι. Αυτή είναι η γυναίκα του, η Λιέν, και αυτός ο γιος τους, ο Ειδό."},{"who":"Παναγιώτης","g":"Πολύ ωραία!"}]},{"id":"u4_park","unit":"u4","title":"Συγγνώμη, δεν καταλαβαίνω","page":49,"track":"A27","audioId":"t027","lines":[{"who":"Βέρα","g":"Γεια σας. Ξέρετε το πάρκο Ελευθερίας;"},{"who":"Πέδρο","g":"Συγγνώμη, δεν καταλαβαίνω..."},{"who":"Βέρα","g":"Α, δε μιλάτε ελληνικά;"},{"who":"Πέδρο","g":"Όχι ελληνικά. Ισπανικά."},{"who":"Βέρα","g":"Εγώ δε μιλάω ισπανικά καθόλου. Αγγλικά;"},{"who":"Πέδρο","g":"Εεε, λίγο. Ο Μάρκος μιλάει ελληνικά. Μάρκο!"},{"who":"Μάρκος","g":"Ναι, τι θέλετε;"},{"who":"Βέρα","g":"Το πάρκο Ελευθερίας;"},{"who":"Μάρκος","g":"Ναι, εδώ είναι. Τι ψάχνετε;"},{"who":"Βέρα","g":"Ψάχνω τον κινηματογράφο ΣΤΟΥΝΤΙΟ."},{"who":"Μάρκος","g":"Μάλιστα. Βλέπετε την τράπεζα; Εκεί είναι."},{"who":"Βέρα","g":"Ευχαριστώ."}]},{"id":"u6_trolley","unit":"u6","title":"Περνάει από το κέντρο;","page":67,"track":"A35","audioId":"t035","lines":[{"who":"Πάμπλο","g":"Με συγχωρείτε, εδώ είναι η στάση για το τρόλεϊ;"},{"who":"Μια κυρία","g":"Ναι, εδώ."},{"who":"Πάμπλο","g":"Πού πηγαίνει;"},{"who":"Μια κυρία","g":"Στην Κυψέλη."},{"who":"Πάμπλο","g":"Σίγουρα;"},{"who":"Μια κυρία","g":"Σίγουρα. Κάθε μέρα πάω στην Κυψέλη με το τρόλεϊ."},{"who":"Πάμπλο","g":"Αλλά... Δεν περνάει από το κέντρο;"},{"who":"Μια κυρία","g":"Ναι. Το 2 σταματάει στη Σύνταγμα."},{"who":"Πάμπλο","g":"Εντάξει λοιπόν. Πάω στο περίπτερο για εισιτήριο."}]},{"id":"u6_kiosk","unit":"u6","title":"Στο περίπτερο","page":67,"track":"A35","audioId":"t035","lines":[{"who":"Πάμπλο","g":"Παρακαλώ, ένα εισιτήριο για το τρόλεϊ."},{"who":"Περιπτεράς","g":"Ορίστε."},{"who":"Πάμπλο","g":"Πόσο κάνει;"},{"who":"Περιπτεράς","g":"Ένα ευρώ."},{"who":"Πάμπλο","g":"Μήπως έχετε και για το μετρό;"},{"who":"Περιπτεράς","g":"Ναι. Είναι το ίδιο εισιτήριο για το μετρό, λεωφορείο, τρόλεϊ, τραμ."},{"who":"Πάμπλο","g":"Τι ώρα είναι τώρα;"},{"who":"Περιπτεράς","g":"Οχτώ και δέκα."},{"who":"Πάμπλο","g":"Ευχαριστώ."}]}],"readings":[{"id":"r_hello","stage":8,"unit":"u1","page":14,"title":"Γεια σας","g":"Γεια σας. Είμαι ο Παναγιώτης. Είμαι η Αρλέτα. Από ’δώ ο Αντρέας.","e":"Hello. I am Panagiotis. I am Arleta. This is Andreas."},{"id":"r_live","stage":8,"unit":"u2","page":25,"title":"Πού μένεις;","g":"Μένω στην Κυψέλη. Εσύ πού μένεις; Στον Πειραιά, στο Πασαλιμάνι.","e":"I live in Kypseli. Where do you live? In Piraeus, in Pasalimani."},{"id":"r_job","stage":8,"unit":"u3","page":46,"title":"Στο αεροπλάνο","g":"Ο Θανάσης είναι από την Αθήνα. Είναι οδοντίατρος και παντρεμένος. Μένει στο Κολωνάκι.","e":"Thanasis is from Athens. He is a dentist and married. He lives in Kolonaki."},{"id":"r_routine","stage":9,"unit":"u7","page":80,"title":"Μια μέρα","g":"Το πρωί ξυπνάω νωρίς. Πάω στη δουλειά. Το μεσημέρι τρώω. Το απόγευμα βλέπω τηλεόραση. Το βράδυ βγαίνω έξω. Πάω για ύπνο.","e":"In the morning I wake up early. I go to work. At noon I eat. In the afternoon I watch TV. In the evening I go out. I go to sleep."},{"id":"r_house","stage":9,"unit":"u11","page":132,"title":"Ψάχνω για σπίτι","g":"Το σπίτι είναι του Σταύρου. Το διαμέρισμα είναι κοντά στο μετρό. Τηλεφωνώ για την αγγελία. Πόσο είναι το ενοίκιο;","e":"The house is Stavros’s. The apartment is near the metro. I phone about the advert. How much is the rent?"},{"id":"r_passage","stage":10,"unit":"u5","page":59,"title":"Πάμε πάλι","g":"Γεια σου. Με λένε Νίκο. Είμαι από την Ελλάδα. Μένω στην Αθήνα. Μιλάω ελληνικά και λίγα αγγλικά. Τι δουλειά κάνεις; Είμαι φοιτητής.","e":"Hi. My name is Nikos. I am from Greece. I live in Athens. I speak Greek and a little English. What do you do? I am a student.","src":"adapted"},{"id":"r_u1_open","stage":8,"unit":"u1","page":14,"title":"Unit 1 phrases","g":"Γεια σας! Είμαι ο Παναγιώτης. Είμαι η Αρλέτα. Από ’δώ ο Αντρέας. Από ’δώ η Βέρα. Πώς σε λένε; Είμαι από τον Καναδά.","e":"Hello! I am Panagiotis. I am Arleta. This is Andreas. This is Vera. What is your name? I am from Canada."},{"id":"r_u2_open","stage":8,"unit":"u2","page":24,"title":"Πού μένεις;","g":"Μένω στην Ελλάδα. Μένω στην Αθήνα. Μένω στην Κυψέλη. Μένω Κυκλάδων 29.","e":"I live in Greece. I live in Athens. I live in Kypseli. I live at 29 Kykladon."},{"id":"r_u3_ask","stage":8,"unit":"u3","page":40,"title":"Ποιος / ποια / πώς τον λένε","g":"Ποιος είναι αυτός; Ο πατέρας μου. Ποια είναι αυτή; Η μητέρα μου. Πώς τον λένε; Τον λένε Χουάνγκ. Πώς σε λένε; Με λένε Μαρία.","e":"Who is this (m.)? My father. Who is this (f.)? My mother. What is his name? His name is Huang. What is your name? My name is Maria."},{"id":"r_u4_speak","stage":8,"unit":"u4","page":49,"title":"Δεν καταλαβαίνω","g":"Συγγνώμη, δεν καταλαβαίνω. Δε μιλάτε ελληνικά; Όχι ελληνικά. Ισπανικά. Εγώ δε μιλάω ισπανικά καθόλου.","e":"Sorry, I don't understand. Don't you speak Greek? Not Greek. Spanish. I don't speak Spanish at all."},{"id":"r_u6_go","stage":9,"unit":"u6","page":66,"title":"Πού πάτε;","g":"Πάω με το λεωφορείο. Θέλω ένα εισιτήριο. Πόσο κάνει; Τι ώρα είναι; Πάω στο κέντρο.","e":"I go by bus. I want a ticket. How much is it? What time is it? I am going to the centre."},{"id":"r_u7_day","stage":9,"unit":"u7","page":80,"title":"Ποτέ την Κυριακή","g":"Το πρωί ξυπνάω νωρίς. Πάω στη δουλειά. Το μεσημέρι τρώω. Το απόγευμα βλέπω τηλεόραση. Το βράδυ βγαίνω έξω. Πάω για ύπνο. Δε δουλεύω ποτέ την Κυριακή.","e":"In the morning I wake up early. I go to work. At noon I eat. In the afternoon I watch TV. In the evening I go out. I go to sleep. I never work on Sunday."},{"id":"r_u8_shop","stage":9,"unit":"u8","page":94,"title":"Πόσο κάνουν όλα;","g":"Τι θέλετε, παρακαλώ; Θα ήθελα δύο χυμούς, τρεις σοκολάτες και τέσσερα παγωτά. Πόσο κάνουν όλα; Τα ρέστα σας και η απόδειξή σας.","e":"What would you like, please? I would like two juices, three chocolates and four ice creams. How much is everything? Your change and your receipt."},{"id":"r_u9_shop","stage":9,"unit":"u9","page":108,"title":"Πάμε για ψώνια;","g":"Σ' αρέσει; Σου πάει! Δε μου κάνει. Πόσο κοστίζει; Τι χρώμα θέλετε;","e":"Do you like it? It suits you! It doesn't fit me. How much does it cost? What colour would you like?"},{"id":"r_u10_rev","stage":9,"unit":"u10","page":122,"title":"Πάμε πάλι!","g":"Πάω με το λεωφορείο. Δε δουλεύω ποτέ την Κυριακή. Πόσο κάνουν όλα; Πάμε για ψώνια;","e":"Revision lines from units 6–9 openers.","src":"adapted"},{"id":"r_u11_ad","stage":9,"unit":"u11","page":132,"title":"Ψάχνω για σπίτι","g":"Το σπίτι είναι του Σταύρου. Το διαμέρισμα είναι κοντά στο μετρό. Τηλεφωνώ για την αγγελία. Πόσο είναι το ενοίκιο; Σε ποιον όροφο είναι το διαμέρισμα;","e":"The house is Stavros's. The apartment is near the metro. I phone about the advert. How much is the rent? On which floor is the apartment?"}],"units":[{"id":"intro","n":0,"title":"Από το Α στο Ω","theme":"Introduction to the alphabet","pages":[8,13],"phonology":["alphabet","i-sound","o-sound","ou"],"goals":["Recognise the 24 letters and ου","Match uppercase and lowercase","Find [i] and [o] letters in words","Complete ου in place names"],"vocab":["Αθήνα","Ελλάδα","τηλέφωνο","σπίτι","βιβλίο","ώρα","σοκολάτα"],"listen":["A1 p.9"],"opener":["The introduction teaches the 24 letters and ΟΥ as [u].","Same-sound families appear on p.16: [e] ε/αι, [i] η/ι/υ/ει/οι/υι, [o] ο/ω."],"vocabItems":[{"g":"Αθήνα","e":"Athens","page":9},{"g":"Ελλάδα","e":"Greece","page":9},{"g":"τηλέφωνο","e":"telephone","page":12},{"g":"σπίτι","e":"house","page":12},{"g":"βιβλίο","e":"book","page":12},{"g":"ώρα","e":"hour / time","page":12},{"g":"σοκολάτα","e":"chocolate","page":12}],"grammar":[{"title":"Letter names","page":9,"src":"book","text":"Learn the book names: γάμα, κάπα, λάμδα, γιώτα. χ is marked [h] on this beginner table."},{"title":"Final sigma","page":9,"src":"book","text":"σ becomes ς at the end of a word."}],"pronNotes":[{"title":"[i] letters","page":9,"src":"book","text":"η, ι and υ are all [i] in the opening table. Later p.16 adds ει, οι, υι."},{"title":"[o] vs ου","page":9,"src":"book","text":"ο and ω are [o]. ΟΥ ου is a different sound [u]."}],"speaking":[{"prompt":"Say the 24 letter names in order, then ΟΥ.","model":"άλφα, βήτα, γάμα… ωμέγα, ου","page":9,"src":"book"},{"prompt":"Read the Greece map names aloud.","model":"Αθήνα, Βόλος, Γιάννενα, Δράμα…","page":10,"src":"book"}],"writing":[{"prompt":"Copy five country names from the p.9 table in Greek.","hint":"Example: Ελλάδα, Ιράν, Κίνα is not on p.9 — use the printed countries.","page":9,"src":"book"},{"prompt":"Circle task on paper: copy τηλέφωνο, βιβλίο, σπίτι and mark every [i] letter.","hint":"Book p.12: βάζω σε κύκλο όλα τα /i/.","page":12,"src":"book"}],"exercises":[{"type":"mc","prompt":"In the book’s opening table, ΟΥ ου is…","src":"book","page":9,"skill":"vowels","choices":[{"label":"[u], as in Ουκρανία","ok":true},{"label":"the same sound as ο","ok":false}],"answer":"[u], as in Ουκρανία"},{"type":"mc","prompt":"η, ι and υ in the book’s table all have the sound…","src":"book","page":9,"skill":"ei","choices":[{"label":"[i]","ok":true},{"label":"[e]","ok":false}],"answer":"[i]"}],"audioIds":["t001"]},{"id":"u1","n":1,"title":"Γεια σας","theme":"Greetings and introductions","pages":[14,23],"phonology":["ai","ei","oi","ou","au","eu","mp","nt","gk","gg","ts","tz"],"goals":["Say hello (γεια σου / γεια σας)","Use είμαι","Ask Πώς σε λένε; Από πού είσαι;","Read numbers 0–10"],"vocab":["γεια","είμαι","από","καλημέρα","Χαίρω πολύ"],"listen":["A2 p.14_1","A3 p.14_2","A4 p.15","A5 p.17_1","A6 p.17_2","A7 p.17_3","A8 p.18_1","A9 p.18_2","A10 p.19_1","A11 p.19_2","A12 p.22"],"opener":["Γεια σας!","Είμαι ο Παναγιώτης.","Είμαι η Αρλέτα.","Από ’δώ ο Αντρέας.","Από ’δώ η Βέρα.","Πώς σε λένε;","Είμαι από τον Καναδά."],"vocabItems":[{"g":"γεια σας","e":"hello (pl./formal)","page":14},{"g":"γεια σου","e":"hello (sg.)","page":14},{"g":"είμαι","e":"I am","page":14},{"g":"από","e":"from","page":14},{"g":"Πώς σε λένε;","e":"What is your name?","page":14},{"g":"καλημέρα","e":"good morning","page":19},{"g":"Χαίρω πολύ","e":"pleased to meet you","page":19}],"grammar":[{"title":"είμαι","page":20,"src":"book","text":"εγώ είμαι · εσύ είσαι · αυτός/αυτή/αυτό είναι · εμείς είμαστε · εσείς είστε · αυτοί/αυτές/αυτά είναι."},{"title":"από + article","page":20,"src":"book","text":"από τον / την / το + place. Είμαι από την Ελλάδα. Είμαι από τον Καναδά. Είμαι από το Μεξικό."},{"title":"γεια σου / γεια σας","page":20,"src":"book","text":"σου = one person you know. σας = more than one, or polite."}],"pronNotes":[{"title":"Vowel combinations","page":16,"src":"book","text":"Unit 1 is where αι ει οι ου αυ ευ and μπ ντ γκ γγ τσ τζ are introduced."}],"speaking":[{"prompt":"Greet someone and introduce a third person.","model":"Γεια σας. Από ’δώ η Βέρα.","page":14,"src":"book"},{"prompt":"Ask and answer Πώς σε λένε;","model":"Πώς σε λένε; Με λένε Φου.","page":19,"src":"book"}],"writing":[{"prompt":"Write four lines: name, hello, where from, one number 0–10.","hint":"Use είμαι and από τον/την/το.","page":21,"src":"adapted"}],"exercises":[{"type":"mc","prompt":"οι ή η;  Aut__ είναι η Βέρα.","src":"book","page":21,"skill":"ei","choices":[{"label":"Αυτή","ok":true},{"label":"Αυτοί","ok":false}],"answer":"Αυτή"},{"type":"mc","prompt":"Ποιο είναι σωστό;","src":"book","page":21,"skill":"spelling","choices":[{"label":"Εγώ είμαι από την Ισπανία.","ok":true},{"label":"Εγώ είσαι από την Ισπανία.","ok":false}],"answer":"Εγώ είμαι από την Ισπανία."}],"audioIds":["t002","t003","t004","t005","t006","t007","t008","t009","t010","t011","t012"]},{"id":"u2","n":2,"title":"Πού μένεις;","theme":"Where you live, phone numbers","pages":[24,37],"phonology":["e-vs-i","o-vs-ou","dialytika"],"goals":["Ask and answer Πού μένεις;","Give a phone number","Practise ε/η and ο/ου"],"vocab":["μένω","τηλέφωνο","κινητό","καλησπέρα","μια χαρά"],"listen":["A13 p.25","A14 p.30","A15 p.33","A16 p.34","A17 p.36_1","A18 p.36_2","A19 p.36_3","A20 p.37"],"opener":["Τι κάνεις;","Πού μένεις;","Έχεις τηλέφωνο;","Το τηλέφωνό μου είναι…","Μένω στην Ελλάδα.","Μένω στην Αθήνα.","Μένω στην Κυψέλη.","Μένω Κυκλάδων 29."],"vocabItems":[{"g":"μένω","e":"I live","page":24},{"g":"Πού μένεις;","e":"Where do you live?","page":24},{"g":"καλησπέρα","e":"good evening","page":25},{"g":"μια χαρά","e":"just fine","page":25},{"g":"τηλέφωνο","e":"telephone","page":24},{"g":"κινητό","e":"mobile","page":36}],"grammar":[{"title":"μένω / κάνω / έχω","page":24,"src":"book","text":"The opener lists κάνω, έχω, μένω as the verbs of this unit."},{"title":"Articles τον / την / το","page":24,"src":"book","text":"ο, η, το → τον, την, το after certain verbs and prepositions (book diagram on the opener)."}],"pronNotes":[{"title":"ε ή η","page":36,"src":"book","text":"Fill the missing ε/η in book words (κινητό, καλημέρα, ξενοδοχείο…)."},{"title":"ο ή ου","page":36,"src":"book","text":"Same sound family is not the same spelling: μουσείο vs σχολείο."}],"speaking":[{"prompt":"Ask Πού μένεις; and answer with a neighbourhood.","model":"Μένω στην Κυψέλη. Εσύ πού μένεις; Στον Πειραιά, στο Πασαλιμάνι.","page":25,"src":"book"},{"prompt":"Exchange Τι κάνεις; / Πώς είσαι;","model":"Καλά, εσύ; Μια χαρά!","page":25,"src":"book"}],"writing":[{"prompt":"Write where you live: country, city, neighbourhood, street number — using μένω.","hint":"Book models: Μένω στην Αθήνα. Μένω Κυκλάδων 29.","page":24,"src":"adapted"}],"exercises":[{"type":"mc","prompt":"Σωστό ή λάθος; Ο Παναγιώτης είναι μια χαρά.","src":"book","page":25,"skill":"listening","choices":[{"label":"Σωστό","ok":true},{"label":"Λάθος","ok":false}],"answer":"Σωστό"},{"type":"mc","prompt":"Σωστό ή λάθος; Ο Φου μένει στον Πειραιά.","src":"book","page":25,"skill":"listening","choices":[{"label":"Σωστό","ok":false},{"label":"Λάθος","ok":true}],"answer":"Λάθος"},{"type":"mc","prompt":"Σωστό ή λάθος; Ο Παναγιώτης μένει στην Κυψέλη.","src":"book","page":25,"skill":"listening","choices":[{"label":"Σωστό","ok":false},{"label":"Λάθος","ok":true}],"answer":"Λάθος"},{"type":"mc","prompt":"Σωστό ή λάθος; Ο Φου μένει Κυκλάδων 29.","src":"book","page":25,"skill":"listening","choices":[{"label":"Σωστό","ok":true},{"label":"Λάθος","ok":false}],"answer":"Σωστό"},{"type":"mc","prompt":"Σωστό ή λάθος; Ο Παναγιώτης μένει στο Πασαλιμάνι.","src":"book","page":25,"skill":"listening","choices":[{"label":"Σωστό","ok":true},{"label":"Λάθος","ok":false}],"answer":"Σωστό"}],"audioIds":["t013","t014","t015","t016","t017","t018","t019","t020"]},{"id":"u3","n":3,"title":"Τι δουλειά κάνεις;","theme":"Family, jobs, who is this?","pages":[38,47],"phonology":["t-th","d-nt","s-z"],"goals":["Name family members and jobs","Ask Ποιος είναι αυτός;","Hear σ vs ζ"],"vocab":["οικογένεια","δουλειά","γιατρός","φοιτήτρια","παντρεμένος"],"listen":["A21 p.39","A22 p.42","A23 p.45_1","A24 p.45_2","A25 p.45_3","A26 p.46"],"opener":["Τι δουλειά κάνεις;","Αυτή είναι η οικογένειά μου.","Ποιος είναι αυτός;","Ποια είναι αυτή;","Πώς τον λένε;","Είσαι παντρεμένος;"],"vocabItems":[{"g":"οικογένεια","e":"family","page":39},{"g":"πατέρας","e":"father","page":40},{"g":"μητέρα","e":"mother","page":40},{"g":"αδερφός","e":"brother","page":40},{"g":"αδερφή","e":"sister","page":40},{"g":"γιος","e":"son","page":40},{"g":"κόρη","e":"daughter","page":40},{"g":"παντρεμένος","e":"married (m.)","page":40},{"g":"ελεύθερος","e":"single (m.)","page":40},{"g":"οδοντίατρος","e":"dentist","page":46},{"g":"φοιτήτρια","e":"female student","page":46},{"g":"γιατρός","e":"doctor","page":47}],"grammar":[{"title":"Ποιος / ποια / ποιο","page":40,"src":"book","text":"Ποιος είναι αυτός; Ποια είναι αυτή; Ποιο είναι αυτό το παιδί;"},{"title":"Πώς τον / τη / το λένε","page":40,"src":"book","text":"Πώς σε λένε; Με λένε Μαρία. Πώς τον λένε; Τον λένε Γιώργο."},{"title":"Family pairs","page":40,"src":"book","text":"ο άντρας / η γυναίκα · ο γιος / η κόρη · ο πατέρας / ο μπαμπάς · η μητέρα / η μαμά · οι γονείς · τα αδέλφια · ο παππούς / η γιαγιά."}],"pronNotes":[{"title":"σ ή ζ","page":46,"src":"book","text":"Listen and complete: Τανζανία and the other σ/ζ fills on p.46 (track p.46)."}],"speaking":[{"prompt":"Show a photo and ask Ποιος είναι αυτός; / Πώς τον λένε;","model":"Ποιος είναι αυτός; Ο πατέρας μου. Τον λένε Χουάνγκ.","page":39,"src":"book"},{"prompt":"Ask Είσαι παντρεμένος / παντρεμένη; Έχεις παιδιά;","model":"Είσαι παντρεμένη; Όχι, είμαι ελεύθερη.","page":40,"src":"book"}],"writing":[{"prompt":"Book p.46: write the dialogue of Θανάσης and Βασιλική on the plane, using the word bank.","hint":"Θανάσης: από την Αθήνα, οδοντίατρος, παντρεμένος, μένει στο Κολωνάκι. Βασιλική: φοιτήτρια, από τη Θεσσαλονίκη, μένει στο Παγκράτι.","page":46,"src":"book"}],"exercises":[{"type":"mc","prompt":"Σωστό ή λάθος; Η Λι είναι από την Κίνα.","src":"book","page":39,"skill":"listening","choices":[{"label":"Σωστό","ok":true},{"label":"Λάθος","ok":false}],"answer":"Σωστό"},{"type":"mc","prompt":"Σωστό ή λάθος; Ο Χουάνγκ είναι η μητέρα της.","src":"book","page":39,"skill":"listening","choices":[{"label":"Σωστό","ok":false},{"label":"Λάθος","ok":true}],"answer":"Λάθος"},{"type":"mc","prompt":"Η Λίλιαν είναι…","src":"book","page":47,"skill":"wordReading","choices":[{"label":"γιατρός","ok":true},{"label":"λεωφορείο","ok":false}],"answer":"γιατρός"},{"type":"listen","prompt":"σ ή ζ;  Ταν_ανία","speakOnStart":"Τανζανία","speak":"Τανζανία","skill":"listening","src":"book","page":46,"choices":[{"label":"ζ","ok":true},{"label":"σ","ok":false}],"answer":"ζ"}],"audioIds":["t021","t022","t023","t024","t025","t026"]},{"id":"u4","n":4,"title":"Μιλάς ελληνικά;","theme":"Languages and nationalities","pages":[48,58],"phonology":["k-g-x-gk"],"goals":["Say which languages you speak","Numbers 10–100","κ γ χ γκ before [e]/[i]"],"vocab":["ελληνικά","μιλάω","ξέρω"],"listen":["A27 p.49","A28 p.50","A29 p.53","A30 p.56"],"opener":["Ξέρεις τον / την / το…;","Μιλάς ελληνικά;","μιλάω (μιλώ)","10–100"],"vocabItems":[{"g":"ελληνικά","e":"Greek","page":48},{"g":"μιλάω","e":"I speak","page":48},{"g":"ξέρω","e":"I know","page":48},{"g":"καταλαβαίνω","e":"I understand","page":49},{"g":"συγγνώμη","e":"sorry","page":49},{"g":"λίγο","e":"a little","page":49},{"g":"καθόλου","e":"not at all","page":49}],"grammar":[{"title":"μιλάω / μιλώ (B1)","page":49,"src":"book","text":"μιλάω (μιλώ), μιλάς, μιλάει (μιλά), μιλάτε, μιλάνε (μιλούν). The book prints both -άω/-ώ endings."},{"title":"Negation","page":49,"src":"book","text":"δε μιλάω / δεν καταλαβαίνω. Δε μιλάτε ελληνικά;"}],"pronNotes":[{"title":"κ γ χ γκ before [e]/[i]","page":57,"src":"book","text":"The book’s later diagram shows these consonants change before [e] and [i]. γ is closer to [j] in the beginner diagram."}],"speaking":[{"prompt":"Ask Μιλάς ελληνικά; and answer with ναι / λίγο / καθόλου.","model":"Μιλάς ελληνικά; Ναι, μιλάω. / Λίγο. / Όχι, καθόλου.","page":49,"src":"book"},{"prompt":"Ask the way using Ξέρετε…; then Συγγνώμη, δεν καταλαβαίνω.","model":"Ξέρετε το πάρκο Ελευθερίας; Συγγνώμη, δεν καταλαβαίνω.","page":49,"src":"book"}],"writing":[{"prompt":"Write which languages you speak, using μιλάω / δε μιλάω / λίγο / καθόλου.","hint":"Book models: μιλάω ελληνικά · δε μιλάω ισπανικά καθόλου · λίγο αγγλικά.","page":49,"src":"adapted"}],"exercises":[{"type":"mc","prompt":"Σωστό ή λάθος; Ο Πέδρο δεν καταλαβαίνει ελληνικά.","src":"book","page":49,"skill":"listening","choices":[{"label":"Σωστό","ok":true},{"label":"Λάθος","ok":false}],"answer":"Σωστό"},{"type":"mc","prompt":"Σωστό ή λάθος; Η Βέρα μιλάει ισπανικά.","src":"book","page":49,"skill":"listening","choices":[{"label":"Σωστό","ok":false},{"label":"Λάθος","ok":true}],"answer":"Λάθος"},{"type":"mc","prompt":"Σωστό ή λάθος; Η Βέρα ψάχνει τον κινηματογράφο ΣΤΟΥΝΤΙΟ.","src":"book","page":49,"skill":"listening","choices":[{"label":"Σωστό","ok":true},{"label":"Λάθος","ok":false}],"answer":"Σωστό"},{"type":"mc","prompt":"Σωστό ή λάθος; Ο Μάρκος δε μιλάει ελληνικά.","src":"book","page":49,"skill":"listening","choices":[{"label":"Σωστό","ok":false},{"label":"Λάθος","ok":true}],"answer":"Λάθος"},{"type":"mc","prompt":"Σωστό ή λάθος; Ο Πέδρο δε μιλάει καθόλου αγγλικά.","src":"book","page":49,"skill":"listening","choices":[{"label":"Σωστό","ok":false},{"label":"Λάθος","ok":true}],"answer":"Λάθος"}],"audioIds":["t027","t028","t029","t030"]},{"id":"u5","n":5,"title":"Πάμε πάλι!","theme":"Revision of units 1–4","pages":[59,65],"phonology":["review"],"goals":["Revise greetings, είμαι, μένω, jobs, languages"],"vocab":["γεια","μένω","δουλειά","ελληνικά"],"listen":["A31 p.62","A32 p.65_1","A33 p.65_2","A34 p.65_3"],"opener":["Πάμε πάλι! — revision of Units 1–4."],"vocabItems":[{"g":"γεια","e":"hi","page":59},{"g":"είμαι","e":"I am","page":59},{"g":"μένω","e":"I live","page":59},{"g":"δουλειά","e":"job","page":59},{"g":"ελληνικά","e":"Greek","page":59}],"grammar":[{"title":"Revision board","page":59,"src":"book","text":"Reuse είμαι, μένω, family/jobs, and μιλάω from units 1–4. This unit does not add a new verb table on the opener."}],"pronNotes":[{"title":"Review the families","page":16,"src":"book","text":"Revisit [e] ε/αι vs [i] η/ι/υ/ει/οι before moving on."}],"speaking":[{"prompt":"Give a 4-line self-introduction from units 1–4.","model":"Γεια σου. Με λένε Νίκο. Είμαι από την Ελλάδα. Μένω στην Αθήνα. Μιλάω ελληνικά.","page":59,"src":"adapted"}],"writing":[{"prompt":"Write a short revision card: name, city, job, languages.","hint":"Stay inside book vocabulary from units 1–4.","page":59,"src":"adapted"}],"exercises":[{"type":"mc","prompt":"Μιλάς ελληνικά;","src":"book","page":59,"skill":"wordReading","choices":[{"label":"Ναι, μιλάω.","ok":true},{"label":"Ναι, μένω.","ok":false}],"answer":"Ναι, μιλάω."}],"audioIds":["t031","t032","t033","t034"]},{"id":"u6","n":6,"title":"Πού πάτε;","theme":"Getting around, time","pages":[66,79],"phonology":["f-th","th-d"],"goals":["Ask where someone is going","Buy a ticket","Tell the time"],"vocab":["λεωφορείο","εισιτήριο","ώρα","πάω"],"listen":["A35 p.67","A36 p.70","A37 p.75","A38 p.77_1","A39 p.77_2"],"opener":["Πάω με το λεωφορείο.","Θέλω ένα εισιτήριο. Πόσο κάνει;","Τι ώρα είναι;","πάω","με, σε, ως, μέχρι, παρά"],"vocabItems":[{"g":"λεωφορείο","e":"bus","page":66},{"g":"εισιτήριο","e":"ticket","page":66},{"g":"τρόλεϊ","e":"trolleybus","page":67},{"g":"μετρό","e":"metro","page":67},{"g":"στάση","e":"stop","page":67},{"g":"κέντρο","e":"centre","page":67},{"g":"ώρα","e":"time","page":66}],"grammar":[{"title":"πάω","page":66,"src":"book","text":"The opener lists πάω as the movement verb of the unit."},{"title":"Prepositions of route / time","page":66,"src":"book","text":"με, σε, ως, μέχρι, παρά — used with tickets, stops and clock time."}],"pronNotes":[{"title":"φ / θ and θ / δ","page":66,"src":"book","text":"Later Unit 6 pages contrast these sounds. Practise λέω/θέλω and δρόμος/τρόλεϊ from the printed dialogues."}],"speaking":[{"prompt":"Ask if this is the stop, where the trolley goes, and how often it comes.","model":"Με συγχωρείτε, εδώ είναι η στάση; Πού πηγαίνει; Κάθε πότε περνάει;","page":67,"src":"book"},{"prompt":"Buy a ticket and ask the time.","model":"Παρακαλώ, ένα εισιτήριο. Πόσο κάνει; Τι ώρα είναι;","page":67,"src":"book"}],"writing":[{"prompt":"Write a three-line ticket dialogue at the kiosk.","hint":"Use παρακαλώ, πόσο κάνει, ευχαριστώ from p.67.","page":67,"src":"adapted"}],"exercises":[{"type":"mc","prompt":"Πόσο κάνει το εισιτήριο στο διάλογο;","src":"book","page":67,"skill":"listening","choices":[{"label":"Ένα ευρώ","ok":true},{"label":"Δέκα ευρώ","ok":false}],"answer":"Ένα ευρώ"},{"type":"mc","prompt":"Τι ώρα είναι στο περίπτερο;","src":"book","page":67,"skill":"listening","choices":[{"label":"Οχτώ και δέκα","ok":true},{"label":"Δέκα και οχτώ","ok":false}],"answer":"Οχτώ και δέκα"}],"audioIds":["t035","t036","t037","t038","t039"]},{"id":"u7","n":7,"title":"Ποτέ την Κυριακή","theme":"Daily routine and weather","pages":[80,93],"phonology":["sm","s-z"],"goals":["Talk about a daily routine","Days, months, weather"],"vocab":["πρωί","δουλειά","τηλεόραση","ύπνος"],"listen":["A40 p.81","A41 p.82","A42 p.84","A43 p.91_1","A44 p.91_2","A45 p.92"],"titleNote":"The book title is Ποτέ την Κυριακή (Never on Sunday), from Δε δουλεύω ποτέ την Κυριακή — not Πότε.","opener":["Πόσο καιρό είσαι εδώ;","Τον Οκτώβριο κάνει ζέστη.","Ακούω μουσική κάθε μέρα.","Βγαίνω έξω συχνά.","Δε δουλεύω ποτέ την Κυριακή."],"vocabItems":[{"g":"πρωί","e":"morning","page":80},{"g":"μεσημέρι","e":"noon","page":80},{"g":"απόγευμα","e":"afternoon","page":80},{"g":"βράδυ","e":"evening","page":80},{"g":"ξυπνάω","e":"I wake up","page":80},{"g":"τρώω","e":"I eat","page":80},{"g":"τηλεόραση","e":"television","page":80},{"g":"ύπνος","e":"sleep","page":80},{"g":"Κυριακή","e":"Sunday","page":80}],"grammar":[{"title":"Contracted verbs","page":80,"src":"book","text":"The opener lists ακούω, τρώω, λέω, κλαίω."},{"title":"Frequency","page":80,"src":"book","text":"κάθε μέρα · συχνά · ποτέ. Δε δουλεύω ποτέ την Κυριακή."},{"title":"Large numbers","page":80,"src":"book","text":"The opener marks 1.000–10.000 as a goal of this unit. Full number tables stay in the book."}],"pronNotes":[{"title":"σμ / σ vs ζ","page":80,"src":"book","text":"Later Unit 7 pages return to σ/ζ style listening (official tracks p.91–92)."}],"speaking":[{"prompt":"Tell a day in six captions from p.80.","model":"Το πρωί ξυπνάω νωρίς. Πάω στη δουλειά. Το μεσημέρι τρώω. Το απόγευμα βλέπω τηλεόραση. Το βράδυ βγαίνω έξω. Πάω για ύπνο.","page":80,"src":"book"},{"prompt":"Say one thing you never do on Sunday.","model":"Δε δουλεύω ποτέ την Κυριακή.","page":80,"src":"book"}],"writing":[{"prompt":"Write your day using the six time-of-day frames on p.80.","hint":"το πρωί / το μεσημέρι / το απόγευμα / το βράδυ","page":80,"src":"adapted"}],"exercises":[{"type":"mc","prompt":"The unit title Ποτέ την Κυριακή means…","src":"book","page":80,"skill":"wordReading","choices":[{"label":"Never on Sunday","ok":true},{"label":"When on Sunday","ok":false}],"answer":"Never on Sunday"},{"type":"mc","prompt":"Δε δουλεύω ποτέ την Κυριακή. ποτέ =","src":"book","page":80,"skill":"wordReading","choices":[{"label":"never","ok":true},{"label":"when","ok":false}],"answer":"never"}],"audioIds":["t040","t041","t042","t043","t044","t045"]},{"id":"u8","n":8,"title":"Πόσο κάνουν όλα;","theme":"Everyday shopping","pages":[94,107],"phonology":["k-x","g-x"],"goals":["Shop at a kiosk, bakery or grocer","Ask prices"],"vocab":["χυμός","σοκολάτα","παγωτό","πόσο"],"listen":["A46 p.95","A47 p.98","A48 p.101","A49 p.103","A50 p.105_1","A51 p.105_2","A52 p.105_3","A53 p.106"],"opener":["Τι θέλετε, παρακαλώ;","Θα ήθελα…","Τα ρέστα σας και η απόδειξή σας.","Πόσο χυμό θέλετε;","Δύο χυμούς, τρεις σοκολάτες και τέσσερα παγωτά.","ένας, μία, ένα"],"vocabItems":[{"g":"χυμός","e":"juice","page":94},{"g":"σοκολάτα","e":"chocolate","page":94},{"g":"παγωτό","e":"ice cream","page":94},{"g":"ρέστα","e":"change","page":94},{"g":"απόδειξη","e":"receipt","page":94},{"g":"πόσο","e":"how much","page":94}],"grammar":[{"title":"ένας / μία / ένα","page":94,"src":"book","text":"The opener lists the three gender forms of ‘one’."},{"title":"Shopping frames","page":94,"src":"book","text":"Τι θέλετε, παρακαλώ; Θα ήθελα… Πόσο κάνουν όλα;"}],"pronNotes":[{"title":"κ / χ and γ / χ","page":94,"src":"book","text":"Unit 8 later contrasts these; use book words χυμός, έχω, κάνω from the printed pages."}],"speaking":[{"prompt":"Order two juices, three chocolates and four ice creams.","model":"Θα ήθελα δύο χυμούς, τρεις σοκολάτες και τέσσερα παγωτά.","page":94,"src":"book"},{"prompt":"Ask the total and take the receipt.","model":"Πόσο κάνουν όλα; Τα ρέστα σας και η απόδειξή σας.","page":94,"src":"book"}],"writing":[{"prompt":"Write a shop mini-dialogue with Θα ήθελα and Πόσο κάνουν όλα;","hint":"Stay with χυμός, σοκολάτα, παγωτό from p.94.","page":94,"src":"adapted"}],"exercises":[{"type":"mc","prompt":"ένας, μία, ένα are the book’s forms for…","src":"book","page":94,"skill":"spelling","choices":[{"label":"one (m./f./n.)","ok":true},{"label":"two","ok":false}],"answer":"one (m./f./n.)"}],"audioIds":["t046","t047","t048","t049","t050","t051","t052","t053"]},{"id":"u9","n":9,"title":"Πάμε για ψώνια;","theme":"Shops, clothes, colours","pages":[108,121],"phonology":["ts-tz"],"goals":["Talk about clothes and colours","μου αρέσει"],"vocab":["ψώνια","ακριβός","καινούριο","χρώμα"],"listen":["A54 p.109","A55 p.113","A56 p.115","A57 p.120_1","A58 p.120_2"],"opener":["Σ' αρέσει;","Σου πάει!","Δε μου κάνει.","Πόσο κοστίζει;","Τι χρώμα θέλετε;","ακριβός, ακριβή","καινούριος, καινούρια, καινούριο"],"vocabItems":[{"g":"ψώνια","e":"shopping","page":108},{"g":"ακριβός","e":"expensive (m.)","page":108},{"g":"καινούριο","e":"new (n.)","page":108},{"g":"χρώμα","e":"colour","page":108},{"g":"Σ' αρέσει;","e":"Do you like it?","page":108}],"grammar":[{"title":"μου αρέσει frames","page":108,"src":"book","text":"Σ' αρέσει; Σου πάει! Δε μου κάνει."},{"title":"Adjective agreement (opener)","page":108,"src":"book","text":"ακριβός / ακριβή · καινούριος / καινούρια / καινούριο."}],"pronNotes":[{"title":"τσ / τζ","page":108,"src":"book","text":"Unit 9 later practises τσ/τζ. Keep using book words such as καινούριο."}],"speaking":[{"prompt":"Try on clothes: like / suit / fit / price / colour.","model":"Σ' αρέσει; Σου πάει! Δε μου κάνει. Πόσο κοστίζει; Τι χρώμα θέλετε;","page":108,"src":"book"}],"writing":[{"prompt":"Write four short shop lines using the opener phrases.","hint":"Do not invent extra clothing lists not printed on p.108.","page":108,"src":"adapted"}],"exercises":[{"type":"mc","prompt":"Δε μου κάνει means…","src":"book","page":108,"skill":"wordReading","choices":[{"label":"It doesn't fit me / it doesn't suit me","ok":true},{"label":"I never work","ok":false}],"answer":"It doesn't fit me / it doesn't suit me"}],"audioIds":["t054","t055","t056","t057","t058"]},{"id":"u10","n":10,"title":"Πάμε πάλι!","theme":"Revision of units 6–9","pages":[122,131],"phonology":["review"],"goals":["Revise travel, routine, shopping"],"vocab":["λεωφορείο","Κυριακή","πόσο","ψώνια"],"listen":["A59 p.127_1","A60 p.127_2"],"opener":["Πάμε πάλι! — revision of Units 6–9."],"vocabItems":[{"g":"λεωφορείο","e":"bus","page":122},{"g":"Κυριακή","e":"Sunday","page":122},{"g":"πόσο","e":"how much","page":122},{"g":"ψώνια","e":"shopping","page":122}],"grammar":[{"title":"Revision","page":122,"src":"book","text":"Reuse πάω / εισιτήριο, daily routine, shopping totals, and clothes phrases. Official audio on this unit is p.127 only."}],"pronNotes":[{"title":"Mixed review","page":122,"src":"book","text":"Replay the hard pairs from units 6–9: ε/η, ο/ου, σ/ζ."}],"speaking":[{"prompt":"Retell one line from each of units 6–9.","model":"Πάω με το λεωφορείο. Δε δουλεύω ποτέ την Κυριακή. Πόσο κάνουν όλα; Πάμε για ψώνια;","page":122,"src":"adapted"}],"writing":[{"prompt":"Write a six-line revision diary mixing travel, Sunday, shop.","hint":"Only book phrases already met in units 6–9.","page":122,"src":"adapted"}],"exercises":[{"type":"mc","prompt":"Which unit title is the book’s Sunday phrase?","src":"book","page":80,"skill":"wordReading","choices":[{"label":"Ποτέ την Κυριακή","ok":true},{"label":"Πότε την Κυριακή","ok":false}],"answer":"Ποτέ την Κυριακή"}],"audioIds":["t059","t060"]},{"id":"u11","n":11,"title":"Ψάχνω για σπίτι","theme":"Looking for a flat","pages":[132,149],"phonology":["review"],"goals":["Read a housing advert","Ask about rent and rooms"],"vocab":["σπίτι","διαμέρισμα","ενοίκιο","αγγελία"],"listen":["B1 p.133","B2 p.139","B3 p.143","B4 p.147"],"opener":["Το σπίτι είναι του Σταύρου.","Το διαμέρισμα είναι κοντά στο μετρό.","Τηλεφωνώ για την αγγελία.","Πόσο είναι το ενοίκιο;","Σε ποιον όροφο είναι το διαμέρισμα;","Το σαλόνι είναι μεγαλύτερο από την κουζίνα."],"vocabItems":[{"g":"σπίτι","e":"house","page":132},{"g":"διαμέρισμα","e":"apartment","page":132},{"g":"ενοίκιο","e":"rent","page":132},{"g":"αγγελία","e":"advert","page":132},{"g":"όροφος","e":"floor","page":132},{"g":"κουζίνα","e":"kitchen","page":132},{"g":"σαλόνι","e":"living room","page":132},{"g":"μετρό","e":"metro","page":132}],"grammar":[{"title":"Whose house?","page":132,"src":"book","text":"Το σπίτι είναι του Σταύρου."},{"title":"Comparison on the opener","page":132,"src":"book","text":"Το σαλόνι είναι μεγαλύτερο από την κουζίνα."}],"pronNotes":[{"title":"Review","page":132,"src":"book","text":"Housing words recycle ει/οι (ενοίκιο) and ι (διαμέρισμα, αγγελία)."}],"speaking":[{"prompt":"Phone about a flat: rent, floor, metro.","model":"Τηλεφωνώ για την αγγελία. Πόσο είναι το ενοίκιο; Σε ποιον όροφο είναι το διαμέρισμα;","page":132,"src":"book"}],"writing":[{"prompt":"Write four questions you would ask about a flat, using the opener.","hint":"ενοίκιο, όροφος, μετρό, κουζίνα / σαλόνι","page":132,"src":"adapted"}],"exercises":[{"type":"mc","prompt":"Το διαμέρισμα είναι κοντά…","src":"book","page":132,"skill":"wordReading","choices":[{"label":"στο μετρό","ok":true},{"label":"στην Κυριακή","ok":false}],"answer":"στο μετρό"},{"type":"type","prompt":"Type the book word for rent","answer":"ενοίκιο","speak":"ενοίκιο","skill":"spelling","src":"book","page":132}],"lastAvailable":true,"audioIds":["t061","t062","t063","t064"]}],"eiLevels":[{"level":1,"title":"Isolated sound","hint":"Listen. Is it [e] or [i]?"},{"level":2,"title":"Single letter","hint":"Hear one letter."},{"level":3,"title":"Syllable","hint":"Hear a short syllable."},{"level":4,"title":"Short word","hint":"Hear a short word from the book."},{"level":5,"title":"Longer word","hint":"Longer book words."},{"level":6,"title":"Sentence","hint":"A short book sentence."},{"level":7,"title":"Short reading","hint":"A short passage. Find the [e] / [i] spellings."}],"skills":[{"id":"alphabet","label":"Alphabet"},{"id":"vowels","label":"Vowels"},{"id":"ei","label":"E vs I"},{"id":"vowelCombos","label":"Vowel combinations"},{"id":"consCombos","label":"Consonant combinations"},{"id":"syllables","label":"Syllables"},{"id":"wordReading","label":"Reading words"},{"id":"spelling","label":"Spelling"},{"id":"listening","label":"Listening"},{"id":"dictation","label":"Dictation"}],"audio":[{"id":"t001","n":1,"page":"9","file":"Track_A_A_01.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_01.mp3","unit":"intro","inScope":true,"disc":"A","trackNo":1,"label":"p.9","cd":"A1"},{"id":"t002","n":2,"page":"14_1","file":"Track_A_A_02.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_02.mp3","unit":"u1","inScope":true,"disc":"A","trackNo":2,"label":"p.14_1","cd":"A2"},{"id":"t003","n":3,"page":"14_2","file":"Track_A_A_03.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_03.mp3","unit":"u1","inScope":true,"disc":"A","trackNo":3,"label":"p.14_2","cd":"A3"},{"id":"t004","n":4,"page":"15","file":"Track_A_A_04.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_04.mp3","unit":"u1","inScope":true,"disc":"A","trackNo":4,"label":"p.15","cd":"A4"},{"id":"t005","n":5,"page":"17_1","file":"Track_A_A_05.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_05.mp3","unit":"u1","inScope":true,"disc":"A","trackNo":5,"label":"p.17_1","cd":"A5"},{"id":"t006","n":6,"page":"17_2","file":"Track_A_A_06.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_06.mp3","unit":"u1","inScope":true,"disc":"A","trackNo":6,"label":"p.17_2","cd":"A6"},{"id":"t007","n":7,"page":"17_3","file":"Track_A_A_07.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_07.mp3","unit":"u1","inScope":true,"disc":"A","trackNo":7,"label":"p.17_3","cd":"A7"},{"id":"t008","n":8,"page":"18_1","file":"Track_A_A_08.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_08.mp3","unit":"u1","inScope":true,"disc":"A","trackNo":8,"label":"p.18_1","cd":"A8"},{"id":"t009","n":9,"page":"18_2","file":"Track_A_A_09.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_09.mp3","unit":"u1","inScope":true,"disc":"A","trackNo":9,"label":"p.18_2","cd":"A9"},{"id":"t010","n":10,"page":"19_1","file":"Track_A_A_10.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_10.mp3","unit":"u1","inScope":true,"disc":"A","trackNo":10,"label":"p.19_1","cd":"A10"},{"id":"t011","n":11,"page":"19_2","file":"Track_A_A_11.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_11.mp3","unit":"u1","inScope":true,"disc":"A","trackNo":11,"label":"p.19_2","cd":"A11"},{"id":"t012","n":12,"page":"22","file":"Track_A_A_12.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_12.mp3","unit":"u1","inScope":true,"disc":"A","trackNo":12,"label":"p.22","cd":"A12"},{"id":"t013","n":13,"page":"25","file":"Track_A_A_13.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_13.mp3","unit":"u2","inScope":true,"disc":"A","trackNo":13,"label":"p.25","cd":"A13"},{"id":"t014","n":14,"page":"30","file":"Track_A_A_14.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_14.mp3","unit":"u2","inScope":true,"disc":"A","trackNo":14,"label":"p.30","cd":"A14"},{"id":"t015","n":15,"page":"33","file":"Track_A_A_15.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_15.mp3","unit":"u2","inScope":true,"disc":"A","trackNo":15,"label":"p.33","cd":"A15"},{"id":"t016","n":16,"page":"34","file":"Track_A_A_16.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_16.mp3","unit":"u2","inScope":true,"disc":"A","trackNo":16,"label":"p.34","cd":"A16"},{"id":"t017","n":17,"page":"36_1","file":"Track_A_A_17.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_17.mp3","unit":"u2","inScope":true,"disc":"A","trackNo":17,"label":"p.36_1","cd":"A17"},{"id":"t018","n":18,"page":"36_2","file":"Track_A_A_18.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_18.mp3","unit":"u2","inScope":true,"disc":"A","trackNo":18,"label":"p.36_2","cd":"A18"},{"id":"t019","n":19,"page":"36_3","file":"Track_A_A_19.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_19.mp3","unit":"u2","inScope":true,"disc":"A","trackNo":19,"label":"p.36_3","cd":"A19"},{"id":"t020","n":20,"page":"37","file":"Track_A_A_20.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_20.mp3","unit":"u2","inScope":true,"disc":"A","trackNo":20,"label":"p.37","cd":"A20"},{"id":"t021","n":21,"page":"39","file":"Track_A_A_21.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_21.mp3","unit":"u3","inScope":true,"disc":"A","trackNo":21,"label":"p.39","cd":"A21"},{"id":"t022","n":22,"page":"42","file":"Track_A_A_22.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_22.mp3","unit":"u3","inScope":true,"disc":"A","trackNo":22,"label":"p.42","cd":"A22"},{"id":"t023","n":23,"page":"45_1","file":"Track_A_A_23.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_23.mp3","unit":"u3","inScope":true,"disc":"A","trackNo":23,"label":"p.45_1","cd":"A23"},{"id":"t024","n":24,"page":"45_2","file":"Track_A_A_24.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_24.mp3","unit":"u3","inScope":true,"disc":"A","trackNo":24,"label":"p.45_2","cd":"A24"},{"id":"t025","n":25,"page":"45_3","file":"Track_A_A_25.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_25.mp3","unit":"u3","inScope":true,"disc":"A","trackNo":25,"label":"p.45_3","cd":"A25"},{"id":"t026","n":26,"page":"46","file":"Track_A_A_26.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_26.mp3","unit":"u3","inScope":true,"disc":"A","trackNo":26,"label":"p.46","cd":"A26"},{"id":"t027","n":27,"page":"49","file":"Track_A_A_27.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_27.mp3","unit":"u4","inScope":true,"disc":"A","trackNo":27,"label":"p.49","cd":"A27"},{"id":"t028","n":28,"page":"50","file":"Track_A_A_28.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_28.mp3","unit":"u4","inScope":true,"disc":"A","trackNo":28,"label":"p.50","cd":"A28"},{"id":"t029","n":29,"page":"53","file":"Track_A_A_29.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_29.mp3","unit":"u4","inScope":true,"disc":"A","trackNo":29,"label":"p.53","cd":"A29"},{"id":"t030","n":30,"page":"56","file":"Track_A_A_30.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_30.mp3","unit":"u4","inScope":true,"disc":"A","trackNo":30,"label":"p.56","cd":"A30"},{"id":"t031","n":31,"page":"62","file":"Track_A_A_31.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_31.mp3","unit":"u5","inScope":true,"disc":"A","trackNo":31,"label":"p.62","cd":"A31"},{"id":"t032","n":32,"page":"65_1","file":"Track_A_A_32.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_32.mp3","unit":"u5","inScope":true,"disc":"A","trackNo":32,"label":"p.65_1","cd":"A32"},{"id":"t033","n":33,"page":"65_2","file":"Track_A_A_33.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_33.mp3","unit":"u5","inScope":true,"disc":"A","trackNo":33,"label":"p.65_2","cd":"A33"},{"id":"t034","n":34,"page":"65_3","file":"Track_A_A_34.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_34.mp3","unit":"u5","inScope":true,"disc":"A","trackNo":34,"label":"p.65_3","cd":"A34"},{"id":"t035","n":35,"page":"67","file":"Track_A_A_35.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_35.mp3","unit":"u6","inScope":true,"disc":"A","trackNo":35,"label":"p.67","cd":"A35"},{"id":"t036","n":36,"page":"70","file":"Track_A_A_36.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_36.mp3","unit":"u6","inScope":true,"disc":"A","trackNo":36,"label":"p.70","cd":"A36"},{"id":"t037","n":37,"page":"75","file":"Track_A_A_37.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_37.mp3","unit":"u6","inScope":true,"disc":"A","trackNo":37,"label":"p.75","cd":"A37"},{"id":"t038","n":38,"page":"77_1","file":"Track_A_A_38.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_38.mp3","unit":"u6","inScope":true,"disc":"A","trackNo":38,"label":"p.77_1","cd":"A38"},{"id":"t039","n":39,"page":"77_2","file":"Track_A_A_39.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_39.mp3","unit":"u6","inScope":true,"disc":"A","trackNo":39,"label":"p.77_2","cd":"A39"},{"id":"t040","n":40,"page":"81","file":"Track_A_A_40.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_40.mp3","unit":"u7","inScope":true,"disc":"A","trackNo":40,"label":"p.81","cd":"A40"},{"id":"t041","n":41,"page":"82","file":"Track_A_A_41.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_41.mp3","unit":"u7","inScope":true,"disc":"A","trackNo":41,"label":"p.82","cd":"A41"},{"id":"t042","n":42,"page":"84","file":"Track_A_A_42.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_42.mp3","unit":"u7","inScope":true,"disc":"A","trackNo":42,"label":"p.84","cd":"A42"},{"id":"t043","n":43,"page":"91_1","file":"Track_A_A_43.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_43.mp3","unit":"u7","inScope":true,"disc":"A","trackNo":43,"label":"p.91_1","cd":"A43"},{"id":"t044","n":44,"page":"91_2","file":"Track_A_A_44.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_44.mp3","unit":"u7","inScope":true,"disc":"A","trackNo":44,"label":"p.91_2","cd":"A44"},{"id":"t045","n":45,"page":"92","file":"Track_A_A_45.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_45.mp3","unit":"u7","inScope":true,"disc":"A","trackNo":45,"label":"p.92","cd":"A45"},{"id":"t046","n":46,"page":"95","file":"Track_A_A_46.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_46.mp3","unit":"u8","inScope":true,"disc":"A","trackNo":46,"label":"p.95","cd":"A46"},{"id":"t047","n":47,"page":"98","file":"Track_A_A_47.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_47.mp3","unit":"u8","inScope":true,"disc":"A","trackNo":47,"label":"p.98","cd":"A47"},{"id":"t048","n":48,"page":"101","file":"Track_A_A_48.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_48.mp3","unit":"u8","inScope":true,"disc":"A","trackNo":48,"label":"p.101","cd":"A48"},{"id":"t049","n":49,"page":"103","file":"Track_A_A_49.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_49.mp3","unit":"u8","inScope":true,"disc":"A","trackNo":49,"label":"p.103","cd":"A49"},{"id":"t050","n":50,"page":"105_1","file":"Track_A_A_50.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_50.mp3","unit":"u8","inScope":true,"disc":"A","trackNo":50,"label":"p.105_1","cd":"A50"},{"id":"t051","n":51,"page":"105_2","file":"Track_A_A_51.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_51.mp3","unit":"u8","inScope":true,"disc":"A","trackNo":51,"label":"p.105_2","cd":"A51"},{"id":"t052","n":52,"page":"105_3","file":"Track_A_A_52.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_52.mp3","unit":"u8","inScope":true,"disc":"A","trackNo":52,"label":"p.105_3","cd":"A52"},{"id":"t053","n":53,"page":"106","file":"Track_A_A_53.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_53.mp3","unit":"u8","inScope":true,"disc":"A","trackNo":53,"label":"p.106","cd":"A53"},{"id":"t054","n":54,"page":"109","file":"Track_A_A_54.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_54.mp3","unit":"u9","inScope":true,"disc":"A","trackNo":54,"label":"p.109","cd":"A54"},{"id":"t055","n":55,"page":"113","file":"Track_A_A_55.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_55.mp3","unit":"u9","inScope":true,"disc":"A","trackNo":55,"label":"p.113","cd":"A55"},{"id":"t056","n":56,"page":"115","file":"Track_A_A_56.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_56.mp3","unit":"u9","inScope":true,"disc":"A","trackNo":56,"label":"p.115","cd":"A56"},{"id":"t057","n":57,"page":"120_1","file":"Track_A_A_57.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_57.mp3","unit":"u9","inScope":true,"disc":"A","trackNo":57,"label":"p.120_1","cd":"A57"},{"id":"t058","n":58,"page":"120_2","file":"Track_A_A_58.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_58.mp3","unit":"u9","inScope":true,"disc":"A","trackNo":58,"label":"p.120_2","cd":"A58"},{"id":"t059","n":59,"page":"127_1","file":"Track_A_A_59.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_59.mp3","unit":"u10","inScope":true,"disc":"A","trackNo":59,"label":"p.127_1","cd":"A59"},{"id":"t060","n":60,"page":"127_2","file":"Track_A_A_60.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_A_60.mp3","unit":"u10","inScope":true,"disc":"A","trackNo":60,"label":"p.127_2","cd":"A60"},{"id":"t061","n":61,"page":"133","file":"Track_A_B_01.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_01.mp3","unit":"u11","inScope":true,"disc":"B","trackNo":1,"label":"p.133","cd":"B1"},{"id":"t062","n":62,"page":"139","file":"Track_A_B_02.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_02.mp3","unit":"u11","inScope":true,"disc":"B","trackNo":2,"label":"p.139","cd":"B2"},{"id":"t063","n":63,"page":"143","file":"Track_A_B_03.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_03.mp3","unit":"u11","inScope":true,"disc":"B","trackNo":3,"label":"p.143","cd":"B3"},{"id":"t064","n":64,"page":"147","file":"Track_A_B_04.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_04.mp3","unit":"u11","inScope":true,"disc":"B","trackNo":4,"label":"p.147","cd":"B4"},{"id":"t065","n":65,"page":"151","file":"Track_A_B_05.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_05.mp3","unit":null,"inScope":false,"disc":"B","trackNo":5,"label":"p.151","cd":"B5"},{"id":"t066","n":66,"page":"156","file":"Track_A_B_06.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_06.mp3","unit":null,"inScope":false,"disc":"B","trackNo":6,"label":"p.156","cd":"B6"},{"id":"t067","n":67,"page":"157","file":"Track_A_B_07.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_07.mp3","unit":null,"inScope":false,"disc":"B","trackNo":7,"label":"p.157","cd":"B7"},{"id":"t068","n":68,"page":"162","file":"Track_A_B_08.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_08.mp3","unit":null,"inScope":false,"disc":"B","trackNo":8,"label":"p.162","cd":"B8"},{"id":"t069","n":69,"page":"163","file":"Track_A_B_09.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_09.mp3","unit":null,"inScope":false,"disc":"B","trackNo":9,"label":"p.163","cd":"B9"},{"id":"t070","n":70,"page":"167","file":"Track_A_B_10.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_10.mp3","unit":null,"inScope":false,"disc":"B","trackNo":10,"label":"p.167","cd":"B10"},{"id":"t071","n":71,"page":"171","file":"Track_A_B_11.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_11.mp3","unit":null,"inScope":false,"disc":"B","trackNo":11,"label":"p.171","cd":"B11"},{"id":"t072","n":72,"page":"177","file":"Track_A_B_12.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_12.mp3","unit":null,"inScope":false,"disc":"B","trackNo":12,"label":"p.177","cd":"B12"},{"id":"t073","n":73,"page":"185","file":"Track_A_B_13.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_13.mp3","unit":null,"inScope":false,"disc":"B","trackNo":13,"label":"p.185","cd":"B13"},{"id":"t074","n":74,"page":"191","file":"Track_A_B_14.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_14.mp3","unit":null,"inScope":false,"disc":"B","trackNo":14,"label":"p.191","cd":"B14"},{"id":"t075","n":75,"page":"196","file":"Track_A_B_15.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_15.mp3","unit":null,"inScope":false,"disc":"B","trackNo":15,"label":"p.196","cd":"B15"},{"id":"t076","n":76,"page":"205_1","file":"Track_A_B_16.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_16.mp3","unit":null,"inScope":false,"disc":"B","trackNo":16,"label":"p.205_1","cd":"B16"},{"id":"t077","n":77,"page":"205_2","file":"Track_A_B_17.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_17.mp3","unit":null,"inScope":false,"disc":"B","trackNo":17,"label":"p.205_2","cd":"B17"},{"id":"t078","n":78,"page":"213","file":"Track_A_B_18.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_18.mp3","unit":null,"inScope":false,"disc":"B","trackNo":18,"label":"p.213","cd":"B18"},{"id":"t079","n":79,"page":"216","file":"Track_A_B_19.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_19.mp3","unit":null,"inScope":false,"disc":"B","trackNo":19,"label":"p.216","cd":"B19"},{"id":"t080","n":80,"page":"224","file":"Track_A_B_20.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_20.mp3","unit":null,"inScope":false,"disc":"B","trackNo":20,"label":"p.224","cd":"B20"},{"id":"t081","n":81,"page":"228","file":"Track_A_B_21.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_21.mp3","unit":null,"inScope":false,"disc":"B","trackNo":21,"label":"p.228","cd":"B21"},{"id":"t082","n":82,"page":"233","file":"Track_A_B_22.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_22.mp3","unit":null,"inScope":false,"disc":"B","trackNo":22,"label":"p.233","cd":"B22"},{"id":"t083","n":83,"page":"239","file":"Track_A_B_23.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_23.mp3","unit":null,"inScope":false,"disc":"B","trackNo":23,"label":"p.239","cd":"B23"},{"id":"t084","n":84,"page":"242","file":"Track_A_B_24.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_24.mp3","unit":null,"inScope":false,"disc":"B","trackNo":24,"label":"p.242","cd":"B24"},{"id":"t085","n":85,"page":"247","file":"Track_A_B_25.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_25.mp3","unit":null,"inScope":false,"disc":"B","trackNo":25,"label":"p.247","cd":"B25"},{"id":"t086","n":86,"page":"259","file":"Track_A_B_26.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_26.mp3","unit":null,"inScope":false,"disc":"B","trackNo":26,"label":"p.259","cd":"B26"},{"id":"t087","n":87,"page":"263","file":"Track_A_B_27.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_27.mp3","unit":null,"inScope":false,"disc":"B","trackNo":27,"label":"p.263","cd":"B27"},{"id":"t088","n":88,"page":"265","file":"Track_A_B_28.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_28.mp3","unit":null,"inScope":false,"disc":"B","trackNo":28,"label":"p.265","cd":"B28"},{"id":"t089","n":89,"page":"268","file":"Track_A_B_29.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_29.mp3","unit":null,"inScope":false,"disc":"B","trackNo":29,"label":"p.268","cd":"B29"},{"id":"t090","n":90,"page":"270","file":"Track_A_B_30.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_30.mp3","unit":null,"inScope":false,"disc":"B","trackNo":30,"label":"p.270","cd":"B30"},{"id":"t091","n":91,"page":"275","file":"Track_A_B_31.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_31.mp3","unit":null,"inScope":false,"disc":"B","trackNo":31,"label":"p.275","cd":"B31"},{"id":"t092","n":92,"page":"282_1","file":"Track_A_B_32.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_32.mp3","unit":null,"inScope":false,"disc":"B","trackNo":32,"label":"p.282_1","cd":"B32"},{"id":"t093","n":93,"page":"282_2","file":"Track_A_B_33.mp3","url":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/Track_A_B_33.mp3","unit":null,"inScope":false,"disc":"B","trackNo":33,"label":"p.282_2","cd":"B33"}],"course":{"availableThrough":11,"fullBookUnits":20,"moreMessage":"More lessons will be added when the remaining book material is available.","audioIndex":"https://www.patakis.gr/files2/06815_audio.html","audioBase":"https://www.patakis.gr/files2/sound/Ellinika_A/Hxos/"},"unitTabs":[{"id":"learn","label":"Learn"},{"id":"vocab","label":"Vocabulary"},{"id":"grammar","label":"Grammar"},{"id":"sounds","label":"Pronunciation"},{"id":"listen","label":"Listen"},{"id":"read","label":"Read"},{"id":"practise","label":"Practise"},{"id":"speak","label":"Speak"},{"id":"write","label":"Write"},{"id":"review","label":"Review"},{"id":"exercises","label":"Exercises"}]}</script>
+<script>
+(function(){
+"use strict";
+let D;
+try{
+  D = JSON.parse(document.getElementById("grs-data").textContent);
+}catch(e){
+  const v=document.getElementById("view");
+  if(v) v.innerHTML='<div class="notice sand"><p><b>The lesson data could not be read in this viewer.</b></p><p>Open this page in Safari. On a computer, double-tap Open_on_iPhone.command.</p></div>';
+  const b=document.getElementById("voiceBadge"); if(b) b.textContent="Greek voice unavailable";
+  return;
+}
+const STORE_KEY = "greekReadingStudio.v1";
+const TABS = [
+  {id:"home", label:"Home"},
+  {id:"learn", label:"Learn"},
+  {id:"practice", label:"Practice"},
+  {id:"review", label:"Review"},
+  {id:"more", label:"More"}
+];
+const GRS = window.GRS = {
+  version: "1.1.0",
+  storageKey: STORE_KEY,
+  data: D,
+  route: {tab:"home", parts:["home"]},
+  state: null,
+  audio: {token:0, last:[], rate:0.92, paused:false},
+  session: null,
+  letterIndex: 0,
+  ready: false,
+  hash: "#/home",
+  stack: ["#/home"],
+  gesture: false
+};
+
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function toast(m){
+  const t=$("toast");
+  if(!t){ return; }
+  t.textContent=m; t.classList.remove("hidden");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.add("hidden"),2400);
+}
+function userGesture(){ GRS.gesture=true; try{ pickVoice(); }catch(e){} }
+function currentHash(){
+  const fromLoc=(location.hash||"").trim();
+  if(fromLoc && fromLoc!=="#") return fromLoc.charAt(0)==="#"? fromLoc : "#"+fromLoc;
+  return GRS.hash || "#/home";
+}
+function srcTag(k){
+  const map={book:["src","Book"],adapted:["src ad","Adapted practice"],new:["src nw","New practice"],web:["src web","Supplementary web research"]};
+  const x=map[k]||map.book; return `<span class="${x[0]}">${x[1]}</span>`;
+}
+function pageTag(p){return p? `<span class="src">p.${p}</span>`:""}
+
+/* ---------- storage ---------- */
+function emptyState(){
+  return {
+    v:1, updatedAt:Date.now(),
+    cursor:{unit:"intro", hash:"#/learn/book/intro"},
+    settings:{rate:0.92, accentTolerance:true, hideEnglish:false, reduceMotion:false},
+    skills:{}, items:{}, mistakes:[], saved:[], completed:{},
+    ei:{level:1, confusions:{}},
+    readingStage:1,
+    review:{due:[], lastAt:0},
+    writing:{}
+  };
+}
+function load(){
+  let s=emptyState();
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(raw){
+      const p=JSON.parse(raw);
+      if(p && typeof p==="object") s=Object.assign(s,p);
+    }
+  }catch(e){}
+  D.skills.forEach(sk=>{ if(!s.skills[sk.id]) s.skills[sk.id]={ok:0,bad:0,attempts:0}; });
+  GRS.state=s;
+  GRS.audio.rate=s.settings.rate||0.92;
+  return s;
+}
+function save(){
+  GRS.state.updatedAt=Date.now();
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(GRS.state)); }
+  catch(e){ toast("Could not save progress on this device."); }
+}
+function exportState(){ return JSON.stringify(GRS.state, null, 2); }
+function importState(text){
+  const p=JSON.parse(text);
+  if(!p || typeof p!=="object") throw new Error("Invalid file");
+  const cur=GRS.state;
+  const merged=Object.assign(emptyState(), cur, p);
+  merged.skills=Object.assign({}, cur.skills, p.skills||{});
+  merged.items=Object.assign({}, cur.items, p.items||{});
+  merged.completed=Object.assign({}, cur.completed, p.completed||{});
+  merged.saved=Array.from(new Set([...(cur.saved||[]), ...(p.saved||[])]));
+  merged.mistakes=[...(p.mistakes||[]), ...(cur.mistakes||[])].slice(0,500);
+  merged.writing=Object.assign({}, cur.writing||{}, p.writing||{});
+  GRS.state=merged; save();
+}
+
+/* ---------- audio ---------- */
+const synth = "speechSynthesis" in window ? window.speechSynthesis : null;
+let voices=[], chosen=null, utterance=null;
+function greekVoices(){
+  if(!synth) return [];
+  return synth.getVoices().filter(v=>/^el\b/i.test(v.lang) || /greek/i.test(v.name));
+}
+function setVoiceUnavailable(){
+  const b=$("voiceBadge"); const h=$("voiceHint");
+  if(b){ b.textContent="Greek voice unavailable"; b.classList.add("warning"); }
+  if(h) h.textContent="Book audio is still available.";
+}
+function pickVoice(){
+  voices=greekVoices();
+  const prefer=voices.find(v=>/el-GR/i.test(v.lang)) || voices[0] || null;
+  chosen=prefer;
+  const b=$("voiceBadge"); const h=$("voiceHint");
+  if(!b) return;
+  if(!synth){ setVoiceUnavailable(); return; }
+  if(!chosen){ setVoiceUnavailable(); return; }
+  b.textContent="Greek voice available ✅";
+  b.classList.remove("warning");
+  if(h) h.textContent=chosen.name+" · "+chosen.lang;
+}
+let bookEl=null;
+function stopBookAudio(){
+  const el=$("bookHtmlAudio");
+  if(el){
+    try{ el.onerror=null; el.onended=null; el.pause(); }catch(e){}
+  }
+  if(bookEl && bookEl!==el){
+    try{ bookEl.onerror=null; bookEl.onended=null; bookEl.pause(); }catch(e){}
+  }
+  bookEl=null;
+}
+function stopAudio(announce){
+  GRS.audio.token++; GRS.audio.paused=false;
+  if(synth) synth.cancel(); utterance=null;
+  stopBookAudio();
+  if(announce) $("audioStatus").textContent="Stopped";
+}
+function showPlayerExtra(open){
+  const extra=$("playerExtra"); const more=$("btnPlayerMore");
+  if(!extra) return;
+  extra.classList.toggle("hidden", !open);
+  if(more) more.setAttribute("aria-expanded", open? "true":"false");
+  document.body.classList.toggle("player-open", !!open);
+}
+function playBookTrack(url, label){
+  if(!url){ toast("No official track for this page."); return; }
+  stopAudio(false);
+  const token=++GRS.audio.token;
+  const el=$("bookHtmlAudio") || new Audio();
+  el.preload="none";
+  el.src=url;
+  bookEl=el;
+  const sk=$("sourceKind"); if(sk){ sk.textContent="🎧 Book audio"; sk.className="src book"; }
+  $("nowText").textContent=label||"";
+  $("audioStatus").textContent="Official book track (external)";
+  showPlayerExtra(true);
+  el.onended=()=>{ if(token!==GRS.audio.token) return; $("audioStatus").textContent="Book track finished. Your turn to say it aloud."; };
+  el.onerror=()=>{
+    if(token!==GRS.audio.token) return;
+    $("audioStatus").textContent="Official track could not be loaded. Use computer voice if you want.";
+    toast("Book audio unavailable (network or publisher).");
+  };
+  const p=el.play();
+  if(p && p.catch) p.catch(()=>{ $("audioStatus").textContent="Playback blocked or failed. Try again, or use computer voice."; });
+}
+function tracksForUnit(id){
+  return (D.audio||[]).filter(a=>a.unit===id && a.inScope);
+}
+function splitUtterances(text){
+  const t=String(text||"").trim();
+  if(!t) return [];
+  const parts=t.split(/[.!;…;]+\s+/).map(s=>s.trim()).filter(Boolean);
+  return parts.length? parts : [t];
+}
+function speakList(list, opts){
+  opts=opts||{};
+  if(!synth || !chosen){ $("audioStatus").textContent="No Greek voice"; return; }
+  stopAudio(false);
+  const token=++GRS.audio.token;
+  GRS.audio.last=list.slice();
+  const rate = opts.slow ? Math.max(0.55, (GRS.audio.rate||0.92)*0.72) : (opts.rate||GRS.audio.rate||0.92);
+  const sk=$("sourceKind"); if(sk){ sk.textContent="🔊 Computer voice"; sk.className="src voice"; }
+  $("nowText").textContent=list.join(" ");
+  const run=i=>{
+    if(token!==GRS.audio.token) return;
+    if(i>=list.length){ $("audioStatus").textContent="Your turn to say it aloud."; if(opts.done) opts.done(); return; }
+    const u=new SpeechSynthesisUtterance(list[i]);
+    u.voice=chosen; u.lang=chosen.lang; u.rate=rate; u.pitch=1; u.volume=1;
+    utterance=u;
+    $("audioStatus").textContent="Playing";
+    u.onend=()=>{ if(token!==GRS.audio.token) return; setTimeout(()=>run(i+1), opts.gap||160); };
+    u.onerror=()=>{ if(token!==GRS.audio.token) return; run(i+1); };
+    synth.speak(u);
+  };
+  run(0);
+}
+function speak(text, opts){
+  const parts=splitUtterances(text);
+  speakList(parts, opts||{});
+}
+GRS.speak=speak; GRS.stopAudio=stopAudio; GRS.playBookTrack=playBookTrack;
+
+/* ---------- greek check ---------- */
+function stripAccents(s){
+  return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/ς/g,"σ").toLowerCase().replace(/\s+/g," ").trim();
+}
+function norm(s, tolerate){
+  let t=String(s||"").replace(/’/g,"'").trim();
+  if(tolerate || (GRS.state && GRS.state.settings.accentTolerance)) t=stripAccents(t);
+  else t=t.replace(/ς/g,"σ").toLowerCase().replace(/\s+/g," ").trim();
+  return t;
+}
+function answersEqual(a,b){ return norm(a)===norm(b); }
+GRS.norm=norm; GRS.answersEqual=answersEqual;
+
+/* ---------- adaptive ---------- */
+function skill(id){ if(!GRS.state.skills[id]) GRS.state.skills[id]={ok:0,bad:0,attempts:0}; return GRS.state.skills[id]; }
+function itemRec(id, meta){
+  if(!GRS.state.items[id]) GRS.state.items[id]={id, ok:0,bad:0, hear:0, spell:0, read:0, due:0, last:0};
+  if(meta) Object.assign(GRS.state.items[id], meta);
+  return GRS.state.items[id];
+}
+function record(skillId, ok, extra){
+  extra=extra||{};
+  const sk=skill(skillId);
+  sk.attempts++; if(ok) sk.ok++; else sk.bad++;
+  if(extra.itemId){
+    const it=itemRec(extra.itemId);
+    it.last=Date.now();
+    if(ok) it.ok++; else it.bad++;
+    const ch=extra.channel||"hear";
+    it[ch]=(it[ch]||0)+(ok?1:0);
+    if(!ok) it.due=Date.now();
+    else it.due=Date.now()+ (ok && it.ok>2 ? 2*86400000 : 86400000);
+  }
+  if(!ok){
+    GRS.state.mistakes.unshift({at:Date.now(), skill:skillId, expected:extra.expected||"", got:extra.got||"", itemId:extra.itemId||"", channel:extra.channel||"hear"});
+    GRS.state.mistakes=GRS.state.mistakes.slice(0,400);
+    if(extra.pair){
+      const c=GRS.state.ei.confusions;
+      c[extra.pair]=(c[extra.pair]||0)+1;
+    }
+  }
+  save();
+}
+function pct(sk){ if(!sk||!sk.attempts) return 0; return Math.round(100*sk.ok/sk.attempts); }
+function weakSounds(){
+  const c=GRS.state.ei.confusions||{};
+  const ei=(c["e-i"]||0)+(c["i-e"]||0);
+  const list=[];
+  if(ei>=2 || pct(skill("ei"))<70) list.push("E / I");
+  if(pct(skill("vowelCombos")) && pct(skill("vowelCombos"))<65) list.push("ει / οι");
+  if(pct(skill("consCombos")) && pct(skill("consCombos"))<65) list.push("μπ / ντ");
+  return list.length? list : (ei? ["E / I"] : []);
+}
+function dueCount(){
+  const now=Date.now();
+  return Object.values(GRS.state.items).filter(it=>it.due && it.due<=now && it.bad>0).length + GRS.state.mistakes.filter(m=>now-m.at<3*86400000).length;
+}
+
+/* ---------- hash router ---------- */
+function parseHash(){
+  const raw=currentHash().replace(/^#/, "");
+  const parts=raw.split("/").filter(Boolean);
+  if(!parts.length) parts.push("home");
+  const tab = TABS.some(t=>t.id===parts[0]) ? parts[0] : "home";
+  return {tab, parts};
+}
+function go(hash, replace){
+  const h=hash.startsWith("#")? hash : "#"+hash;
+  GRS.hash=h;
+  GRS.session=null;
+  if(!replace){
+    const last=GRS.stack[GRS.stack.length-1];
+    if(last!==h) GRS.stack.push(h);
+  }
+  let usedHash=false;
+  try{
+    if(replace){
+      history.replaceState(null,"",h);
+    }else if((location.hash||"")!==h){
+      location.hash=h;
+      usedHash=true;
+    }
+  }catch(e){ usedHash=false; }
+  if(!usedHash) render();
+}
+function navButtons(active){
+  return TABS.map(t=>`<button type="button" data-nav="${t.id}" class="${t.id===active?"active":""}" aria-current="${t.id===active?"page":"false"}">${t.label}</button>`).join("");
+}
+function currentLessonLabel(){
+  const p=GRS.route.parts;
+  if(!p[0] || p[0]==="home") return "Home";
+  if(p[0]==="learn" && p[1]==="book"){
+    const u=D.units.find(x=>x.id===p[2]);
+    if(u) return (u.n? "Unit "+u.n+" · ":"")+u.title;
+    return "Book lessons";
+  }
+  if(p[0]==="learn" && p[1]==="alphabet") return "Alphabet";
+  if(p[0]==="learn") return p[1]? ("Learn · "+p[1]) : "Learn";
+  if(p[0]==="practice") return p[1]? ("Practice · "+p[1]) : "Practice";
+  if(p[0]==="review") return "Review";
+  if(p[0]==="more") return p[1]? ("More · "+p[1]) : "More";
+  return p.join(" · ");
+}
+function parentHash(){
+  const p=GRS.route.parts;
+  if(p[0]==="learn" && p[1]==="book" && p[2] && p[3]) return "#/learn/book/"+p[2];
+  if(p[0]==="learn" && p[1]==="book" && p[2]) return "#/learn/book";
+  if(p[0]==="learn" && p[1]) return "#/learn";
+  if(p[0]==="practice" && p[1]) return "#/practice";
+  if(p[0]==="more" && p[1]) return "#/more";
+  return "#/home";
+}
+
+/* ---------- exercise engine ---------- */
+function shuffle(a){ const b=a.slice(); for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; }
+function pick(arr,n){ return shuffle(arr).slice(0,n); }
+
+function startSession(id, items, skillId){
+  GRS.session={id, items:items.slice(), i:0, skill:skillId, results:[], returnTo: GRS.route.parts.join("/")};
+  render();
+}
+function currentQ(){ return GRS.session && GRS.session.items[GRS.session.i]; }
+
+function renderSession(){
+  const S=GRS.session;
+  if(!S) return `<p>No session.</p>`;
+  if(S.done || S.i>=S.items.length) return renderSessionEnd();
+  const q=S.items[S.i];
+  const n=S.items.length;
+  if(GRS.gesture && q.speakOnStart){ setTimeout(()=>{ speak(q.speakOnStart, {slow:!!q.slow}); }, 40); }
+  return `<section class="stack">
+    <div class="spread row"><span class="eyebrow">${esc(q.skillLabel||S.skill)}</span><span class="micro">${S.i+1} / ${n}</span></div>
+    <div class="bar" aria-hidden="true"><span style="width:${Math.round(100*S.i/n)}%"></span></div>
+    ${q.src? srcTag(q.src):""} ${q.page? pageTag(q.page):""}
+    <h2>${esc(q.prompt||"")}</h2>
+    ${q.big? `<div class="greek xl" lang="el">${esc(q.big)}</div>`:""}
+    ${q.sub? `<p class="muted">${esc(q.sub)}</p>`:""}
+    ${q.type==="listen"||q.speak? `<div class="row"><button class="primary hear-xl" type="button" data-act="speak" data-text="${esc(q.speak||q.speakOnStart||"")}">Hear</button>
+      <button class="hear-xl" type="button" data-act="speak-slow" data-text="${esc(q.speak||q.speakOnStart||"")}">Slow</button></div>`:""}
+    ${renderQBody(q)}
+    <div id="fb" class="notice hidden"></div>
+    <div class="pager">
+      <button type="button" data-act="q-prev" ${S.i===0?"disabled":""}>← Previous</button>
+      <button class="primary" type="button" data-act="q-next">Next →</button>
+    </div>
+  </section>`;
+}
+function renderQBody(q){
+  if(q.type==="mc" || q.type==="listen"){
+    return `<div class="stack" id="choices">${q.choices.map((c,i)=>`<button class="choice" type="button" data-act="choose" data-i="${i}" lang="el">${esc(c.label)}</button>`).join("")}</div>`;
+  }
+  if(q.type==="type" || q.type==="dictation"){
+    return `<label class="stack"><span class="micro">Type in Greek</span>
+      <input id="ans" type="text" lang="el" autocomplete="off" autocapitalize="off" aria-label="Your answer">
+      <button class="primary" type="button" data-act="submit-type">Check</button></label>`;
+  }
+  if(q.type==="find"){
+    const chars=[...q.word];
+    return `<p class="muted">${esc(q.hint||"Tap every letter that matches.")}</p>
+      <div class="row" id="finds">${chars.map((ch,i)=>`<button type="button" class="choice" style="width:auto;min-width:48px" data-act="toggle-ch" data-i="${i}" lang="el">${esc(ch)}</button>`).join("")}</div>
+      <button class="primary" type="button" data-act="submit-find">Check</button>`;
+  }
+  if(q.type==="self"){
+    return `<div class="stack">
+      <button class="primary" type="button" data-act="speak" data-text="${esc(q.speak)}">1. Listen to the model</button>
+      <button type="button" data-act="hide-model">2. Hide the model</button>
+      <p id="model" class="greek" lang="el">${esc(q.speak)}</p>
+      <p class="muted">3. Read it aloud yourself. The browser cannot score Greek pronunciation.</p>
+      <div class="row">
+        <button class="primary" type="button" data-act="self-ok">I read it</button>
+        <button type="button" data-act="self-again">I need to try again</button>
+      </div>
+      <button type="button" data-act="speak" data-text="${esc(q.speak)}">Replay model</button>
+    </div>`;
+  }
+  if(q.type==="match"){
+    return `<div class="grid two" id="match">${q.left.map((L,i)=>`<button type="button" data-act="match-l" data-i="${i}" lang="el">${esc(L)}</button>`).join("")}
+      ${q.right.map((R,i)=>`<button type="button" data-act="match-r" data-i="${i}">${esc(R)}</button>`).join("")}</div>
+      <p class="micro" id="matchSt"></p>`;
+  }
+  if(q.type==="order"){
+    return `<p class="muted">Tap the pieces in order.</p>
+      <div class="row" id="order-pool">${q.pieces.map((p,i)=>`<button type="button" data-act="order-add" data-i="${i}" lang="el">${esc(p)}</button>`).join("")}</div>
+      <p class="el" id="order-out" lang="el"></p>
+      <div class="row"><button type="button" data-act="order-clear">Clear</button><button class="primary" type="button" data-act="order-check">Check</button></div>`;
+  }
+  return `<p>Unknown exercise.</p>`;
+}
+function feedback(ok, msg){
+  const el=$("fb"); if(!el) return;
+  el.classList.remove("hidden","sand"); el.style.background= ok? "#e5f6ea":"#fff1f0";
+  el.innerHTML=msg;
+}
+function finishQuestion(ok, q, got){
+  record(q.skill||GRS.session.skill, ok, {itemId:q.itemId, expected:q.answer, got, channel:q.channel||"hear", pair:q.pair});
+  GRS.session.results.push(ok);
+  if(q.unit) markUnitTouch(q.unit);
+  setTimeout(()=>{ GRS.session.i++; render(); }, ok? 550: 1100);
+}
+function renderSessionEnd(){
+  const S=GRS.session; const ok=(S.results||[]).filter(Boolean).length;
+  const n=(S.results||[]).length;
+  if(S.embedded){
+    S.done=true;
+    return `<section class="stack card">
+      <p class="eyebrow">Session complete</p>
+      <h2>${ok} / ${n} remembered</h2>
+      <p class="muted">This is practice, not a proficiency claim.</p>
+      <button class="primary" type="button" data-act="restart-embed">Practise again</button>
+    </section>`;
+  }
+  GRS.session=null;
+  return `<section class="stack card">
+    <p class="eyebrow">Session complete</p>
+    <h2>${ok} / ${n} remembered</h2>
+    <p class="muted">This is practice, not a proficiency claim.</p>
+    <div class="row">
+      <button class="primary" data-go="#/${S.returnTo||"practice"}">Back</button>
+      <button data-act="again-last">Practise again</button>
+    </div>
+  </section>`;
+}
+
+/* ---------- builders ---------- */
+function mc(prompt, answer, distractors, extra){
+  extra=extra||{};
+  const choices=shuffle([{label:answer, ok:true}, ...distractors.map(d=>({label:d, ok:false}))]);
+  return Object.assign({type:"mc", prompt, choices, answer, skill:"listening", src:"book"}, extra);
+}
+function letterByLower(l){ return D.letters.find(x=>x.l===l); }
+
+function buildAlphabetQuiz(){
+  const items=[];
+  D.letters.forEach(L=>{
+    items.push({type:"listen", prompt:"Hear the letter. Which one is it?", speak:L.l, speakOnStart:L.l, skill:"alphabet", channel:"hear", itemId:"letter:"+L.l,
+      choices:shuffle([{label:L.u+" "+L.l, ok:true}, ...pick(D.letters.filter(x=>x.l!==L.l),3).map(x=>({label:x.u+" "+x.l, ok:false}))]),
+      answer:L.u+" "+L.l, src:"book", page:9, skillLabel:"Alphabet"});
+    items.push({type:"mc", prompt:"What is the name of "+L.u+" "+L.l+"?", big:L.u+" "+L.l, skill:"alphabet", channel:"hear", itemId:"letter-name:"+L.l,
+      choices:shuffle([{label:L.name, ok:true}, ...pick(D.letters.filter(x=>x.l!==L.l),3).map(x=>({label:x.name, ok:false}))]),
+      answer:L.name, src:"book", page:9});
+    items.push({type:"mc", prompt:"Uppercase of "+L.l+"?", skill:"alphabet", channel:"spell", itemId:"letter-case:"+L.l,
+      choices:shuffle([{label:L.u, ok:true}, ...pick(D.letters.filter(x=>x.l!==L.l),3).map(x=>({label:x.u, ok:false}))]),
+      answer:L.u, src:"adapted", page:11});
+  });
+  items.push({type:"type", prompt:"Type the lowercase of Β", answer:"β", skill:"alphabet", channel:"spell", src:"adapted", page:11, itemId:"letter:β"});
+  items.push({type:"type", prompt:"Type the lowercase of Η", answer:"η", skill:"alphabet", channel:"spell", src:"adapted", page:11, itemId:"letter:η"});
+  items.push({type:"type", prompt:"Type the lowercase of Ω", answer:"ω", skill:"alphabet", channel:"spell", src:"adapted", page:11, itemId:"letter:ω"});
+  return shuffle(items).slice(0, 28);
+}
+function buildFindI(){
+  return D.findI.map(w=>({type:"find", prompt:"Find every [i] letter in this word.", word:w.g, hits:w.hits, skill:"ei", channel:"read", src:"book", page:12, itemId:"findi:"+w.g, hint:"The book asks: βάζω σε κύκλο όλα τα /i/."}));
+}
+function buildFindO(){
+  return D.findO.map(w=>({type:"find", prompt:"Find every [o] letter in this word.", word:w.g, hits:w.hits, skill:"vowels", channel:"read", src:"book", page:12, itemId:"findo:"+w.g, hint:"The book asks: βάζω σε κύκλο όλα τα /o/."}));
+}
+function buildOuComplete(){
+  return D.ouCountries.map(x=>({type:"type", prompt:"Complete with ου — type the full Greek word.", sub:x.gap.replace(/__/g,"ου?"), answer:x.g, speak:x.g, skill:"spelling", channel:"spell", src:"book", page:12, itemId:"ou:"+x.g, skillLabel:"ου"}));
+}
+function familySpellChoices(fam){ return fam.spellings.slice(); }
+function buildFamilyQuiz(famId){
+  const fam=D.families.find(f=>f.id===famId);
+  const items=[];
+  fam.examples.forEach(ex=>{
+    items.push({type:"listen", prompt:"You will hear a word. Which spelling makes the "+fam.ipa+" sound in this word?",
+      speak:ex.g, speakOnStart:ex.g, skill:"vowels", channel:"spell", src:"book", page:fam.page, itemId:"fam:"+ex.g,
+      choices:shuffle(fam.spellings.map(sp=>({label:sp, ok:sp===ex.sp}))), answer:ex.sp, sub:ex.g+" — "+ex.e, pair: famId==="e"||famId==="i" ? "e-i": null});
+    items.push({type:"mc", prompt:"Which sound does this spelling usually have in the book’s table?", big:ex.sp, skill:"vowels",
+      choices:shuffle([{label:fam.ipa, ok:true},{label:"[a]",ok:false},{label:"[u]",ok:false},{label:"[o]",ok:famId!=="o"}].filter(c=>famId==="o"? c.label!=="[o]" || c.ok : true).slice(0,4)),
+      answer:fam.ipa, src:"book", page:16});
+  });
+  items.push({type:"mc", prompt:"True or false: "+fam.spellings.join(" / ")+" are interchangeable spellings.",
+    choices:[{label:"False — same sound, different spelling", ok:true},{label:"True — write whichever you like", ok:false}],
+    answer:"False — same sound, different spelling", skill:"vowels", src:"new", channel:"read"});
+  return items;
+}
+function eiIsolated(){
+  const eItems=["ε","αι"].map(s=>({type:"listen", prompt:"Hear [e]. Which did you hear?", speakOnStart:s, speak:s, skill:"ei", channel:"hear", pair:"e-i", src:"adapted", page:16,
+    choices:shuffle([{label:"Ε / ε", ok:s==="ε"},{label:"ΑΙ / αι", ok:s==="αι"},{label:"Ι / ι", ok:false},{label:"Η / η", ok:false}]), answer: s==="ε"?"Ε / ε":"ΑΙ / αι", itemId:"iso:"+s, skillLabel:"E or I · L1"}));
+  const iItems=["ι","η","υ","ει","οι"].map(s=>({type:"listen", prompt:"Hear [i]. Which spelling was spoken?", speakOnStart:s, speak:s, skill:"ei", channel:"hear", pair:"i-e", src:"book", page:16,
+    choices:shuffle(["ι","η","υ","ει","οι"].map(x=>({label:x, ok:x===s}))), answer:s, itemId:"iso:"+s, skillLabel:"E or I · L1"}));
+  return shuffle(eItems.concat(iItems));
+}
+function eiLevelItems(level){
+  if(level<=1) return eiIsolated();
+  if(level===2){
+    return shuffle(["ε","η","ι","υ"].map(s=>{
+      const L=letterByLower(s);
+      return {type:"listen", prompt:"Hear one letter. Choose it.", speakOnStart:s, speak:s, skill:"ei", channel:"hear", pair:s==="ε"?"e-i":"i-e", src:"book", page:9,
+        choices:shuffle(["Ε","Η","Ι","Υ"].map(x=>({label:x, ok:x.toLowerCase()===s || (x==="Ε"&&s==="ε")}))), answer: L.u, itemId:"let:"+s, skillLabel:"E or I · L2"};
+    }));
+  }
+  if(level===3){
+    const pairs=[["με","μη"],["πε","πη"],["τε","τη"],["κε","κη"],["νε","νη"],["λε","λη"],["σε","ση"],["δε","δη"],["ρε","ρη"],["βε","βη"],["μι","μη"],["τι","τη"]];
+    return shuffle(pairs.map(([a,b],i)=>({type:"listen", prompt:"Hear the syllable. Which one?", speakOnStart:a, speak:a, skill:"ei", channel:"hear", pair:"e-i", src:"new",
+      choices:shuffle([{label:a,ok:true},{label:b,ok:false}]), answer:a, itemId:"syl:"+a, skillLabel:"E or I · L3"}))
+      .concat(pairs.map(([a,b])=>({type:"listen", prompt:"Hear the syllable. Which one?", speakOnStart:b, speak:b, skill:"ei", channel:"hear", pair:"i-e", src:"new",
+      choices:shuffle([{label:b,ok:true},{label:a,ok:false}]), answer:b, itemId:"syl:"+b, skillLabel:"E or I · L3"}))));
+  }
+  if(level===4){
+    const words=[{g:"μένω",k:"e"},{g:"ναι",k:"e"},{g:"εσύ",k:"e"},{g:"Ελένη",k:"e"},{g:"τι",k:"i"},{g:"σπίτι",k:"i"},{g:"είμαι",k:"i"},{g:"Ηλίας",k:"i"},{g:"φίλη",k:"i"},{g:"ημέρα",k:"i"}];
+    return shuffle(words.map(w=>({type:"listen", prompt:"Does this word’s stressed vowel family sound like [e] or [i]?", speakOnStart:w.g, speak:w.g, skill:"ei", channel:"hear", pair:w.k==="e"?"e-i":"i-e", src:"book",
+      choices:[{label:"[e]  ε / αι", ok:w.k==="e"},{label:"[i]  η / ι / υ / ει / οι", ok:w.k==="i"}], answer:w.k==="e"?"[e]  ε / αι":"[i]  η / ι / υ / ει / οι", itemId:"w:"+w.g, skillLabel:"E or I · L4", sub:w.g})));
+  }
+  if(level===5){
+    return shuffle(D.eiWords.map(w=>({type:"type", prompt:"Fill ε or η. Type the full word.", sub:w.fill+"  (book p."+w.page+")", answer:w.g, speak:w.g, skill:"ei", channel:"spell", src:"book", page:w.page, itemId:"fill:"+w.g, skillLabel:"E or I · L5"})));
+  }
+  if(level===6){
+    const sents=["Είμαι η Ελένη.","Καλημέρα, τι κάνεις;","Η Ηλίας; Όχι: ο Ηλίας.","Μένω στην Αθήνα.","Είσαι από την Ελλάδα;"];
+    return sents.map(s=>({type:"self", prompt:"Listen, hide, then read the sentence.", speak:s, skill:"ei", channel:"read", src:"adapted", itemId:"sent:"+s, skillLabel:"E or I · L6"}));
+  }
+  return [{type:"find", prompt:"Find every [i] spelling in this sentence.", word:"Η Ειρήνη είναι από την Κύπρο", hits:["Η","ει","η","ί","η","ύ"], skill:"ei", channel:"read", src:"adapted", itemId:"pass:1", hint:"Look for η, ι, υ, ει, οι, υι — including capitals and accents."},
+    {type:"self", prompt:"Read this short passage.", speak:"Καλημέρα. Με λένε Ειρήνη. Είμαι από την Κύπρο. Τι κάνεις;", skill:"ei", channel:"read", src:"adapted", itemId:"pass:2"}];
+}
+function buildComboModule(id){
+  const c=D.combos.find(x=>x.id===id);
+  const items=[];
+  items.push({type:"mc", prompt:"What sound does "+c.spell+" have in the book’s beginner presentation?",
+    choices:shuffle([{label:c.ipa, ok:true},{label:"[a]",ok:false},{label:"[o]",ok:false},{label:"[ks]",ok:false}]),
+    answer:c.ipa, skill:c.kind==="vowel"?"vowelCombos":"consCombos", src:"book", page:c.page, speak:c.spell, speakOnStart:c.spell});
+  c.words.forEach(w=>{
+    items.push({type:"listen", prompt:"Hear the word. Choose the combination it uses.", speak:w.g, speakOnStart:w.g, skill:c.kind==="vowel"?"vowelCombos":"consCombos", channel:"hear", src:"book", page:c.page,
+      choices:shuffle([{label:c.spell, ok:true}, ...pick(D.combos.filter(x=>x.id!==c.id),3).map(x=>({label:x.spell, ok:false}))]), answer:c.spell, itemId:"combo:"+w.g, sub:w.g+" — "+w.e});
+    items.push({type:"type", prompt:"Type the word you hear.", speak:w.g, speakOnStart:w.g, answer:w.g, type:"dictation", skill:"dictation", channel:"spell", src:"book", page:c.page, itemId:"d:"+w.g});
+    items.push({type:"self", prompt:"Read this word.", speak:w.g, skill:"wordReading", channel:"read", src:"book", page:c.page, itemId:"r:"+w.g, sub:w.e});
+  });
+  c.sentences.forEach(s=> items.push({type:"self", prompt:"Read the sentence.", speak:s, skill:"wordReading", channel:"read", src:"adapted", itemId:"rs:"+s}));
+  items.push({type:"order", prompt:"Build the first example word.", pieces:shuffle(Array.from(c.words[0].g)), answer:c.words[0].g, skill:"spelling", channel:"spell", src:"adapted", itemId:"ord:"+c.words[0].g});
+  return items;
+}
+function buildAUEU(){
+  const items=D.aueuSort.map(x=>({type:"mc", prompt:"What sound does αυ/ευ have in this word?", big:x.g, speak:x.g, skill:"vowelCombos", channel:"hear", src:"book", page:16,
+    choices:shuffle(["af","av","ef","ev"].map(b=>({label:"/"+b+"/", ok:b===x.box}))), answer:"/"+x.box+"/", itemId:"aueu:"+x.g}));
+  items.push({type:"mc", prompt:"According to the book, αυ / ευ become [af]/[ef] when the next sound is…",
+    choices:[{label:"κ, π, τ, φ, θ, χ, σ, ξ, ψ", ok:true},{label:"always [av]/[ev]", ok:false},{label:"only at the end of a word", ok:false}],
+    answer:"κ, π, τ, φ, θ, χ, σ, ξ, ψ", src:"book", page:16, skill:"vowelCombos"});
+  return items;
+}
+function buildDictation(level){
+  const banks={
+    1: D.letters.map(L=>L.l),
+    2: D.vowels.map(v=>v.l),
+    3: D.syllables.map(s=>s.g),
+    4: ["ώρα","νερό","ναι","όχι","σπίτι","φίλη","καφές","γεια"],
+    5: ["είμαι","μπανάνα","ντομάτα","Αγγλία","τζιν","πίτσα","αύριο","ευχαριστώ"],
+    6: ["οικογένεια","τηλέφωνο","Θεσσαλονίκη","ευχαριστώ","αυτοκίνητο"],
+    7: ["Είμαι καλά.","Πώς σε λένε;","Καλημέρα.","Ευχαριστώ πολύ.","Πού μένεις;"]
+  };
+  const titles={1:"Letter",2:"Vowel",3:"Syllable",4:"Short word",5:"Combination word",6:"Longer word",7:"Sentence"};
+  const srcs={1:"book",4:"book",5:"book",7:"book"};
+  return (banks[level]||banks[1]).map(x=>({type:"dictation", prompt:"Type what you hear · "+titles[level], speak:x, speakOnStart:x, answer:x, skill:"dictation", channel:"spell", src:srcs[level]||"new", itemId:"dic:"+x, skillLabel:"Dictation L"+level}));
+}
+function buildListening(){
+  const items=[];
+  ["ε","ι"].forEach(s=> items.push({type:"listen", prompt:"[e] or [i]?", speakOnStart:s, speak:s, skill:"listening", channel:"hear", pair:s==="ε"?"e-i":"i-e", src:"adapted",
+    choices:[{label:"[e]", ok:s==="ε"},{label:"[i]", ok:s==="ι"}], answer:s==="ε"?"[e]":"[i]"}));
+  ["ε","η","ι","υ","ει","οι"].forEach(s=> items.push({type:"listen", prompt:"Which did you hear?", speakOnStart:s, speak:s, skill:"listening", channel:"hear", src:"book", page:16,
+    choices:shuffle(["ε","η","ι","υ","ει","οι"].map(x=>({label:x, ok:x===s}))), answer:s, itemId:"hear:"+s}));
+  D.words.slice(0,12).forEach(w=> items.push({type:"listen", prompt:"Hear the word. Choose the Greek.", speakOnStart:w.g, speak:w.g, skill:"listening", channel:"hear", src:"book", page:w.page,
+    choices:shuffle([{label:w.g, ok:true}, ...pick(D.words.filter(x=>x.g!==w.g),3).map(x=>({label:x.g, ok:false}))]), answer:w.g, itemId:"lw:"+w.g}));
+  return shuffle(items).slice(0,24);
+}
+function buildSpelling(){
+  const items=[];
+  D.words.forEach(w=>{
+    items.push({type:"mc", prompt:"Meaning → Greek", sub:w.e, skill:"spelling", channel:"spell", src:"book", page:w.page, itemId:"e2g:"+w.g,
+      choices:shuffle([{label:w.g, ok:true}, ...pick(D.words.filter(x=>x.g!==w.g),3).map(x=>({label:x.g, ok:false}))]), answer:w.g});
+    items.push({type:"type", prompt:"Type the Greek for: "+w.e, answer:w.g, speak:w.g, skill:"spelling", channel:"spell", src:"book", page:w.page, itemId:"type:"+w.g});
+  });
+  D.numbers.forEach(n=> items.push({type:"mc", prompt:"Which Greek number is this?", sub:String(n.n)+(n.var? "  (book also lists "+n.var+")":""), skill:"spelling", src:"book", page:21,
+    choices:shuffle([{label:n.g, ok:true}, ...pick(D.numbers.filter(x=>x.n!==n.n),3).map(x=>({label:x.g, ok:false}))]), answer:n.g}));
+  return shuffle(items).slice(0,24);
+}
+function buildReadingPractice(){
+  const items=D.words.map(w=>({type:"self", prompt:"Read this word, then self-check.", speak:w.g, sub:w.e, skill:"wordReading", channel:"read", src:"book", page:w.page, itemId:"rr:"+w.g}));
+  D.readings.forEach(r=> items.push({type:"self", prompt:r.title, speak:r.g, sub:r.e, skill:"wordReading", channel:"read", src:r.src||"book", page:r.page, itemId:"rd:"+r.id}));
+  return items.slice(0, 20);
+}
+function buildReview(){
+  const due=Object.values(GRS.state.items).filter(it=>it.bad>0).slice(0,8);
+  const mix=[];
+  mix.push(...eiLevelItems(GRS.state.ei.level||1).slice(0,4));
+  mix.push(...buildListening().slice(0,3));
+  mix.push(...buildSpelling().slice(0,3));
+  mix.push(...buildReadingPractice().slice(0,3));
+  mix.push(...buildDictation(4).slice(0,2));
+  if(due.length) mix.unshift(...eiIsolated().slice(0,2));
+  return shuffle(mix).slice(0, 12);
+}
+function unitExercises(u){
+  return (u.exercises||[]).map(q=>Object.assign({src:q.src||"book", skill:q.skill||"wordReading"}, q));
+}
+function buildUnitPractice(u){
+  const items=[];
+  items.push(...unitExercises(u));
+  if(u.id==="intro"){
+    items.push(...buildFindI(), ...buildFindO(), ...buildOuComplete().slice(0,6));
+    items.push({type:"mc", prompt:"Greek or Latin look-alike? Pick the Greek pair.", src:"book", page:12, skill:"alphabet",
+      choices:[{label:"Α, α", ok:true},{label:"A, a", ok:false},{label:"N, n", ok:false}], answer:"Α, α"});
+    (D.placesGr||[]).slice(0,8).forEach(p=> items.push({type:"self", prompt:"Read the place name.", speak:p, skill:"wordReading", src:"book", page:10, itemId:"pl:"+p}));
+    items.push(...eiLevelItems(1));
+    items.push(...eiLevelItems(2));
+    D.letters.slice(0,8).forEach(L=> items.push({type:"listen", prompt:"Hear the letter. Which one?", speakOnStart:L.l, speak:L.l, skill:"alphabet", channel:"hear", src:"book", page:9, itemId:"intro-let:"+L.l,
+      choices:shuffle([{label:L.u+" "+L.l, ok:true}, ...pick(D.letters.filter(x=>x.l!==L.l),3).map(x=>({label:x.u+" "+x.l, ok:false}))]), answer:L.u+" "+L.l, skillLabel:"Alphabet"}));
+    items.push({type:"mc", prompt:"In the book’s opening table, ΟΥ ου is…", src:"book", page:9, skill:"vowels",
+      choices:[{label:"[u], as in Ουκρανία", ok:true},{label:"the same sound as ο", ok:false},{label:"the same sound as ω only", ok:false}], answer:"[u], as in Ουκρανία"});
+    items.push({type:"mc", prompt:"η, ι and υ in the book’s table all have the sound…", src:"book", page:9, skill:"ei",
+      choices:[{label:"[i]", ok:true},{label:"[e]", ok:false},{label:"[a]", ok:false}], answer:"[i]"});
+  } else if(u.id==="u1"){
+    items.push(...buildComboModule("ai").slice(0,4));
+    items.push(...buildAUEU().slice(0,4));
+    items.push({type:"mc", prompt:"οι ή η;  Aut__ είναι η Βέρα.", src:"book", page:21, skill:"ei",
+      choices:[{label:"Αυτή", ok:true},{label:"Αυτοί", ok:false},{label:"Αυτό", ok:false}], answer:"Αυτή"});
+    items.push({type:"mc", prompt:"οι ή η;  Aut__ είναι ο Ερβίν και η Αρλέτα.", src:"book", page:21, skill:"ei",
+      choices:[{label:"Αυτοί", ok:true},{label:"Αυτή", ok:false},{label:"Αυτό", ok:false}], answer:"Αυτοί"});
+    D.numbers.forEach(n=> items.push({type:"listen", prompt:"Hear the number.", speakOnStart:n.g, speak:n.g, skill:"listening", src:"book", page:21,
+      choices:shuffle([{label:n.g, ok:true}, ...pick(D.numbers.filter(x=>x.n!==n.n),3).map(x=>({label:x.g,ok:false}))]), answer:n.g}));
+    items.push({type:"mc", prompt:"Ποιο είναι σωστό;", src:"book", page:21, skill:"spelling",
+      choices:[{label:"Εγώ είμαι από την Ισπανία.", ok:true},{label:"Εγώ είσαι από την Ισπανία.", ok:false}], answer:"Εγώ είμαι από την Ισπανία."});
+  } else if(u.id==="u2"){
+    items.push(...D.eiWords.map(w=>({type:"type", prompt:"ε ή η; Type the full word.", sub:w.fill, answer:w.g, speak:w.g, skill:"ei", src:"book", page:36, itemId:"u2:"+w.g})));
+    items.push(...D.ouVsO.map(w=>({type:"mc", prompt:"ο ή ου in "+w.g+"?", big:w.g, speak:w.g, skill:"vowels", src:"book", page:36,
+      choices:[{label:"ο", ok:w.ans==="ο"},{label:"ου", ok:w.ans==="ου"}], answer:w.ans})));
+    items.push({type:"mc", prompt:"Σωστό ή λάθος; Ο Παναγιώτης είναι μια χαρά.", src:"book", page:25, skill:"listening",
+      choices:[{label:"Σωστό", ok:true},{label:"Λάθος", ok:false}], answer:"Σωστό"});
+    items.push({type:"mc", prompt:"Σωστό ή λάθος; Ο Φου μένει στον Πειραιά.", src:"book", page:25, skill:"listening",
+      choices:[{label:"Λάθος", ok:true},{label:"Σωστό", ok:false}], answer:"Λάθος"});
+  } else if(u.id==="u3"){
+    items.push({type:"mc", prompt:"Η Λίλιαν είναι…", src:"book", page:47, skill:"wordReading",
+      choices:[{label:"γιατρός", ok:true},{label:"λεωφορείο", ok:false},{label:"χυμός", ok:false}], answer:"γιατρός"});
+    items.push({type:"type", prompt:"Type: φοιτήτρια", answer:"φοιτήτρια", speak:"φοιτήτρια", skill:"spelling", src:"book", page:46});
+    items.push({type:"listen", prompt:"σ ή ζ;  Ταν_ανία", speakOnStart:"Τανζανία", speak:"Τανζανία", skill:"listening", src:"book", page:46,
+      choices:[{label:"ζ", ok:true},{label:"σ", ok:false}], answer:"ζ"});
+  } else if(u.id==="u4"){
+    items.push({type:"mc", prompt:"Μιλάς ελληνικά;", src:"book", page:59, skill:"wordReading",
+      choices:[{label:"Ναι, μιλάω.", ok:true},{label:"Ναι, μένω.", ok:false}], answer:"Ναι, μιλάω."});
+    items.push({type:"mc", prompt:"The book’s p.57 pattern: before [e]/[i], γ is closer to…", src:"book", page:57, skill:"listening",
+      choices:[{label:"[j] (book’s beginner diagram)", ok:true},{label:"always [g]", ok:false}], answer:"[j] (book’s beginner diagram)"});
+  } else {
+    (u.vocab||[]).forEach(g=>{
+      const w=D.words.find(x=>x.g===g) || {g:g,e:g};
+      items.push({type:"self", prompt:"Read", speak:w.g, sub:w.e||"", skill:"wordReading", src:"book", page:u.pages[0], itemId:"uv:"+g});
+      items.push({type:"type", prompt:"Type: "+(w.e||g), answer:w.g, speak:w.g, skill:"spelling", src:"book", page:u.pages[0]});
+    });
+  }
+  return items.length? items : buildSpelling().slice(0,8);
+}
+
+function markUnitTouch(id){
+  GRS.state.cursor={unit:id, hash:location.hash||"#/learn/book/"+id};
+  GRS.state.completed[id]=GRS.state.completed[id]||{learn:false, practise:0, read:false};
+  save();
+}
+
+/* ---------- views ---------- */
+function layoutNav(){
+  const html=navButtons(GRS.route.tab);
+  const rail=$("railNav"); if(rail) rail.innerHTML=html;
+  const bot=$("bottomNav"); if(bot) bot.innerHTML=html;
+  const top=$("topNav"); if(top) top.innerHTML=html;
+  const crumb=$("crumb"); if(crumb) crumb.textContent=GRS.route.parts.join(" · ");
+  const lesson=$("headLesson"); if(lesson) lesson.textContent=currentLessonLabel();
+}
+function renderHome(){
+  const u=D.units.find(x=>x.id===GRS.state.cursor.unit)||D.units[0];
+  const due=dueCount();
+  const weak=weakSounds();
+  const progress=pct(skill("ei"));
+  return `<section class="stack">
+    <p class="eyebrow">Continue learning</p>
+    <div class="card stack">
+      <p class="micro">Current unit</p>
+      <h1>${esc(u.n? ("Unit "+u.n+" · "+u.title): u.title)}</h1>
+      <p class="muted">Current lesson · p.${u.pages[0]}–${u.pages[1]}</p>
+      <p class="micro">Progress</p>
+      <div class="bar" aria-hidden="true"><span style="width:${progress}%"></span></div>
+      <p class="micro">E / I practice ${progress}%</p>
+      <button class="primary tap-xl" data-go="#/learn/book/${u.id}">Continue</button>
+    </div>
+    <div class="card stack">
+      <p class="eyebrow">Today's Review</p>
+      <p>Weak area: <b>${esc(weak[0]||"E / I")}</b></p>
+      <p class="micro">${due} items waiting</p>
+      <button class="tap-xl" data-go="#/review">Start Review</button>
+    </div>
+  </section>`;
+}
+function renderLearnHub(){
+  return `<section class="stack">
+    <h1>Learn</h1>
+    <div class="grid two">
+      <button class="card" data-go="#/learn/alphabet"><b>Alphabet & Sounds</b><p class="muted">24 letters + ου, from p.9</p></button>
+      <button class="card" data-go="#/learn/book"><b>Book Lessons</b><p class="muted">Introduction → Unit 11</p></button>
+      <button class="card" data-go="#/learn/reading"><b>Reading</b><p class="muted">Ladder from letters to passages</p></button>
+      <button class="card" data-go="#/learn/vowels"><b>Vowels</b><p class="muted">α ε η ι υ ο ω and sound families</p></button>
+    </div>
+    <div class="grid two">
+      <button class="card" data-go="#/learn/e-or-i"><b>E or I?</b><p class="muted">Highest-priority path</p></button>
+      <button class="card" data-go="#/learn/combos"><b>Combinations</b><p class="muted">αι ει οι ου αυ ευ · μπ ντ γκ γγ τσ τζ</p></button>
+    </div>
+  </section>`;
+}
+function renderAlphabet(){
+  const i=GRS.letterIndex||0;
+  const L=D.letters[i];
+  return `<section class="stack">
+    <div class="spread row"><h1>Alphabet</h1>${srcTag("book")} ${pageTag(9)}</div>
+    <p class="muted">The book table also lists <b>ΟΥ, ου [u]</b> after ω. Click a letter to hear it. Previous / Next and the arrow keys move and play once.</p>
+    <div class="letter-grid" id="letters">${D.letters.map((x,idx)=>`<button class="tile ${idx===i?"active":""}" data-act="letter" data-i="${idx}" lang="el" aria-label="${esc(x.name)}"><span class="el">${x.u} ${x.l}</span><small>${esc(x.name)}</small></button>`).join("")}
+      <button class="tile" data-act="letter-ou" lang="el" aria-label="ου"><span class="el">ΟΥ ου</span><small>[u]</small></button>
+    </div>
+    <div class="card">
+      <div class="greek xl" lang="el">${L.u} ${L.l}</div>
+      <p><b>${esc(L.name)}</b> · ${esc(L.ipa)}</p>
+      ${L.bookNote? `<p class="notice sand">${esc(L.bookNote)}</p>`:""}
+      <p class="el" lang="el">${esc(L.ex)} <span class="muted">· ${esc(L.en)}</span></p>
+      <p class="el" lang="el">${esc(L.ex2)} <span class="muted">· ${esc(L.en2)}</span></p>
+      <div class="row">
+        <button class="primary" data-act="speak" data-text="${L.l}">Hear letter</button>
+        <button data-act="speak" data-text="${L.name}">Hear name</button>
+        <button data-act="speak" data-text="${L.ex}">Hear example</button>
+        <button data-act="speak-slow" data-text="${L.l}">Slow</button>
+        <button data-act="repeat">Repeat</button>
+      </div>
+      <div class="pager">
+        <button data-act="let-prev">Previous</button>
+        <span class="micro">${i+1} / 24</span>
+        <button class="primary" data-act="let-next">Next</button>
+      </div>
+    </div>
+    <button data-go="#/practice" data-act="alpha-quiz">Practise letters</button>
+  </section>`;
+}
+function renderVowels(){
+  return `<section class="stack">
+    <h1>Vowels</h1>
+    <p class="muted">From the book’s “Για δες” table, p.16. Same sound does not mean interchangeable spelling.</p>
+    <div class="grid">${D.vowels.map(v=>`<button class="card" data-act="speak" data-text="${v.l}"><div class="greek" lang="el">${v.u} ${v.l}</div><p>${v.ipa}</p></button>`).join("")}</div>
+    <h2>Sound families</h2>
+    ${D.families.map(f=>`<div class="card stack">
+      <div class="spread row"><b>${esc(f.title)}</b> ${srcTag("book")} ${pageTag(f.page)}</div>
+      <p>${esc(f.teach)}</p>
+      <p class="el" lang="el">${f.spellings.join(" · ")}</p>
+      <div class="row">${f.examples.map(ex=>`<button type="button" data-act="speak" data-text="${esc(ex.g)}">${esc(ex.g)}</button>`).join("")}</div>
+      <button data-act="fam-quiz" data-id="${f.id}">Practise this family</button>
+    </div>`).join("")}
+  </section>`;
+}
+function renderEorI(){
+  const lv=GRS.state.ei.level||1;
+  return `<section class="stack">
+    <h1>E or I?</h1>
+    ${srcTag("book")} ${pageTag(16)} ${pageTag(36)}
+    <p>This is the highest-priority path. Isolated sound first. The book then practises ε/η filling in Unit 2 (p.36).</p>
+    <div class="grid two">${D.eiLevels.map(L=>`<button class="card ${L.level===lv?"primary":""}" data-act="ei-level" data-n="${L.level}" ${L.level>lv+1?"disabled":""}>
+      <b>Level ${L.level}</b><p class="muted">${esc(L.title)}</p></button>`).join("")}</div>
+    <p class="micro">Later levels unlock after you practise. You can still reopen a finished level.</p>
+  </section>`;
+}
+function renderCombos(){
+  return `<section class="stack"><h1>Combinations</h1>
+    <h2>Vowel</h2>
+    <div class="grid two">${D.combos.filter(c=>c.kind==="vowel").map(c=>`<button class="card" data-go="#/learn/combo/${c.id}"><div class="el" lang="el">${c.spell}</div><p class="muted">${c.ipa}</p></button>`).join("")}</div>
+    <h2>Consonant</h2>
+    <div class="grid two">${D.combos.filter(c=>c.kind==="consonant").map(c=>`<button class="card" data-go="#/learn/combo/${c.id}"><div class="el" lang="el">${c.spell}</div><p class="muted">${c.ipa}</p></button>`).join("")}</div>
+    <button class="card" data-go="#/learn/au-eu"><b>αυ / ευ special</b><p class="muted">av/af and ev/ef with the book’s rule</p></button>
+  </section>`;
+}
+function renderCombo(id){
+  const c=D.combos.find(x=>x.id===id); if(!c) return `<p>Unknown.</p>`;
+  return `<section class="stack">
+    <p class="eyebrow">Combination</p>
+    <h1 lang="el">${c.spell}</h1>
+    ${srcTag("book")} ${pageTag(c.page)}
+    <div class="notice">${esc(c.teach)}</div>
+    <div class="row">
+      <button class="primary" data-act="speak" data-text="${c.spell}">Hear</button>
+      <button data-act="speak-slow" data-text="${c.spell}">Slow</button>
+    </div>
+    <h2>See · words from the book</h2>
+    ${c.words.map(w=>`<div class="card spread row"><div><div class="el" lang="el">${esc(w.g)}</div><p class="muted">${esc(w.e)}${w.sound? " · "+w.sound:""}</p></div>
+      <button data-act="speak" data-text="${esc(w.g)}">Play</button></div>`).join("")}
+    <h2>Use in a sentence</h2>
+    ${c.sentences.map(s=>`<div class="card"><p class="el" lang="el">${esc(s)}</p><button data-act="speak" data-text="${esc(s)}">Play</button></div>`).join("")}
+    <button class="primary" data-act="combo-quiz" data-id="${c.id}">Practise (hear, choose, spell, read, dictate)</button>
+  </section>`;
+}
+function renderAUEU(){
+  return `<section class="stack">
+    <h1>αυ / ευ</h1>
+    ${srcTag("book")} ${pageTag(16)}
+    <div class="notice">Book rule: αυ, ευ → [af], [ef] when followed by κ, π, τ, φ, θ, χ, σ, ξ, ψ. They → [av], [ev] when followed by α, ε, ι, ο, υ or β, γ, δ, ζ, λ, ρ, μ, ν.</div>
+    <div class="grid two">${D.aueuSort.map(x=>`<button class="card" data-act="speak" data-text="${x.g}"><div class="el" lang="el">${x.g}</div><p class="muted">/${x.box}/</p></button>`).join("")}</div>
+    <button class="primary" data-act="aueu-quiz">Practise what sound?</button>
+  </section>`;
+}
+function renderSyllables(){
+  const sets=[...new Set(D.syllables.map(s=>s.set))];
+  return `<section class="stack">
+    <h1>Syllables</h1>
+    ${srcTag("new")}
+    <p>Controlled CV syllables using the book’s vowels, including ου. Not a random linguist grid.</p>
+    ${sets.map(set=>`<div class="card"><p class="eyebrow">${set}</p><div class="row">${D.syllables.filter(s=>s.set===set).map(s=>`<button data-act="speak" data-text="${s.g}" lang="el">${s.g}</button>`).join("")}</div></div>`).join("")}
+    <button class="primary" data-act="syl-quiz">Hear and choose</button>
+  </section>`;
+}
+function renderReading(){
+  const st=GRS.state.readingStage||1;
+  const stages=["letters","vowels","consonants","syllables","common combinations","short words","longer words","short sentences","short dialogues","short passages"];
+  const locked=n=> n>=9 && st<8;
+  return `<section class="stack">
+    <h1>Reading ladder</h1>
+    <p class="muted">Stages 9–10 stay closed until earlier reading feels steady.</p>
+    ${stages.map((name,i)=>`<button class="card" ${locked(i+1)?"disabled":""} data-act="read-stage" data-n="${i+1}"><b>Stage ${i+1}</b> · ${esc(name)}</button>`).join("")}
+  </section>`;
+}
+function renderBookIndex(){
+  const later=D.course||{};
+  return `<section class="stack">
+    <h1>Book lessons</h1>
+    <p class="muted">${esc(D.book.title)} · printed pages in the supplied file: 8–149 · ${D.units.length} lessons</p>
+    ${D.units.map(u=>`<button class="card" data-go="#/learn/book/${u.id}"><div class="spread row"><b>${u.n? "Unit "+u.n+" · ":""}${esc(u.title)}</b><span class="micro">p.${u.pages[0]}–${u.pages[1]}</span></div><p class="muted">${esc(u.theme)}</p></button>`).join("")}
+    <div class="more-later" id="more-later">${esc(later.moreMessage||"More lessons will be added when the remaining book material is available.")}</div>
+  </section>`;
+}
+function beginEmbedded(u, tab, items, skill){
+  const sid="emb:"+u.id+":"+tab;
+  if(GRS.session && GRS.session.id===sid) return;
+  GRS.session={id:sid, items:(items||[]).slice(), i:0, skill:skill||"spelling", results:[], embedded:true, unitId:u.id, tab};
+}
+function unitReadCards(u){
+  let rs=D.readings.filter(r=>r.unit===u.id);
+  const ds=D.dialogues.filter(d=>d.unit===u.id);
+  if(u.id==="intro"){
+    rs=rs.concat([
+      {title:"From the alphabet table", page:9, g:D.letters.map(L=>L.ex).join(" · "), e:"Country names printed with each letter on p.9.", src:"book"},
+      {title:"βάζω σε κύκλο όλα τα /i/", page:12, g:D.findI.map(w=>w.g).join(" · "), e:"Circle every [i] spelling: η, ι, υ (and later ει, οι).", src:"book"},
+      {title:"βάζω σε κύκλο όλα τα /o/", page:12, g:D.findO.map(w=>w.g).join(" · "), e:"Circle ο and ω. ου is a different sound.", src:"book"},
+      {title:"Greece on the map", page:10, g:(D.placesGr||[]).join(" · "), e:"Place names from the introduction map.", src:"book"}
+    ]);
+  }
+  if(!rs.length && !ds.length && (u.vocab||[]).length){
+    rs=[{title:u.title, page:u.pages[0], g:u.vocab.join(" · "), e:u.theme, src:"book"}];
+  }
+  return {rs, ds};
+}
+function bookAudioList(u){
+  const tracks=tracksForUnit(u.id);
+  if(!tracks.length){
+    return `<div class="book-audio"><span class="src">Book audio</span>
+      <p class="muted">No official track is mapped for these pages. Use the computer Greek voice, or the publisher index:
+      <a href="${esc((D.course&&D.course.audioIndex)||D.book.audioUrl)}" target="_blank" rel="noopener">Patakis audio</a>.</p></div>`;
+  }
+  return `<div class="book-audio stack">
+    <div class="spread row"><span class="src">Book audio</span><span class="micro">External Patakis MP3 · not bundled · not a computer voice</span></div>
+    ${tracks.map(t=>`<div class="spread row">
+      <div><b>${esc(t.cd)}</b> <span class="muted">p.${esc(t.page)}</span></div>
+      <button type="button" data-act="book-play" data-url="${esc(t.url)}" data-label="${esc(t.cd+" p."+t.page)}">🎧 Book audio</button>
+    </div>`).join("")}
+    <p class="micro">If a track fails to load, the publisher file is temporarily unavailable. You can still use <b>computer voice</b> on the same lines.</p>
+  </div>`;
+}
+function vocabItems(u){
+  if(u.vocabItems && u.vocabItems.length) return u.vocabItems;
+  return (u.vocab||[]).map(g=>{ const w=D.words.find(x=>x.g===g)||{g,e:g,page:u.pages[0]}; return {g:w.g,e:w.e,page:w.page}; });
+}
+function renderUnitLearn(u){
+  const fam=D.families||[];
+  let body=`<p>${esc(u.theme)}</p>
+    <ul>${(u.goals||[]).map(g=>`<li>${esc(g)}</li>`).join("")}</ul>
+    ${(u.opener||[]).length? `<div class="card"><h3>From the book pages</h3>${srcTag("book")} ${pageTag(u.pages[0])}
+      ${(u.opener||[]).map(line=>`<p class="el" lang="el">${esc(line)}</p>`).join("")}
+      <div class="row">${(u.opener||[]).filter(l=>/[Α-Ωα-ω]/.test(l)).slice(0,8).map(l=>`<button data-act="speak" data-text="${esc(l)}">Hear</button>`).join("")}</div>
+    </div>`:""}
+    <p><b>Pronunciation in this unit:</b> ${(u.phonology||[]).join(" · ")}</p>
+    ${u.titleNote? `<p class="notice sand">${esc(u.titleNote)}</p>`:""}
+    <div class="row">${vocabItems(u).map(w=>`<button data-act="speak" data-text="${esc(w.g)}" lang="el">${esc(w.g)}</button>`).join("")}</div>
+    ${bookAudioList(u)}`;
+  if(u.id==="intro"){
+    body += `<div class="card"><h3>Alphabet · p.9</h3>${srcTag("book")}
+      <p class="muted">Click a letter. The book lists ΟΥ, ου [u] after ω.</p>
+      <div class="letter-grid">${D.letters.map((x,idx)=>`<button class="tile" data-act="letter" data-i="${idx}" lang="el"><span class="el">${x.u} ${x.l}</span><small>${esc(x.name)}</small></button>`).join("")}
+        <button class="tile" data-act="letter-ou" lang="el"><span class="el">ΟΥ ου</span><small>[u]</small></button></div></div>
+      ${fam.map(f=>`<div class="card"><h3>${esc(f.title)}</h3><p>${esc(f.teach)}</p><p class="el" lang="el">${f.spellings.join(" · ")}</p>
+        <div class="row">${f.examples.slice(0,4).map(ex=>`<button type="button" data-act="speak" data-text="${esc(ex.g)}">${esc(ex.g)}</button>`).join("")}</div></div>`).join("")}`;
+  }
+  return body;
+}
+function renderUnitVocab(u){
+  const items=vocabItems(u);
+  return `<p class="muted">Words and phrases printed or used on these unit pages.</p>
+    ${items.map(w=>`<div class="card spread row"><div><div class="el" lang="el">${esc(w.g)}</div>
+      <p class="muted">${esc(w.e||"")}</p>${srcTag("book")} ${pageTag(w.page)}</div>
+      <div class="row"><button data-act="speak" data-text="${esc(w.g)}">🔊 Computer voice</button>
+      <button data-act="start-self" data-text="${esc(w.g)}">Read aloud</button></div></div>`).join("")}`;
+}
+function renderUnitGrammar(u){
+  const gs=u.grammar||[];
+  if(!gs.length) return `<div class="card"><p>No extra grammar table is stored for this unit beyond the learn page.</p></div>`;
+  return gs.map(g=>`<div class="card"><h3>${esc(g.title)}</h3>${srcTag(g.src||"book")} ${pageTag(g.page)}<p>${esc(g.text)}</p></div>`).join("");
+}
+function renderUnitSounds(u){
+  const notes=u.pronNotes||[];
+  return `${notes.map(n=>`<div class="card"><h3>${esc(n.title)}</h3>${srcTag(n.src||"book")} ${pageTag(n.page)}<p>${esc(n.text)}</p></div>`).join("")}
+    <p class="muted">Computer voice is a synthesiser, not the book CD. Official tracks are on Listen.</p>
+    <div class="row">${vocabItems(u).map(w=>`<button data-act="speak" data-text="${esc(w.g)}">${esc(w.g)}</button>`).join("")}</div>`;
+}
+function renderUnitSpeak(u){
+  const items=u.speaking||[];
+  if(!items.length) return `<div class="card"><p>No speaking prompt stored for this unit.</p></div>`;
+  return `<p class="muted">Self-check only. No microphone scoring.</p>
+    ${items.map((s,i)=>`<div class="card"><h3>Prompt ${i+1}</h3>${srcTag(s.src||"book")} ${pageTag(s.page)}
+      <p>${esc(s.prompt)}</p>
+      <p class="el" lang="el">${esc(s.model||"")}</p>
+      <div class="row">
+        <button class="primary" data-act="speak" data-text="${esc(s.model||s.prompt)}">Hear model (computer voice)</button>
+        <button data-act="start-self" data-text="${esc(s.model||s.prompt)}">I said it</button>
+      </div>
+    </div>`).join("")}`;
+}
+function renderUnitWrite(u){
+  const items=u.writing||[];
+  if(!items.length) return `<div class="card"><p>No writing prompt stored for this unit.</p></div>`;
+  const drafts=GRS.state.writing||{};
+  return items.map((w,i)=>{
+    const key=u.id+":"+i;
+    const saved=(drafts[key]&&drafts[key].text)||"";
+    return `<div class="card"><h3>Writing ${i+1}</h3>${srcTag(w.src||"book")} ${pageTag(w.page)}
+      <p>${esc(w.prompt)}</p>
+      ${w.hint? `<p class="muted">${esc(w.hint)}</p>`:""}
+      <textarea class="write-box" data-write="${esc(key)}" placeholder="Write in Greek…">${esc(saved)}</textarea>
+      <div class="row"><button type="button" data-act="save-write" data-key="${esc(key)}">Save draft</button>
+        <span class="micro">${saved? "Draft kept in greekReadingStudio.v1":"Not saved yet"}</span></div>
+    </div>`;
+  }).join("");
+}
+function renderUnit(id, tab){
+  const u=D.units.find(x=>x.id===id); if(!u) return `<p>Unknown unit.</p>`;
+  const tabs=D.unitTabs||[];
+  const known=tabs.some(t=>t.id===tab);
+  tab=known? tab : "learn";
+  markUnitTouch(u.id);
+  let body="";
+  if(tab==="learn") body=renderUnitLearn(u);
+  else if(tab==="vocab") body=renderUnitVocab(u);
+  else if(tab==="grammar") body=renderUnitGrammar(u);
+  else if(tab==="sounds") body=renderUnitSounds(u);
+  else if(tab==="speak") body=renderUnitSpeak(u);
+  else if(tab==="write") body=renderUnitWrite(u);
+  else if(tab==="practise" || tab==="exercises"){
+    let items=[];
+    try{ items=shuffle(tab==="exercises"? unitExercises(u).concat(buildUnitPractice(u).slice(0,8)) : buildUnitPractice(u)); }catch(err){ console.error(err); items=[]; }
+    if(!items.length) items=buildSpelling().slice(0,8);
+    beginEmbedded(u, tab, items.slice(0,20), "spelling");
+    body=`<p class="micro">${tab==="exercises"? "Book-based interactive items from the printed pages.":"Mixed practice from this unit."}</p>${renderSession()}`;
+  } else if(tab==="read"){
+    const pack=unitReadCards(u);
+    body=`${pack.rs.map(r=>`<div class="card"><h3>${esc(r.title)}</h3>${srcTag(r.src||"book")} ${pageTag(r.page)}
+      <p class="el" lang="el">${esc(r.g)}</p><p class="muted">${esc(r.e||"")}</p>
+      <button class="primary" data-act="speak" data-text="${esc(r.g)}">Listen</button>
+      <button data-act="start-self" data-text="${esc(r.g)}">Read aloud</button></div>`).join("")}
+      ${pack.ds.map(d=>{
+        const tr=(D.audio||[]).find(a=>a.id===d.audioId) || (D.audio||[]).find(a=>a.unit===u.id && String(a.page).startsWith(String(d.page)));
+        return `<div class="card"><h3>${esc(d.title)}</h3> ${pageTag(d.page)} ${d.track? `<span class="src">Book CD ${d.track}</span>`:""}
+        ${d.lines.map(l=>`<p><b>${esc(l.who)}:</b> <span lang="el">${esc(l.g)}</span></p>`).join("")}
+        <div class="row">
+          ${tr? `<button class="primary" data-act="book-play" data-url="${esc(tr.url)}" data-label="${esc((tr.cd||"")+" p."+d.page)}">🎧 Book audio</button>`:""}
+          <button data-act="speak" data-text="${esc(d.lines.map(l=>l.g).join(". "))}">🔊 Computer voice</button>
+        </div>
+      </div>`;
+      }).join("")}`;
+    if(!pack.rs.length && !pack.ds.length) body=`<div class="card"><p>No reading lines for this unit in the supplied pages.</p></div>`;
+  } else if(tab==="listen"){
+    let items=[];
+    try{ items=buildUnitPractice(u).filter(q=>q.speak||q.speakOnStart||q.type==="listen"); }catch(err){ console.error(err); items=[]; }
+    if(!items.length) items=buildListening().slice(0,10);
+    beginEmbedded(u, "listen", items.slice(0,12), "listening");
+    body=`<p class="micro">${esc((u.listen||[]).join(" · "))}</p>
+      ${bookAudioList(u)}
+      <p class="notice">Below is computer-voice practice on the same pages. Official tracks above stream from Patakis and are not downloaded into this file.</p>
+      ${renderSession()}`;
+  } else {
+    let items=[];
+    try{ items=shuffle(buildUnitPractice(u).concat(eiLevelItems(1).slice(0,4), buildFindI(), buildFindO())); }catch(err){ console.error(err); items=buildReview(); }
+    beginEmbedded(u, "review", items.slice(0,12), "listening");
+    body=renderSession();
+  }
+  const last=u.lastAvailable || u.id===D.units[D.units.length-1].id;
+  const nxt=nextUnit(u.id);
+  return `<section class="stack">
+    <p class="eyebrow">${u.n? "Ενότητα "+u.n : "Εισαγωγή"} · p.${u.pages[0]}–${u.pages[1]}</p>
+    <h1 lang="el">${esc(u.title)}</h1>
+    <div class="tabs">${tabs.map(t=>`<button class="${t.id===tab?"primary":""}" data-go="#/learn/book/${u.id}/${t.id}">${esc(t.label)}</button>`).join("")}</div>
+    ${body}
+    ${last? `<div class="more-later">${esc((D.course&&D.course.moreMessage)||"More lessons will be added when the remaining book material is available.")}</div>`:""}
+    <div class="pager">
+      <button data-go="#/learn/book/${prevUnit(u.id)}">← Previous</button>
+      <button class="primary" data-go="${nxt==="__later__"? "#/learn/book": "#/learn/book/"+nxt}">${nxt==="__later__"? "Book list":"Next →"}</button>
+    </div>
+  </section>`;
+}
+function prevUnit(id){ const i=D.units.findIndex(u=>u.id===id); return D.units[Math.max(0,i-1)].id; }
+function nextUnit(id){
+  const i=D.units.findIndex(u=>u.id===id);
+  if(i<0) return D.units[0].id;
+  if(i>=D.units.length-1) return "__later__";
+  return D.units[i+1].id;
+}
+function renderPractice(){
+  return `<section class="stack">
+    <h1>Practice</h1>
+    <div class="grid two">
+      <button class="card" data-go="#/practice/listening"><b>Listening</b><p class="muted">Ear training, E/I first</p></button>
+      <button class="card" data-go="#/practice/sounds"><b>Sound discrimination</b><p class="muted">Same sound, different spelling</p></button>
+      <button class="card" data-go="#/practice/spelling"><b>Spelling</b><p class="muted">Type and choose the real letters</p></button>
+      <button class="card" data-go="#/practice/reading"><b>Reading practice</b><p class="muted">Self-check read-aloud</p></button>
+      <button class="card" data-go="#/practice/dictation"><b>Dictation</b><p class="muted">7 levels, no microphone</p></button>
+      <button class="card" data-go="#/learn/e-or-i"><b>E or I?</b><p class="muted">Dedicated path</p></button>
+    </div>
+  </section>`;
+}
+function renderDictationHub(){
+  return `<section class="stack"><h1>Dictation</h1>
+    <p class="muted">Hear Greek, type Greek. Optional accent tolerance is on in Settings.</p>
+    ${[1,2,3,4,5,6,7].map(n=>`<button class="card" data-act="dic" data-n="${n}">Level ${n}</button>`).join("")}
+  </section>`;
+}
+function renderReview(){
+  const due=dueCount(); const weak=weakSounds();
+  const hard=Object.values(GRS.state.items).filter(it=>it.bad>=2).slice(0,6);
+  return `<section class="stack">
+    <h1>Review</h1>
+    <div class="card">
+      <p>Today: <b>${Math.max(due,8)}</b> items</p>
+      <p>Weak sounds: <b>${esc(weak.join(" · ")||"E / I")}</b></p>
+      <p>Difficult combinations: <b>ει / οι</b></p>
+      <p>Words: <b>${hard.length||6}</b></p>
+      <button class="primary tap-xl" data-act="start-review">Start Review</button>
+    </div>
+    <p class="muted">Review mixes recognition, listening, spelling and reading — not 20 identical multiple-choice questions.</p>
+  </section>`;
+}
+function renderMore(){
+  return `<section class="stack"><h1>More</h1>
+    <div class="grid two">
+      <button class="card" data-go="#/more/progress"><b>Progress</b></button>
+      <button class="card" data-go="#/more/sources"><b>Sources</b></button>
+      <button class="card" data-go="#/more/settings"><b>Settings</b></button>
+      <button class="card" data-go="#/more/help"><b>Help</b></button>
+    </div>
+  </section>`;
+}
+function renderProgress(){
+  return `<section class="stack"><h1>Progress</h1>
+    <p class="muted">Practice indicators, not proficiency claims.</p>
+    ${D.skills.map(sk=>{ const p=pct(skill(sk.id)); return `<div class="card"><div class="spread row"><b>${esc(sk.label)}</b><span>${p}%</span></div><div class="bar"><span style="width:${p}%"></span></div><p class="micro">${skill(sk.id).ok} ok · ${skill(sk.id).bad} to retry</p></div>`; }).join("")}
+    <h2>Saved words</h2>
+    <p>${(GRS.state.saved||[]).length? GRS.state.saved.map(esc).join(" · ") : "None yet."}</p>
+  </section>`;
+}
+function renderSources(){
+  return `<section class="stack">
+    <h1>Sources</h1>
+    <div class="card">
+      <p><b>${esc(D.book.title)}</b></p>
+      <p>${esc(D.book.subtitle)}</p>
+      <p>${esc(D.book.authors)}</p>
+      <p>${esc(D.book.publisher)}, ${D.book.year} · ISBN ${esc(D.book.isbn)}</p>
+      <p class="muted">${esc(D.book.note)}</p>
+      <p>Official audio (external stream only, not bundled): <a href="${esc(D.book.audioUrl)}" target="_blank" rel="noopener">Patakis MP3 page</a></p>
+      <p class="muted">${(D.audio||[]).filter(a=>a.inScope).length} official tracks mapped to Intro–Unit 11. Tracks for printed units 12–20 stay in the catalog with <code>inScope:false</code> and are not lessons.</p>
+    </div>
+    <p>Labels used in the app:</p>
+    <p>${srcTag("book")} ${srcTag("adapted")} ${srcTag("new")} ${srcTag("web")}</p>
+    <div class="notice sand"><b>Supplementary web research:</b> publisher catalogue (Patakis), Google Books contents list used only to confirm unit titles/pages already visible in the supplied PDF. SpeechSynthesis behaviour is browser-specific and is not from the textbook.</div>
+    <p class="micro">This trainer does not reproduce the PDF as images. Interactive exercises are inspired by the book’s tasks.</p>
+  </section>`;
+}
+function renderSettings(){
+  const s=GRS.state.settings;
+  return `<section class="stack">
+    <h1>Settings</h1>
+    <label class="stack">Speech rate <input id="rate" type="range" min="0.6" max="1.1" step="0.02" value="${s.rate}"></label>
+    <label class="row"><input id="acc" type="checkbox" ${s.accentTolerance?"checked":""}> Accent-tolerant checking (ό = ο)</label>
+    <label class="row"><input id="eng" type="checkbox" ${s.hideEnglish?"checked":""}> Hide English</label>
+    <div class="row">
+      <button class="primary" id="btnExport" type="button">Export progress</button>
+      <label class="card">Import progress<input id="imp" type="file" accept="application/json,.json"></label>
+    </div>
+    <p class="micro">Storage key <code>${STORE_KEY}</code>. Import merges; it does not silently delete.</p>
+  </section>`;
+}
+function renderHelp(){
+  return `<section class="stack">
+    <h1>Help</h1>
+    <div class="notice sand">
+      <p><b>iPhone / iPad:</b> do not open this file from Files or Downloads. That screen is a document preview — it cannot run the app.</p>
+      <p>On the computer, double-tap <b>Open_on_iPhone.command</b>. Safari on the phone should then open the address it shows (same Wi‑Fi). After that, use Home → Learn → Introduction → Practise as usual.</p>
+    </div>
+    <p>This is a reading and pronunciation trainer for a beginner using <b>Ελληνικά Α΄</b>. It is not a dictionary and not a grammar book.</p>
+    <ul>
+      <li><b>Learn</b> follows the book: alphabet, then Unit 1 combinations, then later phonetic contrasts.</li>
+      <li><b>E or I?</b> is extra practice because ε and ι/η are easy to mix up.</li>
+      <li><b>Book audio</b> streams official Patakis MP3s from the publisher site. <b>Computer voice</b> is the browser Greek voice. They are labelled separately. No microphone scoring.</li>
+      <li>Lessons stop at Unit 11 (end of the supplied PDF). Units 12–20 can be added later as extra entries in the unit list.</li>
+      <li>The header Back button returns to the previous screen in the app (Home, Learn, the unit). It does not leave Safari.</li>
+    </ul>
+  </section>`;
+}
+
+function render(){
+  GRS.route=parseHash();
+  layoutNav();
+  showPlayerExtra(false);
+  let html="";
+  const p=GRS.route.parts;
+  if(GRS.session && !GRS.session.embedded){ html=renderSession(); }
+  else if(p[0]==="home") html=renderHome();
+  else if(p[0]==="learn" && p.length===1) html=renderLearnHub();
+  else if(p[0]==="learn" && p[1]==="alphabet") html=renderAlphabet();
+  else if(p[0]==="learn" && p[1]==="vowels") html=renderVowels();
+  else if(p[0]==="learn" && p[1]==="e-or-i") html=renderEorI();
+  else if(p[0]==="learn" && p[1]==="combos") html=renderCombos();
+  else if(p[0]==="learn" && p[1]==="combo") html=renderCombo(p[2]);
+  else if(p[0]==="learn" && p[1]==="au-eu") html=renderAUEU();
+  else if(p[0]==="learn" && p[1]==="syllables") html=renderSyllables();
+  else if(p[0]==="learn" && p[1]==="reading") html=renderReading();
+  else if(p[0]==="learn" && p[1]==="book" && !p[2]) html=renderBookIndex();
+  else if(p[0]==="learn" && p[1]==="book") html=renderUnit(p[2], p[3]);
+  else if(p[0]==="practice" && p.length===1) html=renderPractice();
+  else if(p[0]==="practice" && p[1]==="dictation") html=renderDictationHub();
+  else if(p[0]==="practice" && p[1]==="listening") { GRS.session={id:"lis", items:buildListening(), i:0, skill:"listening", results:[]}; html=renderSession(); }
+  else if(p[0]==="practice" && p[1]==="sounds") { GRS.session={id:"snd", items:shuffle(buildFamilyQuiz("i").concat(buildFamilyQuiz("e"), buildFamilyQuiz("o"))).slice(0,16), i:0, skill:"vowels", results:[]}; html=renderSession(); }
+  else if(p[0]==="practice" && p[1]==="spelling") { GRS.session={id:"sp", items:buildSpelling(), i:0, skill:"spelling", results:[]}; html=renderSession(); }
+  else if(p[0]==="practice" && p[1]==="reading") { GRS.session={id:"rp", items:buildReadingPractice(), i:0, skill:"wordReading", results:[]}; html=renderSession(); }
+  else if(p[0]==="review") html=renderReview();
+  else if(p[0]==="more" && p.length===1) html=renderMore();
+  else if(p[0]==="more" && p[1]==="progress") html=renderProgress();
+  else if(p[0]==="more" && p[1]==="sources") html=renderSources();
+  else if(p[0]==="more" && p[1]==="settings") html=renderSettings();
+  else if(p[0]==="more" && p[1]==="help") html=renderHelp();
+  else html=renderHome();
+  $("view").innerHTML=html;
+  bindView();
+}
+
+function bindView(){
+  document.querySelectorAll("[data-go]").forEach(b=> b.onclick=()=>{ userGesture(); go(b.getAttribute("data-go")); });
+  document.querySelectorAll("[data-nav]").forEach(b=> b.onclick=()=>{ userGesture(); go("#/"+b.getAttribute("data-nav")); });
+  document.querySelectorAll("[data-act]").forEach(b=> b.onclick=()=>{ userGesture(); onAct(b); });
+  const rate=$("rate"); if(rate) rate.oninput=()=>{ GRS.state.settings.rate=parseFloat(rate.value); GRS.audio.rate=GRS.state.settings.rate; save(); };
+  const acc=$("acc"); if(acc) acc.onchange=()=>{ GRS.state.settings.accentTolerance=acc.checked; save(); };
+  const eng=$("eng"); if(eng) eng.onchange=()=>{ GRS.state.settings.hideEnglish=eng.checked; document.body.classList.toggle("no-en", eng.checked); save(); };
+  const exp=$("btnExport"); if(exp) exp.onclick=()=>{
+    const blob=new Blob([exportState()], {type:"application/json"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="greek-reading-studio-progress.json"; a.click();
+  };
+  const imp=$("imp"); if(imp) imp.onchange=()=>{
+    const f=imp.files && imp.files[0]; if(!f) return;
+    const r=new FileReader(); r.onload=()=>{ try{ importState(String(r.result)); toast("Imported and merged."); render(); } catch(e){ toast("Import failed."); } }; r.readAsText(f);
+  };
+  document.querySelectorAll("[data-write]").forEach(box=>{
+    box.oninput=()=>{
+      const key=box.getAttribute("data-write");
+      GRS.state.writing=GRS.state.writing||{};
+      GRS.state.writing[key]={text:box.value, at:Date.now()};
+      save();
+    };
+  });
+}
+function onAct(b){
+  const act=b.getAttribute("data-act");
+  const text=b.getAttribute("data-text")||"";
+  if(act==="speak") speak(text);
+  if(act==="speak-slow") speak(text, {slow:true});
+  if(act==="repeat"){ if(GRS.audio.last.length) speakList(GRS.audio.last); }
+  if(act==="letter"){ GRS.letterIndex=+b.getAttribute("data-i"); stopAudio(false); speak(D.letters[GRS.letterIndex].l); render(); }
+  if(act==="letter-ou"){ stopAudio(false); speak("ου"); }
+  if(act==="let-prev"){ GRS.letterIndex=(GRS.letterIndex+23)%24; stopAudio(false); speak(D.letters[GRS.letterIndex].l); render(); }
+  if(act==="let-next"){ GRS.letterIndex=(GRS.letterIndex+1)%24; stopAudio(false); speak(D.letters[GRS.letterIndex].l); render(); }
+  if(act==="alpha-quiz") startSession("alpha", buildAlphabetQuiz(), "alphabet");
+  if(act==="fam-quiz") startSession("fam", buildFamilyQuiz(b.getAttribute("data-id")), "vowels");
+  if(act==="ei-level"){ const n=+b.getAttribute("data-n"); GRS.state.ei.level=Math.max(GRS.state.ei.level||1, n); save(); startSession("ei"+n, eiLevelItems(n), "ei"); }
+  if(act==="combo-quiz") startSession("c", buildComboModule(b.getAttribute("data-id")), "vowelCombos");
+  if(act==="aueu-quiz") startSession("aueu", buildAUEU(), "vowelCombos");
+  if(act==="syl-quiz"){
+    startSession("syl", shuffle(D.syllables.map(s=>({type:"listen", prompt:"Which syllable?", speakOnStart:s.g, speak:s.g, skill:"syllables", src:"new",
+      choices:shuffle([{label:s.g, ok:true}, ...pick(D.syllables.filter(x=>x.g!==s.g),3).map(x=>({label:x.g, ok:false}))]), answer:s.g}))).slice(0,16), "syllables");
+  }
+  if(act==="dic") startSession("d", shuffle(buildDictation(+b.getAttribute("data-n"))), "dictation");
+  if(act==="start-review") startSession("rev", buildReview(), "listening");
+  if(act==="restart-embed"){
+    if(GRS.session) GRS.session=null;
+    render();
+  }
+  if(act==="unit-listen"){ const u=D.units.find(x=>x.id===b.getAttribute("data-id")); startSession("ul", buildUnitPractice(u).filter(q=>q.speak||q.speakOnStart).slice(0,10), "listening"); }
+  if(act==="unit-review"){ const u=D.units.find(x=>x.id===b.getAttribute("data-id")); startSession("ur", shuffle(buildUnitPractice(u)).slice(0,12), "spelling"); }
+  if(act==="read-stage"){
+    const n=+b.getAttribute("data-n"); GRS.state.readingStage=Math.max(GRS.state.readingStage||1, n); save();
+    if(n<=1) startSession("rs", buildAlphabetQuiz().slice(0,10), "alphabet");
+    else if(n===2) startSession("rs", buildFamilyQuiz("e").concat(buildFamilyQuiz("i")).slice(0,12), "vowels");
+    else if(n===3) startSession("rs", buildComboModule("mp").slice(0,8), "consCombos");
+    else if(n===4) onAct(Object.assign(document.createElement("button"), {getAttribute:k=>k==="data-act"?"syl-quiz":""}));
+    else if(n===5) startSession("rs", buildComboModule("ai").concat(buildComboModule("ei")).slice(0,12), "vowelCombos");
+    else if(n<=7) startSession("rs", buildReadingPractice().filter(q=>q.speak && q.speak.split(" ").length<3).slice(0,12), "wordReading");
+    else startSession("rs", D.readings.filter(r=>r.stage<=n).map(r=>({type:"self", prompt:r.title, speak:r.g, sub:r.e, skill:"wordReading", src:r.src||"book", page:r.page})), "wordReading");
+  }
+  if(act==="choose"){
+    const q=currentQ(); if(!q) return;
+    const i=+b.getAttribute("data-i"); const ch=q.choices[i];
+    b.classList.add(ch.ok? "ok":"bad");
+    q.choices.forEach((c,idx)=>{ if(c.ok) document.querySelectorAll("[data-act=choose]")[idx]?.classList.add("ok"); });
+    feedback(ch.ok, ch.ok? "Yes." : "The book form is <b lang='el'>"+esc(q.answer)+"</b>.");
+    finishQuestion(!!ch.ok, q, ch.label);
+  }
+  if(act==="submit-type"){
+    const q=currentQ(); const got=$("ans").value;
+    const ok=answersEqual(got, q.answer) || (q.answerAlt && answersEqual(got, q.answerAlt));
+    feedback(ok, ok? "Yes." : "Expected <b lang='el'>"+esc(q.answer)+"</b>.");
+    finishQuestion(ok, q, got);
+  }
+  if(act==="toggle-ch"){ b.classList.toggle("ok"); }
+  if(act==="submit-find"){
+    const q=currentQ();
+    const word=[...q.word];
+    const selected=[...document.querySelectorAll("[data-act=toggle-ch]")].map((el,i)=> el.classList.contains("ok")? stripAccents(word[i]) : null).filter(Boolean);
+    const need=q.hits.map(h=>stripAccents(h));
+    const ok=need.every(h=> selected.includes(h)) && selected.length>=need.length;
+    feedback(ok, ok? "Yes." : "Look for "+need.join(", "));
+    finishQuestion(ok, q, selected.join(""));
+  }
+  if(act==="self-ok"){ const q=currentQ(); finishQuestion(true, q, "self-ok"); }
+  if(act==="self-again"){ const q=currentQ(); finishQuestion(false, q, "self-again"); }
+  if(act==="hide-model"){ const m=$("model"); if(m) m.classList.toggle("hidden"); }
+  if(act==="q-next"){ if(GRS.session){ GRS.session.i++; render(); } }
+  if(act==="q-prev"){ if(GRS.session){ GRS.session.i=Math.max(0, GRS.session.i-1); render(); } }
+  if(act==="order-add"){
+    GRS._order=GRS._order||[];
+    GRS._order.push(currentQ().pieces[+b.getAttribute("data-i")]);
+    $("order-out").textContent=GRS._order.join("");
+  }
+  if(act==="order-clear"){ GRS._order=[]; if($("order-out")) $("order-out").textContent=""; }
+  if(act==="order-check"){
+    const q=currentQ(); const got=(GRS._order||[]).join("");
+    const ok=answersEqual(got, q.answer);
+    feedback(ok, ok? "Yes." : "Expected "+q.answer);
+    GRS._order=[]; finishQuestion(ok, q, got);
+  }
+  if(act==="start-self") startSession("self", [{type:"self", prompt:"Read aloud", speak:text, skill:"wordReading", channel:"read", src:"book"}], "wordReading");
+  if(act==="book-play") playBookTrack(b.getAttribute("data-url"), b.getAttribute("data-label")||"Book track");
+  if(act==="save-write"){
+    const key=b.getAttribute("data-key");
+    const box=document.querySelector('[data-write="'+key+'"]');
+    GRS.state.writing=GRS.state.writing||{};
+    GRS.state.writing[key]={text:box? box.value:"", at:Date.now()};
+    save(); toast("Draft saved.");
+  }
+}
+
+document.addEventListener("keydown", e=>{
+  if(e.target && (e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA")) return;
+  if(e.key==="ArrowRight"){
+    if(GRS.route.parts[1]==="alphabet"){ e.preventDefault(); GRS.letterIndex=(GRS.letterIndex+1)%24; stopAudio(false); speak(D.letters[GRS.letterIndex].l); render(); }
+    else if(GRS.session){ e.preventDefault(); GRS.session.i=Math.min(GRS.session.items.length, GRS.session.i+1); render(); }
+  }
+  if(e.key==="ArrowLeft"){
+    if(GRS.route.parts[1]==="alphabet"){ e.preventDefault(); GRS.letterIndex=(GRS.letterIndex+23)%24; stopAudio(false); speak(D.letters[GRS.letterIndex].l); render(); }
+    else if(GRS.session){ e.preventDefault(); GRS.session.i=Math.max(0, GRS.session.i-1); render(); }
+  }
+});
+
+function showFileBanner(){
+  const b=$("iosBanner");
+  if(!b) return;
+  const file=location.protocol==="file:";
+  b.classList.toggle("hidden", !file);
+}
+function inAppBack(){
+  if(GRS.stack.length>1){
+    GRS.stack.pop();
+    const prev=GRS.stack[GRS.stack.length-1]||"#/home";
+    GRS.hash=prev;
+    try{ history.replaceState(null,"",prev); }catch(e){}
+    GRS.session=null;
+    render();
+    return;
+  }
+  const up=parentHash();
+  if(up && up!==currentHash()) go(up, true);
+  else go("#/home", true);
+}
+
+$("btnStop").onclick=()=>{ userGesture(); stopAudio(true); };
+$("btnPlay").onclick=()=>{
+  userGesture();
+  if(GRS.audio.last.length) speakList(GRS.audio.last);
+  else speak("Ελλάδα");
+};
+$("btnReplay").onclick=()=>{
+  userGesture();
+  const book=$("bookHtmlAudio");
+  if(book && book.src && $("sourceKind") && /Book/.test($("sourceKind").textContent||"")){
+    try{ book.currentTime=0; }catch(e){}
+    const p=book.play(); if(p && p.catch) p.catch(()=>{});
+    return;
+  }
+  if(GRS.audio.last.length) speakList(GRS.audio.last);
+  else speak("Ελλάδα");
+};
+$("btnSlow").onclick=()=>{
+  userGesture();
+  if(GRS.audio.last.length) speakList(GRS.audio.last, {slow:true});
+  else speak("Ελλάδα", {slow:true});
+};
+if($("btnPlayerMore")) $("btnPlayerMore").onclick=()=>{
+  const extra=$("playerExtra");
+  showPlayerExtra(extra && extra.classList.contains("hidden"));
+};
+if($("btnBack")) $("btnBack").onclick=()=>{ inAppBack(); };
+
+document.addEventListener("touchstart", userGesture, {passive:true});
+document.addEventListener("click", userGesture, true);
+
+window.addEventListener("hashchange", ()=>{
+  const h=currentHash();
+  GRS.hash=h;
+  const last=GRS.stack[GRS.stack.length-1];
+  if(last!==h) GRS.stack.push(h);
+  GRS.session=null;
+  render();
+});
+window.addEventListener("popstate", ()=>{ GRS.session=null; GRS.hash=currentHash(); render(); });
+
+try{
+  load();
+  GRS.hash=currentHash();
+  GRS.stack=[GRS.hash||"#/home"];
+  showFileBanner();
+  try{
+    if(!location.hash || location.hash==="#") history.replaceState(null,"","#/home");
+  }catch(e){ GRS.hash="#/home"; }
+  render();
+  pickVoice();
+  if(synth){
+    try{ synth.addEventListener("voiceschanged", pickVoice); }catch(e){}
+  }
+  setTimeout(()=>{ pickVoice(); }, 600);
+  setTimeout(()=>{
+    const b=$("voiceBadge");
+    if(b && /Checking|Looking/i.test(b.textContent||"")) setVoiceUnavailable();
+  }, 1200);
+  GRS.ready=true;
+}catch(err){
+  const v=$("view");
+  if(v) v.innerHTML='<div class="notice sand"><p><b>The app could not start in this viewer.</b></p><p>Open this page in Safari. On a computer, double-tap Open_on_iPhone.command and use the address it shows.</p></div>';
+  setVoiceUnavailable();
+}
+GRS.go=go;
+GRS.inAppBack=inAppBack;
+GRS.exportState=exportState;
+GRS.importState=importState;
+GRS.buildAlphabetQuiz=buildAlphabetQuiz;
+GRS.eiLevelItems=eiLevelItems;
+GRS.buildDictation=buildDictation;
+GRS.startSession=startSession;
+})();
+</script>
+</body>
+</html>
