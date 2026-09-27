@@ -5021,7 +5021,23 @@ navigate("course3");
     Τ: "ταυ", Υ: "ύψιλον", Φ: "φι", Χ: "χι", Ψ: "ψι", Ω: "ωμέγα"
   };
   /** Dedicated rate for short alphabet names only — does not change app-wide prefs. */
-  const ALPHABET_NAME_RATE = 0.8;
+  const ALPHABET_NAME_RATE = 0.78;
+  const ALPHABET_SHORT_NAME_RATE = 0.72;
+
+  /**
+   * TTS rendering forms for Apple Melina / el-GR voices.
+   * Canonical display names stay in LETTER_NAMES_GREEK / nameGreek.
+   *
+   * Evidence (Melina Enhanced via SpeechSynthesis, cold start, no queue):
+   *   "ψι"   → ~1.5s wrong long form (listeners report "psi-yuta")
+   *   "ψεί"  → ~0.5s correct short /psi/
+   *   "ψει"  → ~0.44s correct short /psi/
+   * Compact Melina `say`: "ψι" ~0.69s vs "ψεί" ~0.35s (same class of failure).
+   * This is an engine lexicon bug, not queue bleed — single utterance reproduces it.
+   */
+  const LETTER_NAME_TTS = {
+    Ψ: "ψεί"
+  };
 
   function normalizeAlphabetLetterNames() {
     if (!D || !Array.isArray(D.letters)) return;
@@ -5030,13 +5046,28 @@ navigate("course3");
       if (!g) return;
       L.nameGreek = g;
       L.spokenName = g;
+      L.nameTTS = LETTER_NAME_TTS[L.upper] || g;
       if (!L.nameEnglish) L.nameEnglish = L.name || "";
     });
   }
 
+  function alphabetNameSpeechText(L) {
+    if (!L) return "";
+    const canonical = String(L.nameGreek || LETTER_NAMES_GREEK[L.upper] || L.spokenName || "").trim();
+    const tts = LETTER_NAME_TTS[L.upper] || L.nameTTS || canonical;
+    return String(tts || "").trim();
+  }
+
+  function alphabetNameRate(speechText) {
+    const t = String(speechText || "");
+    // Short letter names (μι, νι, ξι, πι, φι, χι, ψεί, …)
+    if (t.length <= 3) return ALPHABET_SHORT_NAME_RATE;
+    return ALPHABET_NAME_RATE;
+  }
+
   /**
-   * Speak ONLY the Greek letter name (nameGreek).
-   * Cancels any queued speech first to prevent Υ→Ψ bleed ("ψι"+"ύψιλον" → "psi-yuta").
+   * Speak the alphabet letter name using a Melina-safe TTS form.
+   * UI / canonical nameGreek is unchanged (Ψ → "ψι").
    */
   function speakAlphabetLetterName(indexOrLetter, opts) {
     opts = opts || {};
@@ -5051,29 +5082,42 @@ navigate("course3");
         ? indexOrLetter
         : D.letters && D.letters[idx];
     if (!L) return;
-    const text = String(L.nameGreek || LETTER_NAMES_GREEK[L.upper] || L.spokenName || "").trim();
+    const canonical = String(L.nameGreek || LETTER_NAMES_GREEK[L.upper] || L.spokenName || "").trim();
+    const text = alphabetNameSpeechText(L);
     if (!text) return;
     // Hard cancel before any new alphabet-name utterance.
     stopClean();
     if (typeof synth !== "undefined" && synth) {
       try { synth.cancel(); } catch (_) {}
     }
+    // Prefer an explicit el-GR Melina voice object (required on iOS; lang alone is not enough).
+    try {
+      if (typeof loadVoices === "function") loadVoices();
+    } catch (_) {}
     GS5._alphaSpeakToken = (GS5._alphaSpeakToken || 0) + 1;
     const token = GS5._alphaSpeakToken;
-    const display = (L.upper || "") + " " + (L.lower || "");
+    const display = (L.upper || "") + " " + (L.lower || "") + (canonical ? " · " + canonical : "");
     const id = "letter-name-" + (L.upper || idx);
+    const rate = alphabetNameRate(text);
     const start = () => {
       if (token !== GS5._alphaSpeakToken) return;
       GS5._speakingLetter = true;
+      GS5._lastAlphabetSpeech = {
+        upper: L.upper,
+        nameGreek: canonical,
+        spokenText: text,
+        rate: rate,
+        via: opts.via || null
+      };
       play([{ text: text, display: display, id: id }], {
         label: "Letter name",
-        rate: ALPHABET_NAME_RATE,
+        rate: rate,
         done: () => {
           GS5._speakingLetter = false;
         }
       });
     };
-    // Allow Web Speech cancel() to flush before speaking (Chrome queue race).
+    // Allow Web Speech cancel() to flush before speaking.
     setTimeout(start, 60);
   }
 
@@ -6278,7 +6322,10 @@ navigate("course3");
     injectCSS();
     normalizeAlphabetLetterNames();
     GS5.LETTER_NAMES_GREEK = LETTER_NAMES_GREEK;
+    GS5.LETTER_NAME_TTS = LETTER_NAME_TTS;
     GS5.ALPHABET_NAME_RATE = ALPHABET_NAME_RATE;
+    GS5.ALPHABET_SHORT_NAME_RATE = ALPHABET_SHORT_NAME_RATE;
+    GS5.alphabetNameSpeechText = alphabetNameSpeechText;
     GS5.speakAlphabetLetterName = speakAlphabetLetterName;
     // apply_v5.py patches case'letter' and gs4nLetterStep — avoid duplicate speakers.
     GS5._baseLetterSpeakPatched = true;
